@@ -41,28 +41,30 @@ components:
   schemas:
     Address:
       type: object
+      description: The address of an organization.
       required:
         - street
         - number
         - postcode
         - city
-        - state
+        - country
       properties:
         street:
           type: string
         number:
           type: integer
           format: int32
-        postcode:
+        postCode:
           type: integer
           format: int32
         city:
           type: string
-        state: 
+        country: 
           type: string
-
     Organization:
       type: object
+      description: >-
+        Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
       required:
         - id
         - name
@@ -76,30 +78,47 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for an organization.
         name:
           type: string
+          description: Name of the organization.
         description:
           type: string
-        images:
+          description: Small description of what the organization does.
+        image:
           type: string
+          description: Image/logo for the organization which gets shown on the application.
         address:
-          type: array
-          items: 
-            type: string
+          $ref: '#/components/schemas/Address'
         serverLDAP:
           type: string
+          description: >-
+            URL or IP address of the LDAP server of the organization.
+            If it's required a specific TCP port (different from LDAP's default) it must be specified.
+            Needed only if trackingMethod is set to authenticated.
         creationDate:
           type: string
-        modifyDate: 
+          format: date-time
+          description: When the organization was added to the system.
+        lastChangeDate:
           type: string
-        perimeter:
-          type: number
+          format: date-time
+          description: When the organization parameters were last changed.
         trackingArea:
-          type: number
+          type: string
+          description: >-
+            rea subjected to movement tracking of people.
+            It is a collection of (longitude, latitude) pairs consisting in a polygon.
+            The string is expressed in JSON format.
         trackingMethod:
-          type: number
+          type: string
+          description: How an user who added to its favorites the organization can be tracked inside the organization's trackingArea and its places.
+          enum:
+            - authenticated
+            - anonymous
     Place:
       type: object
+      description: Area of an organization subjected to tracking.
       required:
         - id
         - organization
@@ -114,9 +133,10 @@ components:
           description: Name describing the place. If not set by user it gets automatically filled.
         organization:
           $ref: '#/components/schemas/Organization'
-          description: >-
-            Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
         trackingArea:
           type: string
-          description: Area subjected to movement tracking of people.
+          description: >-
+            rea subjected to movement tracking of people.
+            It is a collection of (longitude, latitude) pairs consisting in a polygon.
+            The string is expressed in JSON format.
     
