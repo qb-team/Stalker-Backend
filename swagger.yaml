@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  version: "1.0.0"
-  title: "Stalker API"
-  description: "API di Stalker di Imola Informatica sviluppato da qbteam"
+  version: '1.0.0'
+  title: 'Stalker API'
+  description: 'API di Stalker di Imola Informatica sviluppato da qbteam'
 # Added by API Auto Mocking Plugin
 servers:
   - description: SwaggerHub API Auto Mocking
@@ -17,26 +17,25 @@ tags:
   - name: place
     description: Place related endpoints.
 paths:
-  /autenticazione/login:
+  '/autenticazione/login':
     post:
       tags:
-        - userAutetication
+        - userAuthentication
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthenticationData"
-        "400":
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
           description: incorrect credentials
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthenticationData"
-
-  "/organizzazioni/{organizationId}":
+              $ref: '#/components/schemas/AuthenticationData'
+  '/organization/{organizationId}':
     get:
       tags:
         - organization
@@ -52,33 +51,21 @@ paths:
             type: integer
             format: int64
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organization"
+                $ref: '#/components/schemas/Organization'
             application/xml:
               schema:
-                $ref: "#/components/schemas/Organization"
-        "400":
+                $ref: '#/components/schemas/Organization'
+        '400':
           description: Invalid Id supplied
-        "404":
+        '404':
           description: Organization not found
 components:
   schemas:
-    AuthResponse:
-      type: object
-      description: Data given to the user when authenticated.
-      required:
-        - token
-        - expirationDate
-      properties:
-        token:
-          type: string
-        expirationDate:
-          type: string
-          format: date-time
     AuthenticationData:
       type: object
       description: Data requested to the user when authenticating or registering to the system.
@@ -91,6 +78,18 @@ components:
         password:
           type: string
           format: password
+    AuthResponse:
+      type: object
+      description: Data given to the user when authenticated.
+      required:
+        - token
+        - expirationDate
+      properties:
+        token:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
     Address:
       type: object
       description: The address of an organization.
@@ -105,10 +104,10 @@ components:
           type: string
         number:
           type: integer
-          format: int32
+          format: string
         postCode:
           type: integer
-          format: int32
+          format: string
         city:
           type: string
         state:
@@ -125,7 +124,7 @@ components:
         - modifyDate
         - perimeter
         - trackingArea
-        - trackingMethod
+        - trackingMode
       properties:
         id:
           type: integer
@@ -163,7 +162,7 @@ components:
         trackingArea:
           type: string
           description: >-
-            rea subjected to movement tracking of people.
+            Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
         trackingMode:
@@ -187,13 +186,6 @@ components:
         name:
           type: string
           description: Name describing the place. If not set by user it gets automatically filled.
-        organization:
-          $ref: "#/components/schemas/Organization"
-          description: >-
-            Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
-        trackingArea:
-          type: string
-          description: Area subjected to movement tracking of people.
         organizationId:
           type: integer
           format: int64
