@@ -264,7 +264,7 @@ components:
           description: When the favorite was added by the user.
     Access:
       type: object
-      description: Generic access to an organization.
+      description: Generic access to an organization or a place of it.
       required:
         - entranceTimestamp
         - exitTimestamp
@@ -335,6 +335,82 @@ components:
       properties:
         access:
           $ref: '#/components/schemas/Access'
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+    Movement:
+      type: object
+      description: Generic movement in an organization or in a place of it.
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the place.
+        movementType:
+          type: string
+          description: Type of movement.
+          enum:
+            - entrance
+            - exit
+    PlaceAuthenticatedMovement:
+      type: object
+      description: Movement in a place of an organization made with the authenticated trackingMode.
+      required:
+        - movement
+        - placeId
+        - ldapId
+      properties:
+        movement:
+          $ref: '#/components/schemas/Movement'
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+        ldapId:
+          type: integer
+          format: int64
+          description: Organization LDAP server's user unique identifier.
+    OrganizationAuthenticatedMovement:
+      type: object
+      description: Movement to an organization made with the authenticated trackingMode.
+      required:
+        - movement
+        - organizationId
+        - ldapId
+      properties:
+        movement:
+          $ref: '#/components/schemas/Movement'
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+        ldapId:
+          type: integer
+          format: int64
+          description: Organization LDAP server's user unique identifier.
+    PlaceAnonymousMovement:
+      type: object
+      description: Movement to a place of an organization made with the anonymous trackingMode.
+      required:
+        - movement
+        - placeId
+      properties:
+        movement:
+          $ref: '#/components/schemas/Movement'
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+    OrganizationAnonymousMovement:
+      type: object
+      description: Movement to an organization made with the authenticated trackingMode.
+      required:
+        - movement
+        - organizationId
+      properties:
+        movement:
+          $ref: '#/components/schemas/Movement'
         organizationId:
           type: integer
           format: int64
