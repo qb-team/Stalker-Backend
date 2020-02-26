@@ -68,7 +68,7 @@ components:
       required:
         - id
         - name
-        - adress
+        - address
         - creationDate
         - modifyDate
         - perimeter
@@ -110,7 +110,7 @@ components:
             rea subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-        trackingMethod:
+        trackingMode:
           type: string
           description: How an user who added to its favorites the organization can be tracked inside the organization's trackingArea and its places.
           enum:
@@ -131,12 +131,129 @@ components:
         name:
           type: string
           description: Name describing the place. If not set by user it gets automatically filled.
-        organization:
-          $ref: '#/components/schemas/Organization'
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization the place is part of.
         trackingArea:
           type: string
           description: >-
             rea subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-    
+    User:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          description: Authentication service's user unique identifier.
+        ldapId:
+          type: integer
+          description: Organization LDAP server's user unique identifier.
+    Administrator:
+      type: object
+      required:
+        - administratorId
+      properties:
+        administratorId:
+          type: string
+          description: Authentication service's administrator unique identifier.
+        ldapId:
+          type: integer
+          description: Organization LDAP server's administrator unique identifier.
+    Permission:
+      type: object
+      description: What can or cannot do an organization's administrator.
+      required:
+        - userId
+        - organizationId
+        - permission
+      properties:
+        administratorId:
+          type: string
+          description: Authentication service's administrator unique identifier.
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization the administrator is part of.
+        permission:
+          type: string
+          description: >- 
+            What can or cannot do an organization's administrator.
+            Owner is the highest level of permissions while viewer is the lowest.
+          enum:
+            - owner
+            - manager
+            - viewer
+    Favorite:
+      type: object
+      description: >-
+        Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.
+      required:
+        - userId
+        - organizationId
+        - creationDate
+      properties:
+        userId:
+          type: string
+          description: Authentication service's user unique identifier.
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization the user sets as favorite.
+        creationDate:
+          type: string
+          format: date-time
+          description: When the favorite was added by the user.
+    PlaceAuthenticatedAccess:
+      type: object
+      description: Access to a place of an organization made with the authenticated trackingMode.
+      required:
+        - entranceTimestamp
+        - exitTimestamp
+        - placeId
+        - ldapId
+      properties:
+        entranceTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the place.
+        exitTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user left the place.
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+        ldapId:
+          type: integer
+          format: int64
+          description: Organization LDAP server's user unique identifier.
+    OrganizationAuthenticatedAccess:
+      type: object
+      description: Access to an organization made with the authenticated trackingMode.
+      required:
+        - entranceTimestamp
+        - exitTimestamp
+        - organizationId
+        - ldapId
+      properties:
+        entranceTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the organization.
+        exitTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user left the organization.
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+        ldapId:
+          type: integer
+          format: int64
+          description: Organization LDAP server's user unique identifier.
