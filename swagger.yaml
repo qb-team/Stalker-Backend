@@ -67,7 +67,6 @@ paths:
           description: Organization not found
 components:
   schemas:
-<<<<<<< HEAD
     AuthResponse:
       type: object
       description: Data given to the user when authenticated.
@@ -80,7 +79,6 @@ components:
         expirationDate:
           type: string
           format: date-time
-=======
     AuthenticationData:
       type: object
       description: Data requested to the user when authenticating or registering to the system.
@@ -93,7 +91,6 @@ components:
         password:
           type: string
           format: password
->>>>>>> 8d9a0599a16762040724684899d49d5a2a3ea866
     Address:
       type: object
       description: The address of an organization.
@@ -114,11 +111,7 @@ components:
           format: int32
         city:
           type: string
-<<<<<<< HEAD
         state:
-=======
-        country: 
->>>>>>> 8d9a0599a16762040724684899d49d5a2a3ea866
           type: string
     Organization:
       type: object
@@ -148,13 +141,10 @@ components:
           type: string
           description: Image/logo for the organization which gets shown on the application.
         address:
-<<<<<<< HEAD
           type: array
           items:
             type: string
-=======
           $ref: '#/components/schemas/Address'
->>>>>>> 8d9a0599a16762040724684899d49d5a2a3ea866
         serverLDAP:
           type: string
           description: >-
@@ -163,13 +153,10 @@ components:
             Needed only if trackingMethod is set to authenticated.
         creationDate:
           type: string
-<<<<<<< HEAD
         modifyDate:
-=======
           format: date-time
           description: When the organization was added to the system.
         lastChangeDate:
->>>>>>> 8d9a0599a16762040724684899d49d5a2a3ea866
           type: string
           format: date-time
           description: When the organization parameters were last changed.
@@ -200,7 +187,6 @@ components:
         name:
           type: string
           description: Name describing the place. If not set by user it gets automatically filled.
-<<<<<<< HEAD
         organization:
           $ref: "#/components/schemas/Organization"
           description: >-
@@ -208,7 +194,6 @@ components:
         trackingArea:
           type: string
           description: Area subjected to movement tracking of people.
-=======
         organizationId:
           type: integer
           format: int64
@@ -362,4 +347,3 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization in which the user had access.
->>>>>>> 8d9a0599a16762040724684899d49d5a2a3ea866
