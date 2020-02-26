@@ -228,14 +228,12 @@ components:
           type: string
           format: date-time
           description: When the favorite was added by the user.
-    PlaceAuthenticatedAccess:
+    Access:
       type: object
-      description: Access to a place of an organization made with the authenticated trackingMode.
+      description: Generic access to an organization.
       required:
         - entranceTimestamp
         - exitTimestamp
-        - placeId
-        - ldapId
       properties:
         entranceTimestamp:
           type: string
@@ -244,7 +242,17 @@ components:
         exitTimestamp:
           type: string
           format: date-time
-          description: Date and time of the moment in which the user left the place.
+          description: Date and time of the moment in which the user left the place.      
+    PlaceAuthenticatedAccess:
+      type: object
+      description: Access to a place of an organization made with the authenticated trackingMode.
+      required:
+        - access
+        - placeId
+        - ldapId
+      properties:
+        access:
+          $ref: '#/components/schemas/Access'
         placeId:
           type: integer
           format: int64
@@ -257,19 +265,12 @@ components:
       type: object
       description: Access to an organization made with the authenticated trackingMode.
       required:
-        - entranceTimestamp
-        - exitTimestamp
+        - access
         - organizationId
         - ldapId
       properties:
-        entranceTimestamp:
-          type: string
-          format: date-time
-          description: Date and time of the moment in which the user entered the organization.
-        exitTimestamp:
-          type: string
-          format: date-time
-          description: Date and time of the moment in which the user left the organization.
+        access:
+          $ref: '#/components/schemas/Access'
         organizationId:
           type: integer
           format: int64
@@ -278,3 +279,29 @@ components:
           type: integer
           format: int64
           description: Organization LDAP server's user unique identifier.
+    PlaceAnonymousAccess:
+      type: object
+      description: Access to a place of an organization made with the anonymous trackingMode.
+      required:
+        - access
+        - placeId
+      properties:
+        access:
+          $ref: '#/components/schemas/Access'
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+    OrganizationAnonymousAccess:
+      type: object
+      description: Access to an organization made with the authenticated trackingMode.
+      required:
+        - access
+        - organizationId
+      properties:
+        access:
+          $ref: '#/components/schemas/Access'
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
