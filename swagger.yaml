@@ -7,6 +7,15 @@ info:
 servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
+tags:
+  - name: userAuthentication
+    description: User authentication related endpoints.
+  - name: adminAuthentication
+    description: Administrator authentication related endpoints.
+  - name: organization
+    description: Organization related endpoints.
+  - name: place
+    description: Place related endpoints.
 paths:
   '/organizzazioni/{organizationId}':
     get:
@@ -39,6 +48,18 @@ paths:
           description: Organization not found
 components:
   schemas:
+    AuthenticationData:
+      type: object
+      description: Data requested to the user when authenticating or registering to the system.
+      required:
+      - mail
+      - password
+      properties:
+        mail:
+          type: string
+        password:
+          type: string
+          format: password
     Address:
       type: object
       description: The address of an organization.
