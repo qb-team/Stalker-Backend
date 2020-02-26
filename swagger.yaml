@@ -44,6 +44,9 @@ components:
       properties:
         via:
           type: string
+        postcode:
+          type: integer
+          format: int32
     Organization:
       type: object
       properties:
