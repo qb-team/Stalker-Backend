@@ -39,16 +39,39 @@ paths:
           description: Organization not found
 components:
   schemas:
-    Adress:
+    Address:
       type: object
+      required:
+        - street
+        - number
+        - postcode
+        - city
+        - state
       properties:
-        via:
+        street:
           type: string
+        number:
+          type: integer
+          format: int32
         postcode:
           type: integer
-          format: int64
+          format: int32
+        city:
+          type: string
+        state: 
+          type: string
+
     Organization:
       type: object
+      required:
+        - id
+        - name
+        - adress
+        - creationDate
+        - modifyDate
+        - perimeter
+        - trackingArea
+        - trackingMethod
       properties:
         id:
           type: integer
@@ -57,9 +80,9 @@ components:
           type: string
         description:
           type: string
-        immages:
+        images:
           type: string
-        adress:
+        address:
           type: array
           items: 
             type: string
