@@ -1,17 +1,36 @@
 openapi: 3.0.0
 info:
-  version: '1.0.0'
-  title: 'Stalker API'
-  description: 'API di Stalker di Imola Informatica sviluppato da qbteam'
+  version: "1.0.0"
+  title: "Stalker API"
+  description: "API di Stalker di Imola Informatica sviluppato da qbteam"
 # Added by API Auto Mocking Plugin
 servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
 paths:
-  '/organizzazioni/{organizationId}':
+  /autenticazione/login:
+    post:
+      tags:
+        - userAutetication
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationData"
+        "400":
+          description: incorrect credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationData"
+
+  "/organizzazioni/{organizationId}":
     get:
       tags:
-      - organization
+        - organization
       summary: Get the information of an organization
       description: Returns a single organization
       operationId: getOrganization
@@ -24,21 +43,33 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
             application/xml:
               schema:
-                $ref: '#/components/schemas/Organization'
-        '400':
+                $ref: "#/components/schemas/Organization"
+        "400":
           description: Invalid Id supplied
-        '404':
+        "404":
           description: Organization not found
 components:
   schemas:
+    AuthResponse:
+      type: object
+      description: Data given to the user when authenticated.
+      required:
+        - token
+        - expirationDate
+      properties:
+        token:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
     Address:
       type: object
       required:
@@ -58,7 +89,7 @@ components:
           format: int32
         city:
           type: string
-        state: 
+        state:
           type: string
 
     Organization:
@@ -84,13 +115,13 @@ components:
           type: string
         address:
           type: array
-          items: 
+          items:
             type: string
         serverLDAP:
           type: string
         creationDate:
           type: string
-        modifyDate: 
+        modifyDate:
           type: string
         perimeter:
           type: number
@@ -113,10 +144,9 @@ components:
           type: string
           description: Name describing the place. If not set by user it gets automatically filled.
         organization:
-          $ref: '#/components/schemas/Organization'
+          $ref: "#/components/schemas/Organization"
           description: >-
             Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
         trackingArea:
           type: string
           description: Area subjected to movement tracking of people.
-    
