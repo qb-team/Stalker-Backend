@@ -80,15 +80,20 @@ components:
       required:
         - id
         - organization
-        - name
         - trackingArea
       properties:
         id:
           type: integer
           format: int64
+          description: Unique identifier for a place of an organization.
         name:
           type: string
+          description: Name describing the place. If not set by user it gets automatically filled.
         organization:
           $ref: '#/components/schemas/Organization'
+          description: >-
+            Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
         trackingArea:
           type: string
+          description: Area subjected to movement tracking of people.
+    
