@@ -46,7 +46,7 @@ components:
           type: string
         postcode:
           type: integer
-          format: int32
+          format: int64
     Organization:
       type: object
       properties:
