@@ -75,3 +75,20 @@ components:
           type: number
         trackingMethod:
           type: number
+    Place:
+      type: object
+      required:
+        - id
+        - organization
+        - name
+        - trackingArea
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+        trackingArea:
+          type: string
