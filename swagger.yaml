@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  version: '1.0.0'
-  title: 'Stalker API'
-  description: 'API di Stalker di Imola Informatica sviluppato da qbteam'
+  version: "1.0.0"
+  title: "Stalker API"
+  description: "API di Stalker di Imola Informatica sviluppato da qbteam"
 # Added by API Auto Mocking Plugin
 servers:
   - description: SwaggerHub API Auto Mocking
@@ -16,26 +16,28 @@ tags:
     description: Organization related endpoints.
   - name: place
     description: Place related endpoints.
+  - name: tracking
+    description: Tracking related endpoints.
 paths:
-  '/autenticazione/login':
+  "/autenticazione/login":
     post:
       tags:
         - userAuthentication
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '400':
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
           description: incorrect credentials
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthenticationData'
-  '/organization/{organizationId}':
+              $ref: "#/components/schemas/AuthenticationData"
+  "/organization/{organizationId}":
     get:
       tags:
         - organization
@@ -51,27 +53,95 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
             application/xml:
               schema:
-                $ref: '#/components/schemas/Organization'
-        '400':
+                $ref: "#/components/schemas/Organization"
+        "400":
           description: Invalid Id supplied
-        '404':
+        "404":
           description: Organization not found
+  "/trackMovement/organization/authenticated":
+    post:
+      tags:
+        - tracking
+      summary: Lets the user track its movement with trackingMode set to authenticated in an organization's trackingArea and send it to the system.
+      description: Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
+      operationId: trackAuthenticatedMovementInOrganization
+      responses:
+        "200":
+          description: Movement successfully tracked.
+        "400":
+          description: Movement could not be tracked due to incorrect data sent to the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationAuthenticatedMovement"
+  "/trackMovement/organization/anonymous":
+    post:
+      tags:
+        - tracking
+      summary: Lets the user track its movement with trackingMode set to anonymous in an organization's trackingArea and send it to the system.
+      description: Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
+      operationId: trackAnonymousMovementInOrganization
+      responses:
+        "200":
+          description: Movement successfully tracked.
+        "400":
+          description: Movement could not be tracked due to incorrect data sent to the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationAnonymousMovement"
+  "/trackMovement/place/authenticated":
+    post:
+      tags:
+        - tracking
+      summary: Lets the user track its movement with trackingMode set to authenticated in a place's trackingArea and send it to the system.
+      description: Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
+      operationId: trackAuthenticatedMovementInPlace
+      responses:
+        "200":
+          description: Movement successfully tracked.
+        "400":
+          description: Movement could not be tracked due to incorrect data sent to the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceAuthenticatedMovement"
+  "/trackMovement/place/anonymous":
+    post:
+      tags:
+        - tracking
+      summary: Lets the user track its movement with trackingMode set to anonymous in a place's trackingArea and send it to the system.
+      description: Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
+      operationId: trackAnonymousMovementInPlace
+      responses:
+        "200":
+          description: Movement successfully tracked.
+        "400":
+          description: Movement could not be tracked due to incorrect data sent to the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceAnonymousMovement"
 components:
   schemas:
     AuthenticationData:
       type: object
       description: Data requested to the user when authenticating or registering to the system.
       required:
-      - mail
-      - password
+        - mail
+        - password
       properties:
         mail:
           type: string
@@ -143,7 +213,7 @@ components:
           type: array
           items:
             type: string
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         serverLDAP:
           type: string
           description: >-
@@ -235,7 +305,7 @@ components:
           description: Unique identifier of the organization the administrator is part of.
         permission:
           type: string
-          description: >- 
+          description: >-
             What can or cannot do an organization's administrator.
             Owner is the highest level of permissions while viewer is the lowest.
           enum:
@@ -276,7 +346,7 @@ components:
         exitTimestamp:
           type: string
           format: date-time
-          description: Date and time of the moment in which the user left the place.      
+          description: Date and time of the moment in which the user left the place.
     PlaceAuthenticatedAccess:
       type: object
       description: Access to a place of an organization made with the authenticated trackingMode.
@@ -286,7 +356,7 @@ components:
         - ldapId
       properties:
         access:
-          $ref: '#/components/schemas/Access'
+          $ref: "#/components/schemas/Access"
         placeId:
           type: integer
           format: int64
@@ -304,7 +374,7 @@ components:
         - ldapId
       properties:
         access:
-          $ref: '#/components/schemas/Access'
+          $ref: "#/components/schemas/Access"
         organizationId:
           type: integer
           format: int64
@@ -321,7 +391,7 @@ components:
         - placeId
       properties:
         access:
-          $ref: '#/components/schemas/Access'
+          $ref: "#/components/schemas/Access"
         placeId:
           type: integer
           format: int64
@@ -334,7 +404,7 @@ components:
         - organizationId
       properties:
         access:
-          $ref: '#/components/schemas/Access'
+          $ref: "#/components/schemas/Access"
         organizationId:
           type: integer
           format: int64
@@ -362,7 +432,7 @@ components:
         - ldapId
       properties:
         movement:
-          $ref: '#/components/schemas/Movement'
+          $ref: "#/components/schemas/Movement"
         placeId:
           type: integer
           format: int64
@@ -380,7 +450,7 @@ components:
         - ldapId
       properties:
         movement:
-          $ref: '#/components/schemas/Movement'
+          $ref: "#/components/schemas/Movement"
         organizationId:
           type: integer
           format: int64
@@ -397,7 +467,7 @@ components:
         - placeId
       properties:
         movement:
-          $ref: '#/components/schemas/Movement'
+          $ref: "#/components/schemas/Movement"
         placeId:
           type: integer
           format: int64
@@ -410,7 +480,7 @@ components:
         - organizationId
       properties:
         movement:
-          $ref: '#/components/schemas/Movement'
+          $ref: "#/components/schemas/Movement"
         organizationId:
           type: integer
           format: int64
