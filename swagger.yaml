@@ -66,6 +66,22 @@ paths:
           description: Invalid Id supplied
         "404":
           description: Organization not found
+    put:
+      tags:
+        - organization
+      summary: update the information of an existing organization
+      operationId: updateOrganization
+      responses:
+        '400':
+          description: Invalid organizationId supplied
+        '404':
+          description: organization not found
+        '200':
+          description: updated successfully
+        '405':
+          description: validation exception
+      requestBody:
+        $ref: '#/components/requestBodies/Organization'
   "/trackMovement/organization/authenticated":
     post:
       tags:
@@ -172,16 +188,21 @@ components:
       properties:
         street:
           type: string
+          description: the street where the organization is situated
         number:
           type: integer
-          format: string
+          format: int32
+          description: the number in the street where the organization is situated
         postCode:
           type: integer
-          format: string
+          format: int32
+          description: the postcode of the city where the organization is situated
         city:
           type: string
+          description: the city where the organization is situated
         state:
           type: string
+          description: the state where the organization is situated
     Organization:
       type: object
       description: >-
@@ -485,6 +506,17 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization in which the user had access.
+  requestBodies:
+    Organization:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Organization'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Organization'
+      description: Organization that need to be added to the database
+      required: true
 # Added by API Auto Mocking Plugin
 servers:
   - description: SwaggerHub API Auto Mocking
