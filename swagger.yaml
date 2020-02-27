@@ -4,9 +4,9 @@ info:
   title: "Stalker API"
   description: "API di Stalker di Imola Informatica sviluppato da qbteam"
 # Added by API Auto Mocking Plugin
-servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
+# servers:
+#   - description: SwaggerHub API Auto Mocking
+#     url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
 tags:
   - name: userAuthentication
     description: User authentication related endpoints.
@@ -485,3 +485,7 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization in which the user had access.
+# Added by API Auto Mocking Plugin
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
