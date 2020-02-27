@@ -517,7 +517,3 @@ components:
             $ref: '#/components/schemas/Organization'
       description: Organization that need to be added to the database
       required: true
-# Added by API Auto Mocking Plugin
-servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
