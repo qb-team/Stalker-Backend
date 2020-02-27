@@ -3,6 +3,10 @@ info:
   version: "1.0.0"
   title: "Stalker API"
   description: "API di Stalker di Imola Informatica sviluppato da qbteam"
+  contact:
+    name: "qbteam"
+    url: "https://github.com/qb-team/"
+    email: "qbteamswe@gmail.com"
 # Added by API Auto Mocking Plugin
 # servers:
 #   - description: SwaggerHub API Auto Mocking
