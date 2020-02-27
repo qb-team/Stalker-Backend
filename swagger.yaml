@@ -22,6 +22,9 @@ tags:
     description: Place related endpoints.
   - name: tracking
     description: Tracking related endpoints.
+  - name: movement
+    description: operation regarding movement
+
 paths:
   "/autenticazione/login":
     post:
@@ -41,6 +44,23 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AuthenticationData"
+  /organization:
+    post:
+      tags:
+        - organization
+      summary: create a new organization
+      operationId: createOrganization
+      responses:
+        '405':
+          description: Invalid input
+        '200':
+          description: Organization created successfully
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      requestBody:
+        $ref: '#/components/requestBodies/Organization'
   "/organization/{organizationId}":
     get:
       tags:
@@ -75,6 +95,14 @@ paths:
         - organization
       summary: update the information of an existing organization
       operationId: updateOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization
+          required: true
+          schema:
+            type: integer
+            format: int64 
       responses:
         '400':
           description: Invalid organizationId supplied
@@ -154,6 +182,44 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceAnonymousMovement"
+  '/movement/{userId}': 
+    get:  
+      tags:
+        - movement
+      summary: the user can retrive all his movements
+      description: >-
+        Muliple userId can be provided with comma separated number. 
+      operationId: getMovementUserId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of an User
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64 
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+        "400":
+          description: Invalid Id supplied
+        "404":
+          description: Organization not found
+                  
 components:
   schemas:
     AuthenticationData:
@@ -271,7 +337,7 @@ components:
       description: Area of an organization subjected to tracking.
       required:
         - id
-        - organization
+        - organizationId
         - trackingArea
       properties:
         id:
