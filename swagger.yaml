@@ -503,6 +503,9 @@ components:
     Movement:
       type: object
       description: Generic movement in an organization or in a place of it.
+      required:
+        - timestamp
+        - movementType
       properties:
         timestamp:
           type: string
