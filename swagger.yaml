@@ -301,9 +301,6 @@ components:
           type: string
           description: Image/logo for the organization which gets shown on the application.
         address:
-          type: array
-          items:
-            type: string
           $ref: "#/components/schemas/Address"
         serverLDAP:
           type: string
