@@ -601,12 +601,16 @@ components:
       type: object
       description: Generic access to an organization or a place of it.
       required:
+        - id
         - entranceTimestamp
         - exitTimestamp
         - accessDiscriminator
       discriminator:
         propertyName: accessDiscriminator
       properties:
+        id:
+          type: integer
+          format: int64
         accessDiscriminator:
           type: string
         entranceTimestamp:
@@ -680,12 +684,16 @@ components:
       type: object
       description: Generic movement in an organization or in a place of it.
       required:
+        - id
         - timestamp
         - movementType
         - movementDiscriminator
       discriminator:
         propertyName: movementDiscriminator
       properties:
+        id:
+          type: integer
+          format: int64
         movementDiscriminator:
           type: string
         timestamp:
