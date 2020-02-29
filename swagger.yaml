@@ -603,6 +603,9 @@ components:
       required:
         - entranceTimestamp
         - exitTimestamp
+        - accessSubType
+      discriminator:
+        propertyName: accessSubType
       properties:
         entranceTimestamp:
           type: string
@@ -612,68 +615,67 @@ components:
           type: string
           format: date-time
           description: Date and time of the moment in which the user left the place.
+        accessSubType:
+          type: string
     PlaceAuthenticatedAccess:
-      type: object
       description: Access to a place of an organization made with the authenticated trackingMode.
-      required:
-        - access
-        - placeId
-        - ldapId
-      properties:
-        access:
-          $ref: "#/components/schemas/Access"
-        placeId:
-          type: integer
-          format: int64
-          description: Unique identifier of the place in which the user had access.
-        ldapId:
-          type: integer
-          format: int64
-          description: Organization LDAP server's user unique identifier.
+      allOf:
+        - $ref: "#/components/schemas/Access"
+        - type: object
+          required:
+            - placeId
+            - ldapId
+          properties:
+            placeId:
+              type: integer
+              format: int64
+              description: Unique identifier of the place in which the user had access.
+            ldapId:
+              type: integer
+              format: int64
+              description: Organization LDAP server's user unique identifier.
     OrganizationAuthenticatedAccess:
-      type: object
       description: Access to an organization made with the authenticated trackingMode.
-      required:
-        - access
-        - organizationId
-        - ldapId
-      properties:
-        access:
-          $ref: "#/components/schemas/Access"
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization in which the user had access.
-        ldapId:
-          type: integer
-          format: int64
-          description: Organization LDAP server's user unique identifier.
+      allOf:
+      - $ref: "#/components/schemas/Access"
+      - type: object
+        required:
+          - organizationId
+          - ldapId
+        properties:
+          organizationId:
+            type: integer
+            format: int64
+            description: Unique identifier of the organization in which the user had access.
+          ldapId:
+            type: integer
+            format: int64
+            description: Organization LDAP server's user unique identifier.
     PlaceAnonymousAccess:
-      type: object
       description: Access to a place of an organization made with the anonymous trackingMode.
-      required:
-        - access
-        - placeId
-      properties:
-        access:
-          $ref: "#/components/schemas/Access"
-        placeId:
-          type: integer
-          format: int64
-          description: Unique identifier of the place in which the user had access.
+      allOf:
+      - $ref: "#/components/schemas/Access"
+      - type: object
+        required:
+          - placeId
+        properties:
+          placeId:
+            type: integer
+            format: int64
+            description: Unique identifier of the place in which the user had access.
     OrganizationAnonymousAccess:
-      type: object
       description: Access to an organization made with the authenticated trackingMode.
-      required:
-        - access
-        - organizationId
-      properties:
-        access:
-          $ref: "#/components/schemas/Access"
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization in which the user had access.
+      allOf:
+      - $ref: "#/components/schemas/Access"
+      - type: object
+        required:
+          - access
+          - organizationId
+        properties:
+          organizationId:
+            type: integer
+            format: int64
+            description: Unique identifier of the organization in which the user had access.
     Movement:
       type: object
       description: Generic movement in an organization or in a place of it.
