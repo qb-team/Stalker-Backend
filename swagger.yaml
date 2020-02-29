@@ -44,6 +44,7 @@ paths:
         "400":
           description: Incorrect credentials.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -67,6 +68,7 @@ paths:
         "406":
           description: Account already present with this e-mail address.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -98,6 +100,7 @@ paths:
         "400":
           description: Incorrect credentials.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -178,7 +181,11 @@ paths:
         "405":
           description: Organization not found.
       requestBody:
-        $ref: "#/components/requestBodies/Organization"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
   "/movement/track/organization/authenticated":
     post:
       tags:
@@ -192,6 +199,7 @@ paths:
         "400":
           description: Movement could not be tracked due to incorrect data sent to the system.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -209,6 +217,7 @@ paths:
         "400":
           description: Movement could not be tracked due to incorrect data sent to the system.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -226,6 +235,7 @@ paths:
         "400":
           description: Movement could not be tracked due to incorrect data sent to the system.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -243,6 +253,7 @@ paths:
         "400":
           description: Movement could not be tracked due to incorrect data sent to the system.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -382,6 +393,7 @@ components:
       properties:
         mail:
           type: string
+          format: email
         password:
           type: string
           format: password
@@ -399,16 +411,17 @@ components:
           format: date-time
     AuthenticationDataAdmin:
       type: object
-      description: Data given to the admin when authenticated.
+      description: Data requested to the admin when authenticating to the system.
       required:
-        - token
-        - expirationDate
+        - mail
+        - password
       properties:
-        token:
+        mail:
           type: string
-        expirationDate:
+          format: email
+        password:
           type: string
-          format: date-time
+          format: password
     AuthResponseAdmin:
       type: object
       description: Data given to the admin when authenticated.
@@ -421,33 +434,6 @@ components:
         expirationDate:
           type: string
           format: date-time
-    Address:
-      type: object
-      description: The address of an organization.
-      required:
-        - street
-        - number
-        - postcode
-        - city
-        - country
-      properties:
-        street:
-          type: string
-          description: the street where the organization is situated
-        number:
-          type: integer
-          format: int32
-          description: the number in the street where the organization is situated
-        postCode:
-          type: integer
-          format: int32
-          description: the postcode of the city where the organization is situated
-        city:
-          type: string
-          description: the city where the organization is situated
-        state:
-          type: string
-          description: the state where the organization is situated
     Organization:
       type: object
       description: >-
@@ -455,10 +441,13 @@ components:
       required:
         - id
         - name
-        - address
+        - street
+        - number
+        - postcode
+        - city
+        - country
         - creationDate
         - modifyDate
-        - perimeter
         - trackingArea
         - trackingMode
       properties:
@@ -475,8 +464,22 @@ components:
         image:
           type: string
           description: Image/logo for the organization which gets shown on the application.
-        address:
-          $ref: "#/components/schemas/Address"
+        street:
+          type: string
+          description: The street where the organization is located.
+        number:
+          type: string
+          description: The number in the street where the organization is located.
+        postCode:
+          type: integer
+          format: string
+          description: The postcode where the organization is located.
+        city:
+          type: string
+          description: The city where the organization is located.
+        country:
+          type: string
+          description: The country where the organization is located.
         serverLDAP:
           type: string
           description: >-
@@ -485,7 +488,6 @@ components:
             Needed only if trackingMethod is set to authenticated.
         creationDate:
           type: string
-        modifyDate:
           format: date-time
           description: When the organization was added to the system.
         lastChangeDate:
@@ -751,11 +753,3 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization in which the user had access.
-  requestBodies:
-    Organization:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Organization"
-      description: Organization that need to be added to the database
-      required: true
