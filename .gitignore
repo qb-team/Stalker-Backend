@@ -191,3 +191,6 @@ buildNumber.properties
 .flattened-pom.xml
 
 # End of https://www.gitignore.io/api/code,java,maven,eclipse,intellij+iml
+
+### Docker ###
+./container/mysql/
