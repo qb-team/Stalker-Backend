@@ -98,38 +98,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>${openapi-generator.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/swagger.yaml</inputSpec>
-							<skipValidateSpec>false</skipValidateSpec>
-							<generatorName>spring</generatorName>
-							<invokerPackage>it.qbteam</invokerPackage>
-							<groupId>it.qbteam</groupId>
-							<artifactId>stalker-backend</artifactId>
-							<artifactVersion>0.0.1-SNAPSHOT</artifactVersion>
-							<packageName>it.qbteam</packageName>
-							<apiPackage>it.qbteam.api</apiPackage>
-							<modelPackage>it.qbteam.model</modelPackage>
-							<configHelp>false</configHelp>
-							<configOptions>
-								<sourceFolder>src/main/java</sourceFolder>
-								<interfaceOnly>true</interfaceOnly>
-								<java8>true</java8>
-								<dateLibrary>java8</dateLibrary>
-								<serializationLibrary>jackson</serializationLibrary>
-							</configOptions>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
 		</plugins>
 	</build>
 

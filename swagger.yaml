@@ -333,11 +333,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
           description: Accesses were not found with these organizationId.
   "/access/organization/{organizationId}/authenticated/{userIds}":
@@ -760,9 +755,6 @@ components:
     Organization:
       content:
         application/json:
-          schema:
-            $ref: "#/components/schemas/Organization"
-        application/xml:
           schema:
             $ref: "#/components/schemas/Organization"
       description: Organization that need to be added to the database
