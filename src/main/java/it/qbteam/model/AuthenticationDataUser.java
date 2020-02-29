@@ -13,7 +13,6 @@ import javax.validation.constraints.*;
  * Data requested to the user when authenticating or registering to the system.
  */
 @ApiModel(description = "Data requested to the user when authenticating or registering to the system.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class AuthenticationDataUser   {
   @JsonProperty("mail")

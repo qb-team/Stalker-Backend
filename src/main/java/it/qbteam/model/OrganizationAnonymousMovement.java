@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  * Movement to an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Movement to an organization made with the authenticated trackingMode.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class OrganizationAnonymousMovement   {
   @JsonProperty("movement")

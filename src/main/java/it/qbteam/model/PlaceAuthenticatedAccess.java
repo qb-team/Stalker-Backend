@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  * Access to a place of an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Access to a place of an organization made with the authenticated trackingMode.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class PlaceAuthenticatedAccess   {
   @JsonProperty("access")

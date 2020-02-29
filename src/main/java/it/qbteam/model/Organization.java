@@ -16,7 +16,6 @@ import javax.validation.constraints.*;
  * Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class Organization   {
   @JsonProperty("id")

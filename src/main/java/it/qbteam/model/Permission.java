@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  * What can or cannot do an organization&#39;s administrator.
  */
 @ApiModel(description = "What can or cannot do an organization's administrator.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class Permission   {
   @JsonProperty("administratorId")

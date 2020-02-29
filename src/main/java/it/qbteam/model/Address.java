@@ -13,7 +13,6 @@ import javax.validation.constraints.*;
  * The address of an organization.
  */
 @ApiModel(description = "The address of an organization.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class Address   {
   @JsonProperty("street")

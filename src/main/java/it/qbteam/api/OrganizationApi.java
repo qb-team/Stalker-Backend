@@ -26,7 +26,6 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "organization", description = "the organization API")
@@ -110,7 +109,7 @@ public interface OrganizationApi {
         @ApiResponse(code = 405, message = "Organization not found.") })
     @RequestMapping(value = "/organization/{organizationId}",
         produces = { "application/json" }, 
-        consumes = { "application/json", "application/xml" },
+        consumes = { "application/json" },
         method = RequestMethod.PUT)
     default ResponseEntity<Organization> updateOrganization(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "Organization that need to be added to the database" ,required=true )  @Valid @RequestBody Organization organization) {
         getRequest().ifPresent(request -> {

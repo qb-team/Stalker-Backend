@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
  * Generic movement in an organization or in a place of it.
  */
 @ApiModel(description = "Generic movement in an organization or in a place of it.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class Movement   {
   @JsonProperty("timestamp")

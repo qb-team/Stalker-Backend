@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 /**
  * Administrator
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class Administrator   {
   @JsonProperty("administratorId")

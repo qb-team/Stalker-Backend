@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  * Data given to the user when authenticated.
  */
 @ApiModel(description = "Data given to the user when authenticated.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class AuthResponseUser   {
   @JsonProperty("token")

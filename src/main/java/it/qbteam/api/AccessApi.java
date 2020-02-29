@@ -27,7 +27,6 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 @Validated
 @Api(value = "access", description = "the access API")
@@ -50,7 +49,7 @@ public interface AccessApi {
         @ApiResponse(code = 200, message = "Authenticated accesses in an organization returned successfully.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Accesses were not found with these organizationId.") })
     @RequestMapping(value = "/access/organization/{organizationId}/authenticated",
-        produces = { "application/json", "application/xml" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.GET)
     default ResponseEntity<List<OrganizationAuthenticatedAccess>> getAccessListInOrganization(@ApiParam(value = "ID of an organization",required=true) @PathVariable("organizationId") Long organizationId) {
         getRequest().ifPresent(request -> {
@@ -58,11 +57,6 @@ public interface AccessApi {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"organizationId\" : 0, \"access\" : { \"entranceTimestamp\" : \"2000-01-23T04:56:07.000+00:00\", \"exitTimestamp\" : \"2000-01-23T04:56:07.000+00:00\" }, \"ldapId\" : 6 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<null> <organizationId>123456789</organizationId> <ldapId>123456789</ldapId> </null>";
-                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }

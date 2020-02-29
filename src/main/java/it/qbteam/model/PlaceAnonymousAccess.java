@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  * Access to a place of an organization made with the anonymous trackingMode.
  */
 @ApiModel(description = "Access to a place of an organization made with the anonymous trackingMode.")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2020-02-29T20:29:04.115+01:00[Europe/Berlin]")
 
 public class PlaceAnonymousAccess   {
   @JsonProperty("access")
