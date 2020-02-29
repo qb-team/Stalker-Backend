@@ -25,7 +25,7 @@ import javax.validation.constraints.*;
   @JsonSubTypes.Type(value = OrganizationAnonymousAccess.class, name = "OrganizationAnonymousAccess"),
 })
 
-public class Access   {
+public abstract class Access   {
   @JsonProperty("id")
   private Long id;
 
