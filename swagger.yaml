@@ -323,7 +323,7 @@ paths:
   "/access/organization/{organizationId}/authenticated":
     get:
       tags:
-        - organization
+        - access
       summary: Returns all the authenticated accesses in an organization registered.
       description: Returns all the authenticated accesses in an organization registered.
       operationId: getAccessListInOrganization
@@ -603,10 +603,12 @@ components:
       required:
         - entranceTimestamp
         - exitTimestamp
-        - accessSubType
+        - accessDiscriminator
       discriminator:
-        propertyName: accessSubType
+        propertyName: accessDiscriminator
       properties:
+        accessDiscriminator:
+          type: string
         entranceTimestamp:
           type: string
           format: date-time
@@ -615,8 +617,6 @@ components:
           type: string
           format: date-time
           description: Date and time of the moment in which the user left the place.
-        accessSubType:
-          type: string
     PlaceAuthenticatedAccess:
       description: Access to a place of an organization made with the authenticated trackingMode.
       allOf:
@@ -682,7 +682,12 @@ components:
       required:
         - timestamp
         - movementType
+        - movementDiscriminator
+      discriminator:
+        propertyName: movementDiscriminator
       properties:
+        movementDiscriminator:
+          type: string
         timestamp:
           type: string
           format: date-time
@@ -694,64 +699,60 @@ components:
             - entrance
             - exit
     PlaceAuthenticatedMovement:
-      type: object
       description: Movement in a place of an organization made with the authenticated trackingMode.
-      required:
-        - movement
-        - placeId
-        - ldapId
-      properties:
-        movement:
-          $ref: "#/components/schemas/Movement"
-        placeId:
-          type: integer
-          format: int64
-          description: Unique identifier of the place in which the user had access.
-        ldapId:
-          type: integer
-          format: int64
-          description: Organization LDAP server's user unique identifier.
+      allOf:
+      - $ref: "#/components/schemas/Movement"
+      - type: object
+        required:
+          - placeId
+          - ldapId
+        properties:
+          placeId:
+            type: integer
+            format: int64
+            description: Unique identifier of the place in which the user had access.
+          ldapId:
+            type: integer
+            format: int64
+            description: Organization LDAP server's user unique identifier.
     OrganizationAuthenticatedMovement:
-      type: object
       description: Movement to an organization made with the authenticated trackingMode.
-      required:
-        - movement
-        - organizationId
-        - ldapId
-      properties:
-        movement:
-          $ref: "#/components/schemas/Movement"
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization in which the user had access.
-        ldapId:
-          type: integer
-          format: int64
-          description: Organization LDAP server's user unique identifier.
+      allOf:
+      - $ref: "#/components/schemas/Movement"
+      - type: object
+        required:
+          - organizationId
+          - ldapId
+        properties:
+          organizationId:
+            type: integer
+            format: int64
+            description: Unique identifier of the organization in which the user had access.
+          ldapId:
+            type: integer
+            format: int64
+            description: Organization LDAP server's user unique identifier.
     PlaceAnonymousMovement:
-      type: object
       description: Movement to a place of an organization made with the anonymous trackingMode.
-      required:
-        - movement
-        - placeId
-      properties:
-        movement:
-          $ref: "#/components/schemas/Movement"
-        placeId:
-          type: integer
-          format: int64
-          description: Unique identifier of the place in which the user had access.
+      allOf:
+      - $ref: "#/components/schemas/Movement"
+      - type: object
+        required:
+          - placeId
+        properties:
+          placeId:
+            type: integer
+            format: int64
+            description: Unique identifier of the place in which the user had access.
     OrganizationAnonymousMovement:
-      type: object
       description: Movement to an organization made with the authenticated trackingMode.
-      required:
-        - movement
-        - organizationId
-      properties:
-        movement:
-          $ref: "#/components/schemas/Movement"
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization in which the user had access.
+      allOf:
+      - $ref: "#/components/schemas/Movement"
+      - type: object
+        required:
+          - organizationId
+        properties:
+          organizationId:
+            type: integer
+            format: int64
+            description: Unique identifier of the organization in which the user had access.
