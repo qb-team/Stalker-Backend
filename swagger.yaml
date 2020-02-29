@@ -7,10 +7,10 @@ info:
     name: "qbteam"
     url: "https://github.com/qb-team/"
     email: "qbteamswe@gmail.com"
-# Added by API Auto Mocking Plugin
-# servers:
-#   - description: SwaggerHub API Auto Mocking
-#     url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
+# Server attualmente localhost
+servers:
+  - description: Server attualmente localhost
+    url: http://localhost:8080/
 tags:
   - name: userAuthentication
     description: User authentication related endpoints.
@@ -23,182 +23,167 @@ tags:
   - name: tracking
     description: Tracking related endpoints.
   - name: movement
-    description: operation regarding movement
-
+    description: Movement related endpoints.
+  - name: access
+    description: Access related endpoints.
 paths:
-  "/autenticazione/login":
+  "/authentication/userLogin":
     post:
       tags:
         - userAuthentication
-      summary: the user logs in
-      operationId: UserLogin
+      summary: Lets the user login via the authentication service.
+      description: Lets the user login via the authentication service.
+      operationId: userLogin
       responses:
         "200":
-          description: successful operation
+          description: Logged in successfully.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthResponse"
+                $ref: "#/components/schemas/AuthResponseUser"
         "400":
-          description: incorrect credentials
+          description: Incorrect credentials.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthenticationData"
-  "/autenticazione/registration":
+              $ref: "#/components/schemas/AuthenticationDataUser"
+  "/authentication/userRegistration":
     post:
       tags:
         - userAuthentication
-      summary: the user signs up
-      operationId: UserRegistration
+      summary: Lets the user registrate into the system.
+      description: Lets the user registrate into the system.
+      operationId: userRegistration
       responses:
         "200":
-          description: successful operation
+          description: Registered successfully.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthResponse"
+                $ref: "#/components/schemas/AuthResponseUser"
         "400":
-          description: weak password
+          description: Too weak password.
         "406":
-          description: email already present
+          description: Account already present with this e-mail address.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthenticationData"
-  "/autenticazione/logout":
+              $ref: "#/components/schemas/AuthenticationDataUser"
+  "/authentication/userLogout":
     post:
       tags:
         - userAuthentication
-      summary: the user logs out
-      operationId: UserLogout
+      summary: Lets the user logout from the system.
+      description: Lets the user logout from the system.
+      operationId: userLogout
       responses:
         "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/"
-  "/autenticazione/admin/Login":
+          description: Logged out successfully.
+  "/authentication/adminLogin":
     post:
       tags:
         - adminAuthentication
-      summary: the admin logs in
-      operationId: AdminLogin
+      summary: Lets the admin login via the authentication service.
+      description: Lets the admin login via the authentication service.
+      operationId: adminLogin
       responses:
         "200":
-          description: successful operation
+          description: Logged in successfully.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthResponseAdmin"
         "400":
-          description: incorrect credentials
+          description: Incorrect credentials.
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/AuthenticationDataAdmin"
-  "/autenticazione/admin/Logout":
+  "/authentication/adminLogout":
     post:
       tags:
         - adminAuthentication
-      summary: the admin logs out
-      operationId: AdminLogout
+      summary: Lets the admin logout from the system.
+      description: Lets the admin logout from the system.
+      operationId: adminLogout
       responses:
         "200":
-          description: successful operation
+          description: Logged out successfully.
+  "/organization":
+    get:
+      tags:
+        - organization
+      summary: Returns the list of all organizations.
+      description: Returns the list of all organizations.
+      operationId: getOrganizationList
+      responses:
+        "200":
+          description: Organizations returned successfully.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/"
-  /organization:
-    post:
-      tags:
-        - organization
-      summary: create a new organization
-      operationId: createOrganization
-      responses:
-        "405":
-          description: Invalid input
-        "200":
-          description: Organization created successfully
-      security:
-        - petstore_auth:
-            - "write:pets"
-            - "read:pets"
-      requestBody:
-        $ref: "#/components/requestBodies/Organization"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
   "/organization/{organizationId}":
     get:
       tags:
         - organization
-      summary: Get the information of an organization
-      description: Returns a single organization
-      operationId: getOrganization
+      summary: Gets the data of a single organization.
+      description: Gets the data of a single organization.
+      operationId: getOrganizationById
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization
+          description: ID of an organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "200":
-          description: successful operation
+          description: Organization returned successfully.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Organization"
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Organization"
         "400":
-          description: Invalid Id supplied
-        "404":
-          description: Organization not found
+          description: Organization not found.
     put:
       tags:
         - organization
-      summary: update the information of an existing organization
+      summary: Updates one or more properties of a single organization.
+      description: Updates one or more properties of a single organization.
       operationId: updateOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization
+          description: ID of an organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        "400":
-          description: Invalid organizationId supplied
-        "404":
-          description: organization not found
         "200":
-          description: updated successfully
+          description: Organization updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400":
+          description: Invalid organizationId supplied.
         "405":
-          description: validation exception
+          description: Organization not found.
       requestBody:
         $ref: "#/components/requestBodies/Organization"
-  "/trackMovement/organization/authenticated":
+  "/movement/track/organization/authenticated":
     post:
       tags:
         - tracking
-      summary: Lets the user track its movement with trackingMode set to authenticated in an organization's trackingArea and send it to the system.
+      summary: Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
       description: Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
       operationId: trackAuthenticatedMovementInOrganization
       responses:
@@ -211,11 +196,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/OrganizationAuthenticatedMovement"
-  "/trackMovement/organization/anonymous":
+  "/movement/track/organization/anonymous":
     post:
       tags:
         - tracking
-      summary: Lets the user track its movement with trackingMode set to anonymous in an organization's trackingArea and send it to the system.
+      summary: Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
       description: Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
       operationId: trackAnonymousMovementInOrganization
       responses:
@@ -228,11 +213,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/OrganizationAnonymousMovement"
-  "/trackMovement/place/authenticated":
+  "/movement/track/place/authenticated":
     post:
       tags:
         - tracking
-      summary: Lets the user track its movement with trackingMode set to authenticated in a place's trackingArea and send it to the system.
+      summary: Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
       description: Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
       operationId: trackAuthenticatedMovementInPlace
       responses:
@@ -245,11 +230,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceAuthenticatedMovement"
-  "/trackMovement/place/anonymous":
+  "/movement/track/place/anonymous":
     post:
       tags:
         - tracking
-      summary: Lets the user track its movement with trackingMode set to anonymous in a place's trackingArea and send it to the system.
+      summary: Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
       description: Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
       operationId: trackAnonymousMovementInPlace
       responses:
@@ -262,18 +247,43 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceAnonymousMovement"
-  "/movement/{userId}":
+  "/access/place/{placeId}/authenticated":
     get:
       tags:
-        - movement
-      summary: the user can retrive all his movements
-      description: >-
-        Muliple userId can be provided with comma separated number.
-      operationId: getMovementUserId
+        - access
+      summary: Returns all the authenticated accesses in a place registered.
+      description: Returns all the authenticated accesses in a place registered.
+      operationId: getAccessListInPlace
       parameters:
-        - name: userId
+        - name: placeId
           in: path
-          description: ID of an User
+          description: ID of a place
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Authenticated accesses in a place returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+        "400":
+          description: Accesses were not found with these placeId.
+  "/access/place/{placeId}/authenticated/{userIds}":
+    get:
+      tags:
+        - access
+      summary: Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
+      description: Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
+      operationId: getAccessListInPlaceOfUsers
+      parameters:
+        - name: userIds
+          in: path
+          description: One or more userIds
           required: true
           explode: true
           schema:
@@ -281,31 +291,31 @@ paths:
             items:
               type: integer
               format: int64
+        - name: placeId
+          in: path
+          description: ID of a place
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
-          description: successful operation
+          description: Authenticated accesses in a place returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/PlaceAuthenticatedAccess"
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
         "400":
-          description: Invalid Id supplied
-        "404":
-          description: Organization not found
-  "/AuthenticatedOrganizationAcces/{organizationId}":
+          description: Accesses were not found with these placeId and userIds.
+  "/access/organization/{organizationId}/authenticated":
     get:
       tags:
         - organization
-      summary: the administrator can retieve all the access made in his organization
-      description: get all the access in the specified organization
-      operationId: getAuthenticatedOrganizationAccess
+      summary: Returns all the authenticated accesses in an organization registered.
+      description: Returns all the authenticated accesses in an organization registered.
+      operationId: getAccessListInOrganization
       parameters:
         - name: organizationId
           in: path
@@ -316,7 +326,7 @@ paths:
             format: int64
       responses:
         "200":
-          description: successful operation
+          description: Authenticated accesses in an organization returned successfully.
           content:
             application/json:
               schema:
@@ -329,17 +339,25 @@ paths:
                 items:
                   $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
-          description: Invalid Id supplied
-        "404":
-          description: Access not found
-  "/AuthenticatedPlaceAcces/{organizationId}":
+          description: Accesses were not found with these organizationId.
+  "/access/organization/{organizationId}/authenticated/{userIds}":
     get:
       tags:
-        - place
-      summary: the administrator can retieve all the access made in every place of his organization
-      description: get all the access in every place in the specified organization
-      operationId: getAuthenticatedPlaceAccess
+        - access
+      summary: Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
+      description: Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
+      operationId: getAccessListInOrganizationOfUsers
       parameters:
+        - name: userIds
+          in: path
+          description: One or more userIds
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
         - name: organizationId
           in: path
           description: ID of an organization
@@ -349,25 +367,18 @@ paths:
             format: int64
       responses:
         "200":
-          description: successful operation
+          description: Authenticated accesses in an organization returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedMovement"
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedMovement"
+                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
-          description: Invalid Id supplied
-        "404":
-          description: Access not found
+          description: Accesses were not found with these organizationId and userIds.
 components:
   schemas:
-    AuthenticationData:
+    AuthenticationDataUser:
       type: object
       description: Data requested to the user when authenticating or registering to the system.
       required:
@@ -379,7 +390,7 @@ components:
         password:
           type: string
           format: password
-    AuthResponse:
+    AuthResponseUser:
       type: object
       description: Data given to the user when authenticated.
       required:
