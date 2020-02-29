@@ -30,6 +30,8 @@ paths:
     post:
       tags:
         - userAuthentication
+      summary: the user logs in
+      operationId: UserLogin
       responses:
         "200":
           description: successful operation
@@ -44,6 +46,84 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AuthenticationData"
+  "/autenticazione/registration":
+    post:
+      tags:
+        - userAuthentication
+      summary: the user signs up
+      operationId: UserRegistration
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: weak password
+        "406":
+          description: email already present
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationData"
+  "/autenticazione/logout":
+    post:
+      tags:
+        - userAuthentication
+      summary: the user logs out
+      operationId: UserLogout
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/"
+  "/autenticazione/admin/Login":
+    post:
+      tags:
+        - adminAuthentication
+      summary: the admin logs in
+      operationId: AdminLogin
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponseAdmin"
+        "400":
+          description: incorrect credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationDataAdmin"
+  "/autenticazione/admin/Logout":
+    post:
+      tags:
+        - adminAuthentication
+      summary: the admin logs out
+      operationId: AdminLogout
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/"
   /organization:
     post:
       tags:
@@ -51,16 +131,16 @@ paths:
       summary: create a new organization
       operationId: createOrganization
       responses:
-        '405':
+        "405":
           description: Invalid input
-        '200':
+        "200":
           description: Organization created successfully
       security:
         - petstore_auth:
-            - 'write:pets'
-            - 'read:pets'
+            - "write:pets"
+            - "read:pets"
       requestBody:
-        $ref: '#/components/requestBodies/Organization'
+        $ref: "#/components/requestBodies/Organization"
   "/organization/{organizationId}":
     get:
       tags:
@@ -102,18 +182,18 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64 
+            format: int64
       responses:
-        '400':
+        "400":
           description: Invalid organizationId supplied
-        '404':
+        "404":
           description: organization not found
-        '200':
+        "200":
           description: updated successfully
-        '405':
+        "405":
           description: validation exception
       requestBody:
-        $ref: '#/components/requestBodies/Organization'
+        $ref: "#/components/requestBodies/Organization"
   "/trackMovement/organization/authenticated":
     post:
       tags:
@@ -182,13 +262,13 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceAnonymousMovement"
-  '/movement/{userId}': 
-    get:  
+  "/movement/{userId}":
+    get:
       tags:
         - movement
       summary: the user can retrive all his movements
       description: >-
-        Muliple userId can be provided with comma separated number. 
+        Muliple userId can be provided with comma separated number.
       operationId: getMovementUserId
       parameters:
         - name: userId
@@ -200,7 +280,7 @@ paths:
             type: array
             items:
               type: integer
-              format: int64 
+              format: int64
       responses:
         "200":
           description: successful operation
@@ -219,14 +299,14 @@ paths:
           description: Invalid Id supplied
         "404":
           description: Organization not found
-  '/AuthenticatedOrganizationAcces/{organizationId}':
+  "/AuthenticatedOrganizationAcces/{organizationId}":
     get:
       tags:
         - organization
       summary: the administrator can retieve all the access made in his organization
-      description: get all the access in the specified organization 
+      description: get all the access in the specified organization
       operationId: getAuthenticatedOrganizationAccess
-      parameters: 
+      parameters:
         - name: organizationId
           in: path
           description: ID of an organization
@@ -236,30 +316,30 @@ paths:
             format: int64
       responses:
         "200":
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
-              application/xml:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
-            description: Invalid Id supplied
+          description: Invalid Id supplied
         "404":
-            description: Access not found
-  '/AuthenticatedPlaceAcces/{organizationId}':
+          description: Access not found
+  "/AuthenticatedPlaceAcces/{organizationId}":
     get:
       tags:
         - place
       summary: the administrator can retieve all the access made in every place of his organization
-      description: get all the access in every place in the specified organization 
+      description: get all the access in every place in the specified organization
       operationId: getAuthenticatedPlaceAccess
-      parameters: 
+      parameters:
         - name: organizationId
           in: path
           description: ID of an organization
@@ -269,22 +349,22 @@ paths:
             format: int64
       responses:
         "200":
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/PlaceAuthenticatedMovement"
-              application/xml:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/PlaceAuthenticatedMovement"
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAuthenticatedMovement"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAuthenticatedMovement"
         "400":
-            description: Invalid Id supplied
+          description: Invalid Id supplied
         "404":
-            description: Access not found
+          description: Access not found
 components:
   schemas:
     AuthenticationData:
@@ -302,6 +382,30 @@ components:
     AuthResponse:
       type: object
       description: Data given to the user when authenticated.
+      required:
+        - token
+        - expirationDate
+      properties:
+        token:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
+    AuthenticationDataAdmin:
+      type: object
+      description: Data given to the admin when authenticated.
+      required:
+        - token
+        - expirationDate
+      properties:
+        token:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
+    AuthResponseAdmin:
+      type: object
+      description: Data given to the admin when authenticated.
       required:
         - token
         - expirationDate
@@ -646,9 +750,9 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Organization'
+            $ref: "#/components/schemas/Organization"
         application/xml:
           schema:
-            $ref: '#/components/schemas/Organization'
+            $ref: "#/components/schemas/Organization"
       description: Organization that need to be added to the database
       required: true
