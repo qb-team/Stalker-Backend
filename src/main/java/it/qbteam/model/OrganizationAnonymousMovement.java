@@ -3,9 +3,12 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Movement;
+import it.qbteam.model.OrganizationAnonymousMovementAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,34 +18,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Movement to an organization made with the authenticated trackingMode.")
 
-public class OrganizationAnonymousMovement   {
-  @JsonProperty("movement")
-  private Movement movement;
-
+public class OrganizationAnonymousMovement extends Movement  {
   @JsonProperty("organizationId")
   private Long organizationId;
-
-  public OrganizationAnonymousMovement movement(Movement movement) {
-    this.movement = movement;
-    return this;
-  }
-
-  /**
-   * Get movement
-   * @return movement
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Movement getMovement() {
-    return movement;
-  }
-
-  public void setMovement(Movement movement) {
-    this.movement = movement;
-  }
 
   public OrganizationAnonymousMovement organizationId(Long organizationId) {
     this.organizationId = organizationId;
@@ -75,21 +53,20 @@ public class OrganizationAnonymousMovement   {
       return false;
     }
     OrganizationAnonymousMovement organizationAnonymousMovement = (OrganizationAnonymousMovement) o;
-    return Objects.equals(this.movement, organizationAnonymousMovement.movement) &&
-        Objects.equals(this.organizationId, organizationAnonymousMovement.organizationId);
+    return Objects.equals(this.organizationId, organizationAnonymousMovement.organizationId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(movement, organizationId);
+    return Objects.hash(organizationId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrganizationAnonymousMovement {\n");
-    
-    sb.append("    movement: ").append(toIndentedString(movement)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("}");
     return sb.toString();

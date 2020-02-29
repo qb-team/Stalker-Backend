@@ -3,9 +3,12 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Movement;
+import it.qbteam.model.OrganizationAuthenticatedAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,37 +18,12 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Movement to an organization made with the authenticated trackingMode.")
 
-public class OrganizationAuthenticatedMovement   {
-  @JsonProperty("movement")
-  private Movement movement;
-
+public class OrganizationAuthenticatedMovement extends Movement  {
   @JsonProperty("organizationId")
   private Long organizationId;
 
   @JsonProperty("ldapId")
   private Long ldapId;
-
-  public OrganizationAuthenticatedMovement movement(Movement movement) {
-    this.movement = movement;
-    return this;
-  }
-
-  /**
-   * Get movement
-   * @return movement
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Movement getMovement() {
-    return movement;
-  }
-
-  public void setMovement(Movement movement) {
-    this.movement = movement;
-  }
 
   public OrganizationAuthenticatedMovement organizationId(Long organizationId) {
     this.organizationId = organizationId;
@@ -99,22 +77,21 @@ public class OrganizationAuthenticatedMovement   {
       return false;
     }
     OrganizationAuthenticatedMovement organizationAuthenticatedMovement = (OrganizationAuthenticatedMovement) o;
-    return Objects.equals(this.movement, organizationAuthenticatedMovement.movement) &&
-        Objects.equals(this.organizationId, organizationAuthenticatedMovement.organizationId) &&
-        Objects.equals(this.ldapId, organizationAuthenticatedMovement.ldapId);
+    return Objects.equals(this.organizationId, organizationAuthenticatedMovement.organizationId) &&
+        Objects.equals(this.ldapId, organizationAuthenticatedMovement.ldapId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(movement, organizationId, ldapId);
+    return Objects.hash(organizationId, ldapId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrganizationAuthenticatedMovement {\n");
-    
-    sb.append("    movement: ").append(toIndentedString(movement)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("    ldapId: ").append(toIndentedString(ldapId)).append("\n");
     sb.append("}");

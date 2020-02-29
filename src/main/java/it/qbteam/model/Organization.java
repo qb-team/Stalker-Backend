@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.qbteam.model.Address;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
@@ -30,17 +29,26 @@ public class Organization   {
   @JsonProperty("image")
   private String image;
 
-  @JsonProperty("address")
-  private Address address;
+  @JsonProperty("street")
+  private String street;
+
+  @JsonProperty("number")
+  private String number;
+
+  @JsonProperty("postCode")
+  private Integer postCode;
+
+  @JsonProperty("city")
+  private String city;
+
+  @JsonProperty("country")
+  private String country;
 
   @JsonProperty("serverLDAP")
   private String serverLDAP;
 
   @JsonProperty("creationDate")
-  private String creationDate;
-
-  @JsonProperty("modifyDate")
-  private Object modifyDate = null;
+  private OffsetDateTime creationDate;
 
   @JsonProperty("lastChangeDate")
   private OffsetDateTime lastChangeDate;
@@ -168,26 +176,108 @@ public class Organization   {
     this.image = image;
   }
 
-  public Organization address(Address address) {
-    this.address = address;
+  public Organization street(String street) {
+    this.street = street;
     return this;
   }
 
   /**
-   * Get address
-   * @return address
+   * The street where the organization is located.
+   * @return street
   */
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(required = true, value = "The street where the organization is located.")
   @NotNull
 
-  @Valid
 
-  public Address getAddress() {
-    return address;
+  public String getStreet() {
+    return street;
   }
 
-  public void setAddress(Address address) {
-    this.address = address;
+  public void setStreet(String street) {
+    this.street = street;
+  }
+
+  public Organization number(String number) {
+    this.number = number;
+    return this;
+  }
+
+  /**
+   * The number in the street where the organization is located.
+   * @return number
+  */
+  @ApiModelProperty(required = true, value = "The number in the street where the organization is located.")
+  @NotNull
+
+
+  public String getNumber() {
+    return number;
+  }
+
+  public void setNumber(String number) {
+    this.number = number;
+  }
+
+  public Organization postCode(Integer postCode) {
+    this.postCode = postCode;
+    return this;
+  }
+
+  /**
+   * The postcode where the organization is located.
+   * @return postCode
+  */
+  @ApiModelProperty(value = "The postcode where the organization is located.")
+
+
+  public Integer getPostCode() {
+    return postCode;
+  }
+
+  public void setPostCode(Integer postCode) {
+    this.postCode = postCode;
+  }
+
+  public Organization city(String city) {
+    this.city = city;
+    return this;
+  }
+
+  /**
+   * The city where the organization is located.
+   * @return city
+  */
+  @ApiModelProperty(required = true, value = "The city where the organization is located.")
+  @NotNull
+
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public Organization country(String country) {
+    this.country = country;
+    return this;
+  }
+
+  /**
+   * The country where the organization is located.
+   * @return country
+  */
+  @ApiModelProperty(required = true, value = "The country where the organization is located.")
+  @NotNull
+
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public Organization serverLDAP(String serverLDAP) {
@@ -210,46 +300,26 @@ public class Organization   {
     this.serverLDAP = serverLDAP;
   }
 
-  public Organization creationDate(String creationDate) {
+  public Organization creationDate(OffsetDateTime creationDate) {
     this.creationDate = creationDate;
-    return this;
-  }
-
-  /**
-   * Get creationDate
-   * @return creationDate
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-
-  public String getCreationDate() {
-    return creationDate;
-  }
-
-  public void setCreationDate(String creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public Organization modifyDate(Object modifyDate) {
-    this.modifyDate = modifyDate;
     return this;
   }
 
   /**
    * When the organization was added to the system.
-   * @return modifyDate
+   * @return creationDate
   */
   @ApiModelProperty(required = true, value = "When the organization was added to the system.")
   @NotNull
 
+  @Valid
 
-  public Object getModifyDate() {
-    return modifyDate;
+  public OffsetDateTime getCreationDate() {
+    return creationDate;
   }
 
-  public void setModifyDate(Object modifyDate) {
-    this.modifyDate = modifyDate;
+  public void setCreationDate(OffsetDateTime creationDate) {
+    this.creationDate = creationDate;
   }
 
   public Organization lastChangeDate(OffsetDateTime lastChangeDate) {
@@ -329,10 +399,13 @@ public class Organization   {
         Objects.equals(this.name, organization.name) &&
         Objects.equals(this.description, organization.description) &&
         Objects.equals(this.image, organization.image) &&
-        Objects.equals(this.address, organization.address) &&
+        Objects.equals(this.street, organization.street) &&
+        Objects.equals(this.number, organization.number) &&
+        Objects.equals(this.postCode, organization.postCode) &&
+        Objects.equals(this.city, organization.city) &&
+        Objects.equals(this.country, organization.country) &&
         Objects.equals(this.serverLDAP, organization.serverLDAP) &&
         Objects.equals(this.creationDate, organization.creationDate) &&
-        Objects.equals(this.modifyDate, organization.modifyDate) &&
         Objects.equals(this.lastChangeDate, organization.lastChangeDate) &&
         Objects.equals(this.trackingArea, organization.trackingArea) &&
         Objects.equals(this.trackingMode, organization.trackingMode);
@@ -340,7 +413,7 @@ public class Organization   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, image, address, serverLDAP, creationDate, modifyDate, lastChangeDate, trackingArea, trackingMode);
+    return Objects.hash(id, name, description, image, street, number, postCode, city, country, serverLDAP, creationDate, lastChangeDate, trackingArea, trackingMode);
   }
 
   @Override
@@ -352,10 +425,13 @@ public class Organization   {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    image: ").append(toIndentedString(image)).append("\n");
-    sb.append("    address: ").append(toIndentedString(address)).append("\n");
+    sb.append("    street: ").append(toIndentedString(street)).append("\n");
+    sb.append("    number: ").append(toIndentedString(number)).append("\n");
+    sb.append("    postCode: ").append(toIndentedString(postCode)).append("\n");
+    sb.append("    city: ").append(toIndentedString(city)).append("\n");
+    sb.append("    country: ").append(toIndentedString(country)).append("\n");
     sb.append("    serverLDAP: ").append(toIndentedString(serverLDAP)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    modifyDate: ").append(toIndentedString(modifyDate)).append("\n");
     sb.append("    lastChangeDate: ").append(toIndentedString(lastChangeDate)).append("\n");
     sb.append("    trackingArea: ").append(toIndentedString(trackingArea)).append("\n");
     sb.append("    trackingMode: ").append(toIndentedString(trackingMode)).append("\n");

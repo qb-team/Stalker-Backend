@@ -54,7 +54,7 @@ public interface OrganizationApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"address\" : { \"number\" : 6, \"city\" : \"city\", \"street\" : \"street\", \"postCode\" : 1, \"state\" : \"state\" }, \"modifyDate\" : \"\", \"name\" : \"name\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"id\" : 0, \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"creationDate\" }";
+                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -81,7 +81,7 @@ public interface OrganizationApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"address\" : { \"number\" : 6, \"city\" : \"city\", \"street\" : \"street\", \"postCode\" : 1, \"state\" : \"state\" }, \"modifyDate\" : \"\", \"name\" : \"name\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"id\" : 0, \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"creationDate\" }";
+                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -97,7 +97,7 @@ public interface OrganizationApi {
      * Updates one or more properties of a single organization.
      *
      * @param organizationId ID of an organization. (required)
-     * @param organization Organization that need to be added to the database (required)
+     * @param organization  (required)
      * @return Organization updated successfully. (status code 200)
      *         or Invalid organizationId supplied. (status code 400)
      *         or Organization not found. (status code 405)
@@ -111,11 +111,11 @@ public interface OrganizationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    default ResponseEntity<Organization> updateOrganization(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "Organization that need to be added to the database" ,required=true )  @Valid @RequestBody Organization organization) {
+    default ResponseEntity<Organization> updateOrganization(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Organization organization) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"address\" : { \"number\" : 6, \"city\" : \"city\", \"street\" : \"street\", \"postCode\" : 1, \"state\" : \"state\" }, \"modifyDate\" : \"\", \"name\" : \"name\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"id\" : 0, \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"creationDate\" }";
+                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

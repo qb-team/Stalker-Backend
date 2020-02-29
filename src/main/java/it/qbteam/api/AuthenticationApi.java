@@ -42,7 +42,7 @@ public interface AuthenticationApi {
      * POST /authentication/adminLogin : Lets the admin login via the authentication service.
      * Lets the admin login via the authentication service.
      *
-     * @param authenticationDataAdmin  (optional)
+     * @param authenticationDataAdmin  (required)
      * @return Logged in successfully. (status code 200)
      *         or Incorrect credentials. (status code 400)
      */
@@ -54,7 +54,7 @@ public interface AuthenticationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<AuthResponseAdmin> adminLogin(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) AuthenticationDataAdmin authenticationDataAdmin) {
+    default ResponseEntity<AuthResponseAdmin> adminLogin(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AuthenticationDataAdmin authenticationDataAdmin) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -90,7 +90,7 @@ public interface AuthenticationApi {
      * POST /authentication/userLogin : Lets the user login via the authentication service.
      * Lets the user login via the authentication service.
      *
-     * @param authenticationDataUser  (optional)
+     * @param authenticationDataUser  (required)
      * @return Logged in successfully. (status code 200)
      *         or Incorrect credentials. (status code 400)
      */
@@ -102,7 +102,7 @@ public interface AuthenticationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<AuthResponseUser> userLogin(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) AuthenticationDataUser authenticationDataUser) {
+    default ResponseEntity<AuthResponseUser> userLogin(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AuthenticationDataUser authenticationDataUser) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
@@ -138,7 +138,7 @@ public interface AuthenticationApi {
      * POST /authentication/userRegistration : Lets the user registrate into the system.
      * Lets the user registrate into the system.
      *
-     * @param authenticationDataUser  (optional)
+     * @param authenticationDataUser  (required)
      * @return Registered successfully. (status code 200)
      *         or Too weak password. (status code 400)
      *         or Account already present with this e-mail address. (status code 406)
@@ -152,7 +152,7 @@ public interface AuthenticationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<AuthResponseUser> userRegistration(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) AuthenticationDataUser authenticationDataUser) {
+    default ResponseEntity<AuthResponseUser> userRegistration(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AuthenticationDataUser authenticationDataUser) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {

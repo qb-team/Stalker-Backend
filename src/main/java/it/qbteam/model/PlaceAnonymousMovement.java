@@ -3,9 +3,12 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Movement;
+import it.qbteam.model.PlaceAnonymousAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,34 +18,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Movement to a place of an organization made with the anonymous trackingMode.")
 
-public class PlaceAnonymousMovement   {
-  @JsonProperty("movement")
-  private Movement movement;
-
+public class PlaceAnonymousMovement extends Movement  {
   @JsonProperty("placeId")
   private Long placeId;
-
-  public PlaceAnonymousMovement movement(Movement movement) {
-    this.movement = movement;
-    return this;
-  }
-
-  /**
-   * Get movement
-   * @return movement
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Movement getMovement() {
-    return movement;
-  }
-
-  public void setMovement(Movement movement) {
-    this.movement = movement;
-  }
 
   public PlaceAnonymousMovement placeId(Long placeId) {
     this.placeId = placeId;
@@ -75,21 +53,20 @@ public class PlaceAnonymousMovement   {
       return false;
     }
     PlaceAnonymousMovement placeAnonymousMovement = (PlaceAnonymousMovement) o;
-    return Objects.equals(this.movement, placeAnonymousMovement.movement) &&
-        Objects.equals(this.placeId, placeAnonymousMovement.placeId);
+    return Objects.equals(this.placeId, placeAnonymousMovement.placeId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(movement, placeId);
+    return Objects.hash(placeId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PlaceAnonymousMovement {\n");
-    
-    sb.append("    movement: ").append(toIndentedString(movement)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    placeId: ").append(toIndentedString(placeId)).append("\n");
     sb.append("}");
     return sb.toString();

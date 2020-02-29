@@ -44,7 +44,7 @@ public interface AccessApi {
      * @return Authenticated accesses in an organization returned successfully. (status code 200)
      *         or Accesses were not found with these organizationId. (status code 400)
      */
-    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered.", nickname = "getAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List", tags={ "organization", })
+    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered.", nickname = "getAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List", tags={ "access", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Authenticated accesses in an organization returned successfully.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Accesses were not found with these organizationId.") })
@@ -55,7 +55,7 @@ public interface AccessApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"organizationId\" : 0, \"access\" : { \"entranceTimestamp\" : \"2000-01-23T04:56:07.000+00:00\", \"exitTimestamp\" : \"2000-01-23T04:56:07.000+00:00\" }, \"ldapId\" : 6 }";
+                    String exampleString = "null";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -86,7 +86,7 @@ public interface AccessApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"organizationId\" : 0, \"access\" : { \"entranceTimestamp\" : \"2000-01-23T04:56:07.000+00:00\", \"exitTimestamp\" : \"2000-01-23T04:56:07.000+00:00\" }, \"ldapId\" : 6 }";
+                    String exampleString = "null";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -116,7 +116,7 @@ public interface AccessApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"access\" : { \"entranceTimestamp\" : \"2000-01-23T04:56:07.000+00:00\", \"exitTimestamp\" : \"2000-01-23T04:56:07.000+00:00\" }, \"placeId\" : 0, \"ldapId\" : 6 }";
+                    String exampleString = "null";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -147,7 +147,7 @@ public interface AccessApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"access\" : { \"entranceTimestamp\" : \"2000-01-23T04:56:07.000+00:00\", \"exitTimestamp\" : \"2000-01-23T04:56:07.000+00:00\" }, \"placeId\" : 0, \"ldapId\" : 6 }";
+                    String exampleString = "null";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

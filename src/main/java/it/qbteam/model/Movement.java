@@ -3,6 +3,8 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +18,21 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic movement in an organization or in a place of it.")
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "movementDiscriminator", visible = true)
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = PlaceAuthenticatedMovement.class, name = "PlaceAuthenticatedMovement"),
+  @JsonSubTypes.Type(value = OrganizationAuthenticatedMovement.class, name = "OrganizationAuthenticatedMovement"),
+  @JsonSubTypes.Type(value = PlaceAnonymousMovement.class, name = "PlaceAnonymousMovement"),
+  @JsonSubTypes.Type(value = OrganizationAnonymousMovement.class, name = "OrganizationAnonymousMovement"),
+})
+
 public class Movement   {
+  @JsonProperty("id")
+  private Long id;
+
+  @JsonProperty("movementDiscriminator")
+  private String movementDiscriminator;
+
   @JsonProperty("timestamp")
   private OffsetDateTime timestamp;
 
@@ -57,6 +73,48 @@ public class Movement   {
 
   @JsonProperty("movementType")
   private MovementTypeEnum movementType;
+
+  public Movement id(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   * @return id
+  */
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Movement movementDiscriminator(String movementDiscriminator) {
+    this.movementDiscriminator = movementDiscriminator;
+    return this;
+  }
+
+  /**
+   * Get movementDiscriminator
+   * @return movementDiscriminator
+  */
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+
+  public String getMovementDiscriminator() {
+    return movementDiscriminator;
+  }
+
+  public void setMovementDiscriminator(String movementDiscriminator) {
+    this.movementDiscriminator = movementDiscriminator;
+  }
 
   public Movement timestamp(OffsetDateTime timestamp) {
     this.timestamp = timestamp;
@@ -111,13 +169,15 @@ public class Movement   {
       return false;
     }
     Movement movement = (Movement) o;
-    return Objects.equals(this.timestamp, movement.timestamp) &&
+    return Objects.equals(this.id, movement.id) &&
+        Objects.equals(this.movementDiscriminator, movement.movementDiscriminator) &&
+        Objects.equals(this.timestamp, movement.timestamp) &&
         Objects.equals(this.movementType, movement.movementType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(timestamp, movementType);
+    return Objects.hash(id, movementDiscriminator, timestamp, movementType);
   }
 
   @Override
@@ -125,6 +185,8 @@ public class Movement   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Movement {\n");
     
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    movementDiscriminator: ").append(toIndentedString(movementDiscriminator)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("    movementType: ").append(toIndentedString(movementType)).append("\n");
     sb.append("}");

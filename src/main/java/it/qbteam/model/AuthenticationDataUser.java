@@ -33,7 +33,7 @@ public class AuthenticationDataUser   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-
+@javax.validation.constraints.Email
   public String getMail() {
     return mail;
   }

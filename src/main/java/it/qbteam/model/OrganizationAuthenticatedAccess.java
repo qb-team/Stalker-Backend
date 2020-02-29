@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
+import it.qbteam.model.OrganizationAuthenticatedAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,37 +17,12 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Access to an organization made with the authenticated trackingMode.")
 
-public class OrganizationAuthenticatedAccess   {
-  @JsonProperty("access")
-  private Access access;
-
+public class OrganizationAuthenticatedAccess extends Access  {
   @JsonProperty("organizationId")
   private Long organizationId;
 
   @JsonProperty("ldapId")
   private Long ldapId;
-
-  public OrganizationAuthenticatedAccess access(Access access) {
-    this.access = access;
-    return this;
-  }
-
-  /**
-   * Get access
-   * @return access
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Access getAccess() {
-    return access;
-  }
-
-  public void setAccess(Access access) {
-    this.access = access;
-  }
 
   public OrganizationAuthenticatedAccess organizationId(Long organizationId) {
     this.organizationId = organizationId;
@@ -99,22 +76,21 @@ public class OrganizationAuthenticatedAccess   {
       return false;
     }
     OrganizationAuthenticatedAccess organizationAuthenticatedAccess = (OrganizationAuthenticatedAccess) o;
-    return Objects.equals(this.access, organizationAuthenticatedAccess.access) &&
-        Objects.equals(this.organizationId, organizationAuthenticatedAccess.organizationId) &&
-        Objects.equals(this.ldapId, organizationAuthenticatedAccess.ldapId);
+    return Objects.equals(this.organizationId, organizationAuthenticatedAccess.organizationId) &&
+        Objects.equals(this.ldapId, organizationAuthenticatedAccess.ldapId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(access, organizationId, ldapId);
+    return Objects.hash(organizationId, ldapId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrganizationAuthenticatedAccess {\n");
-    
-    sb.append("    access: ").append(toIndentedString(access)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("    ldapId: ").append(toIndentedString(ldapId)).append("\n");
     sb.append("}");

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
+import it.qbteam.model.PlaceAuthenticatedAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,37 +17,12 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Access to a place of an organization made with the authenticated trackingMode.")
 
-public class PlaceAuthenticatedAccess   {
-  @JsonProperty("access")
-  private Access access;
-
+public class PlaceAuthenticatedAccess extends Access  {
   @JsonProperty("placeId")
   private Long placeId;
 
   @JsonProperty("ldapId")
   private Long ldapId;
-
-  public PlaceAuthenticatedAccess access(Access access) {
-    this.access = access;
-    return this;
-  }
-
-  /**
-   * Get access
-   * @return access
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Access getAccess() {
-    return access;
-  }
-
-  public void setAccess(Access access) {
-    this.access = access;
-  }
 
   public PlaceAuthenticatedAccess placeId(Long placeId) {
     this.placeId = placeId;
@@ -99,22 +76,21 @@ public class PlaceAuthenticatedAccess   {
       return false;
     }
     PlaceAuthenticatedAccess placeAuthenticatedAccess = (PlaceAuthenticatedAccess) o;
-    return Objects.equals(this.access, placeAuthenticatedAccess.access) &&
-        Objects.equals(this.placeId, placeAuthenticatedAccess.placeId) &&
-        Objects.equals(this.ldapId, placeAuthenticatedAccess.ldapId);
+    return Objects.equals(this.placeId, placeAuthenticatedAccess.placeId) &&
+        Objects.equals(this.ldapId, placeAuthenticatedAccess.ldapId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(access, placeId, ldapId);
+    return Objects.hash(placeId, ldapId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PlaceAuthenticatedAccess {\n");
-    
-    sb.append("    access: ").append(toIndentedString(access)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    placeId: ").append(toIndentedString(placeId)).append("\n");
     sb.append("    ldapId: ").append(toIndentedString(ldapId)).append("\n");
     sb.append("}");

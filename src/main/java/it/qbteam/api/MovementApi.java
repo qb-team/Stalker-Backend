@@ -42,7 +42,7 @@ public interface MovementApi {
      * POST /movement/track/organization/anonymous : Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
      * Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
      *
-     * @param organizationAnonymousMovement  (optional)
+     * @param organizationAnonymousMovement  (required)
      * @return Movement successfully tracked. (status code 200)
      *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
      */
@@ -53,7 +53,7 @@ public interface MovementApi {
     @RequestMapping(value = "/movement/track/organization/anonymous",
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAnonymousMovementInOrganization(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) OrganizationAnonymousMovement organizationAnonymousMovement) {
+    default ResponseEntity<Void> trackAnonymousMovementInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationAnonymousMovement organizationAnonymousMovement) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -63,7 +63,7 @@ public interface MovementApi {
      * POST /movement/track/place/anonymous : Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
      * Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
      *
-     * @param placeAnonymousMovement  (optional)
+     * @param placeAnonymousMovement  (required)
      * @return Movement successfully tracked. (status code 200)
      *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
      */
@@ -74,7 +74,7 @@ public interface MovementApi {
     @RequestMapping(value = "/movement/track/place/anonymous",
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAnonymousMovementInPlace(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) PlaceAnonymousMovement placeAnonymousMovement) {
+    default ResponseEntity<Void> trackAnonymousMovementInPlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody PlaceAnonymousMovement placeAnonymousMovement) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -84,7 +84,7 @@ public interface MovementApi {
      * POST /movement/track/organization/authenticated : Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
      * Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
      *
-     * @param organizationAuthenticatedMovement  (optional)
+     * @param organizationAuthenticatedMovement  (required)
      * @return Movement successfully tracked. (status code 200)
      *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
      */
@@ -95,7 +95,7 @@ public interface MovementApi {
     @RequestMapping(value = "/movement/track/organization/authenticated",
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAuthenticatedMovementInOrganization(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) OrganizationAuthenticatedMovement organizationAuthenticatedMovement) {
+    default ResponseEntity<Void> trackAuthenticatedMovementInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationAuthenticatedMovement organizationAuthenticatedMovement) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
@@ -105,7 +105,7 @@ public interface MovementApi {
      * POST /movement/track/place/authenticated : Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
      * Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
      *
-     * @param placeAuthenticatedMovement  (optional)
+     * @param placeAuthenticatedMovement  (required)
      * @return Movement successfully tracked. (status code 200)
      *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
      */
@@ -116,7 +116,7 @@ public interface MovementApi {
     @RequestMapping(value = "/movement/track/place/authenticated",
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAuthenticatedMovementInPlace(@ApiParam(value = ""  )  @Valid @RequestBody(required = false) PlaceAuthenticatedMovement placeAuthenticatedMovement) {
+    default ResponseEntity<Void> trackAuthenticatedMovementInPlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody PlaceAuthenticatedMovement placeAuthenticatedMovement) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

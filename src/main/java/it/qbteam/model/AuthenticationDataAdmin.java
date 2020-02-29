@@ -5,64 +5,62 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Data given to the admin when authenticated.
+ * Data requested to the admin when authenticating to the system.
  */
-@ApiModel(description = "Data given to the admin when authenticated.")
+@ApiModel(description = "Data requested to the admin when authenticating to the system.")
 
 public class AuthenticationDataAdmin   {
-  @JsonProperty("token")
-  private String token;
+  @JsonProperty("mail")
+  private String mail;
 
-  @JsonProperty("expirationDate")
-  private OffsetDateTime expirationDate;
+  @JsonProperty("password")
+  private String password;
 
-  public AuthenticationDataAdmin token(String token) {
-    this.token = token;
+  public AuthenticationDataAdmin mail(String mail) {
+    this.mail = mail;
     return this;
   }
 
   /**
-   * Get token
-   * @return token
+   * Get mail
+   * @return mail
+  */
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
+
+@javax.validation.constraints.Email
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
+  }
+
+  public AuthenticationDataAdmin password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * Get password
+   * @return password
   */
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
 
-  public String getToken() {
-    return token;
+  public String getPassword() {
+    return password;
   }
 
-  public void setToken(String token) {
-    this.token = token;
-  }
-
-  public AuthenticationDataAdmin expirationDate(OffsetDateTime expirationDate) {
-    this.expirationDate = expirationDate;
-    return this;
-  }
-
-  /**
-   * Get expirationDate
-   * @return expirationDate
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public OffsetDateTime getExpirationDate() {
-    return expirationDate;
-  }
-
-  public void setExpirationDate(OffsetDateTime expirationDate) {
-    this.expirationDate = expirationDate;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
 
@@ -75,13 +73,13 @@ public class AuthenticationDataAdmin   {
       return false;
     }
     AuthenticationDataAdmin authenticationDataAdmin = (AuthenticationDataAdmin) o;
-    return Objects.equals(this.token, authenticationDataAdmin.token) &&
-        Objects.equals(this.expirationDate, authenticationDataAdmin.expirationDate);
+    return Objects.equals(this.mail, authenticationDataAdmin.mail) &&
+        Objects.equals(this.password, authenticationDataAdmin.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(token, expirationDate);
+    return Objects.hash(mail, password);
   }
 
   @Override
@@ -89,8 +87,8 @@ public class AuthenticationDataAdmin   {
     StringBuilder sb = new StringBuilder();
     sb.append("class AuthenticationDataAdmin {\n");
     
-    sb.append("    token: ").append(toIndentedString(token)).append("\n");
-    sb.append("    expirationDate: ").append(toIndentedString(expirationDate)).append("\n");
+    sb.append("    mail: ").append(toIndentedString(mail)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");
     return sb.toString();
   }

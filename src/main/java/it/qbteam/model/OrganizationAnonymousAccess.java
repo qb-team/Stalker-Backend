@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
+import it.qbteam.model.OrganizationAnonymousAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,34 +17,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Access to an organization made with the authenticated trackingMode.")
 
-public class OrganizationAnonymousAccess   {
-  @JsonProperty("access")
-  private Access access;
-
+public class OrganizationAnonymousAccess extends Access  {
   @JsonProperty("organizationId")
   private Long organizationId;
-
-  public OrganizationAnonymousAccess access(Access access) {
-    this.access = access;
-    return this;
-  }
-
-  /**
-   * Get access
-   * @return access
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Access getAccess() {
-    return access;
-  }
-
-  public void setAccess(Access access) {
-    this.access = access;
-  }
 
   public OrganizationAnonymousAccess organizationId(Long organizationId) {
     this.organizationId = organizationId;
@@ -75,21 +52,20 @@ public class OrganizationAnonymousAccess   {
       return false;
     }
     OrganizationAnonymousAccess organizationAnonymousAccess = (OrganizationAnonymousAccess) o;
-    return Objects.equals(this.access, organizationAnonymousAccess.access) &&
-        Objects.equals(this.organizationId, organizationAnonymousAccess.organizationId);
+    return Objects.equals(this.organizationId, organizationAnonymousAccess.organizationId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(access, organizationId);
+    return Objects.hash(organizationId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrganizationAnonymousAccess {\n");
-    
-    sb.append("    access: ").append(toIndentedString(access)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("}");
     return sb.toString();

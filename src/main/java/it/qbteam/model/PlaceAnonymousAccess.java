@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
+import it.qbteam.model.PlaceAnonymousAccessAllOf;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,34 +17,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Access to a place of an organization made with the anonymous trackingMode.")
 
-public class PlaceAnonymousAccess   {
-  @JsonProperty("access")
-  private Access access;
-
+public class PlaceAnonymousAccess extends Access  {
   @JsonProperty("placeId")
   private Long placeId;
-
-  public PlaceAnonymousAccess access(Access access) {
-    this.access = access;
-    return this;
-  }
-
-  /**
-   * Get access
-   * @return access
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Access getAccess() {
-    return access;
-  }
-
-  public void setAccess(Access access) {
-    this.access = access;
-  }
 
   public PlaceAnonymousAccess placeId(Long placeId) {
     this.placeId = placeId;
@@ -75,21 +52,20 @@ public class PlaceAnonymousAccess   {
       return false;
     }
     PlaceAnonymousAccess placeAnonymousAccess = (PlaceAnonymousAccess) o;
-    return Objects.equals(this.access, placeAnonymousAccess.access) &&
-        Objects.equals(this.placeId, placeAnonymousAccess.placeId);
+    return Objects.equals(this.placeId, placeAnonymousAccess.placeId) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(access, placeId);
+    return Objects.hash(placeId, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PlaceAnonymousAccess {\n");
-    
-    sb.append("    access: ").append(toIndentedString(access)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    placeId: ").append(toIndentedString(placeId)).append("\n");
     sb.append("}");
     return sb.toString();
