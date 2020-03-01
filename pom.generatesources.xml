@@ -159,7 +159,7 @@
 						<configuration>
 							<inputSpec>${project.basedir}/swagger.yaml</inputSpec>
 							<skipValidateSpec>false</skipValidateSpec>
-							<generatorName>java</generatorName>
+							<generatorName>android</generatorName>
 							<invokerPackage>it.qbteam</invokerPackage>
 							<groupId>it.qbteam</groupId>
 							<artifactId>stalker-app</artifactId>
@@ -169,11 +169,10 @@
 							<modelPackage>it.qbteam.model</modelPackage>
 							<configHelp>false</configHelp>
 							<configOptions>
-								<sourceFolder>android</sourceFolder>
-								<interfaceOnly>true</interfaceOnly>
+								<sourceFolder>src/main/java</sourceFolder>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
-								<hideGenerationTimestamp>true</hideGenerationTimestamp>
+								<useBeanValidation>true</useBeanValidation>
 							</configOptions>
 						</configuration>
 					</execution>
