@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,8 +16,9 @@ import javax.validation.constraints.*;
  * Area of an organization subjected to tracking.
  */
 @ApiModel(description = "Area of an organization subjected to tracking.")
-
+@Entity
 public class Place   {
+  @Id
   @JsonProperty("id")
   private Long id;
 

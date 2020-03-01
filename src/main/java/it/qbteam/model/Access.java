@@ -9,6 +9,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -24,8 +29,10 @@ import javax.validation.constraints.*;
   @JsonSubTypes.Type(value = PlaceAnonymousAccess.class, name = "PlaceAnonymousAccess"),
   @JsonSubTypes.Type(value = OrganizationAnonymousAccess.class, name = "OrganizationAnonymousAccess"),
 })
-
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Access   {
+  @Id
   @JsonProperty("id")
   private Long id;
 

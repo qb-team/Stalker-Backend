@@ -6,17 +6,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.IdClass;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * User
  */
-
+@Entity
+@IdClass(UserId.class)
 public class User   {
+  @Id
   @JsonProperty("userId")
   private String userId;
 
+  @Id
   @JsonProperty("ldapId")
   private Integer ldapId;
 
