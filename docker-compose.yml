@@ -6,7 +6,7 @@ services:
     env_file: 
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PSW}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
     volumes:
       - ./container/mysql:/var/lib/mysql
     ports:
@@ -23,4 +23,4 @@ services:
       - .env
     environment:
       PMA_HOST: mysql_engine
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PSW}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
