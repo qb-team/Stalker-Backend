@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -19,6 +20,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
 @Entity
+@Table(name="organization")
 public class Organization   {
   @Id
   @JsonProperty("id")
