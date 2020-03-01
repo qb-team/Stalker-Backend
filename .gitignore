@@ -180,4 +180,4 @@ buildNumber.properties
 # End of https://www.gitignore.io/api/code,java,maven,eclipse,intellij+iml
 
 ### Docker ###
-./container/mysql/
+./container/mysql/*
