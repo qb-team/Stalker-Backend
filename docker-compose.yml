@@ -8,7 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
     volumes:
-      - ./containers/mysql-container/mysql:/var/lib/mysql
+      - ./containers/mysql-container/data:/var/lib/mysql
     ports:
       - "33060:3306"
   phpmyadmin:
@@ -24,10 +24,10 @@ services:
     environment:
       PMA_HOST: mysql_engine
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
-  redis_stalker:
+  redis_engine:
     container_name: stalker-nosql
     build: ./containers/redis-container
     ports:
       - "63800:6380"
     volumes:
-      - .containers/redis-container/data:/data
+      - ./containers/redis-container/data:/data
