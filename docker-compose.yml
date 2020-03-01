@@ -3,8 +3,10 @@ services:
   mysql_engine:
     container_name: stalker-rdbms
     build: ./container
+    env_file: 
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_PSW
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PSW}
     volumes:
       - ./container/mysql:/var/lib/mysql
     ports:
@@ -17,6 +19,8 @@ services:
     restart: always
     ports:
       - '5000:80'
+    env_file: 
+      - .env
     environment:
       PMA_HOST: mysql_engine
-      MYSQL_ROOT_PASSWORD: $MYSQL_PSW
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PSW}

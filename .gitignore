@@ -181,3 +181,4 @@ buildNumber.properties
 
 ### Docker ###
 container/mysql/*
+.env
