@@ -1,15 +1,33 @@
 package it.qbteam.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.NativeWebRequest;
+
+import org.springframework.http.MediaType;
+
 import org.springframework.http.HttpStatus;
 
 import it.qbteam.api.OrganizationApi;
 import it.qbteam.model.Organization;
+import it.qbteam.repository.OrganizationRepository;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class OrganizationApiController implements OrganizationApi {
+    private OrganizationRepository orgRepo;
+
+    private boolean checkCompatibility(NativeWebRequest nwRequest, String mediaType) {
+        boolean compatible = false;
+        for (MediaType m : MediaType.parseMediaTypes(nwRequest.getHeader("Accept"))) {
+            compatible = m.isCompatibleWith(MediaType.valueOf(mediaType));
+        }
+        return compatible;
+    }
     /**
      * GET /organization/{organizationId} : Gets the data of a single organization.
      * Gets the data of a single organization.
@@ -20,7 +38,15 @@ public class OrganizationApiController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Organization> getOrganizationById(Long organizationId) {
-        return null;
+        Optional<NativeWebRequest> nwr = getRequest();
+        Optional<Organization> org;
+        if(nwr.isPresent() && checkCompatibility(getRequest().get(), "application/json"))
+        {
+            org = orgRepo.findById(organizationId);
+            if(org.isPresent())
+                return new ResponseEntity<Organization>(org.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<Organization>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -31,7 +57,13 @@ public class OrganizationApiController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
-        return null;
+        Optional<NativeWebRequest> nwr = getRequest();
+        List<Organization> orgList = new ArrayList<Organization>();
+        if(nwr.isPresent() && checkCompatibility(getRequest().get(), "application/json"))
+        {
+            orgRepo.findAll().forEach(orgList::add);
+        }
+        return new ResponseEntity<List<Organization>>(orgList, HttpStatus.OK);
     }
 
     /**
@@ -46,6 +78,6 @@ public class OrganizationApiController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Organization> updateOrganization(Long organizationId, @Valid Organization organization) {
-        return null;
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
