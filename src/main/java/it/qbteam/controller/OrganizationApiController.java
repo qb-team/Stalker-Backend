@@ -3,7 +3,6 @@ package it.qbteam.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
-
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import it.qbteam.repository.OrganizationRepository;
 import javax.validation.Valid;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,17 +41,12 @@ public class OrganizationApiController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Organization> getOrganizationById(Long organizationId) {
-        Optional<NativeWebRequest> nwr = getRequest();
-        Optional<Organization> org;
-        System.out.println("Get ID before if");
-        if(nwr.isPresent() && checkCompatibility(getRequest().get(), "application/json"))
-        {
-            System.out.println("Get ID inside if");
-            org = orgRepo.findById(organizationId);
-            if(org.isPresent())
-                return new ResponseEntity<Organization>(org.get(), HttpStatus.OK);
+        Optional<Organization> org = orgRepo.findById(organizationId);
+
+        if(org.isPresent()) {
+            return new ResponseEntity<Organization>(org.get(), HttpStatus.OK);
         }
-        System.out.println("Get ID after if");
+
         return new ResponseEntity<Organization>(HttpStatus.BAD_REQUEST);
     }
 
@@ -65,15 +58,10 @@ public class OrganizationApiController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
-        Optional<NativeWebRequest> nwr = getRequest();
         List<Organization> orgList = new ArrayList<Organization>();
-        System.out.println("Get List before if");
-        if(nwr.isPresent() && checkCompatibility(nwr.get(), "application/json"))
-        {
-            System.out.println("Get List inside if");
-            orgRepo.findAll().forEach(orgList::add);
-        }
-        System.out.println("Get List after if" + nwr.isPresent());
+        
+        orgRepo.findAll().forEach(orgList::add);
+        
         return new ResponseEntity<List<Organization>>(orgList, HttpStatus.OK);
     }
 

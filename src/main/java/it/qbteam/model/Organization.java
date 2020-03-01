@@ -11,7 +11,12 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -23,42 +28,56 @@ import javax.validation.constraints.*;
 @Table(name="organization")
 public class Organization   {
   @Id
+  @Column(name="id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
   private Long id;
 
+  @Column(name="name")
   @JsonProperty("name")
   private String name;
 
+  @Column(name="description")
   @JsonProperty("description")
   private String description;
 
+  @Column(name="image")
   @JsonProperty("image")
   private String image;
 
+  @Column(name="street")
   @JsonProperty("street")
   private String street;
 
+  @Column(name="number")
   @JsonProperty("number")
   private String number;
 
+  @Column(name="post_code")
   @JsonProperty("postCode")
   private Integer postCode;
 
+  @Column(name="city")
   @JsonProperty("city")
   private String city;
 
+  @Column(name="country")
   @JsonProperty("country")
   private String country;
 
+  @Column(name="server_ldap")
   @JsonProperty("serverLDAP")
   private String serverLDAP;
 
+  @Column(name="creation_date")
   @JsonProperty("creationDate")
   private OffsetDateTime creationDate;
 
+  @Column(name="last_change_date")
   @JsonProperty("lastChangeDate")
   private OffsetDateTime lastChangeDate;
 
+  @Column(name="tracking_area")
   @JsonProperty("trackingArea")
   private String trackingArea;
 
@@ -97,6 +116,8 @@ public class Organization   {
     }
   }
 
+  @Enumerated(EnumType.STRING)
+  @Column(name="tracking_mode")
   @JsonProperty("trackingMode")
   private TrackingModeEnum trackingMode;
 
