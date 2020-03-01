@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,11 +18,14 @@ import javax.validation.constraints.*;
  * What can or cannot do an organization&#39;s administrator.
  */
 @ApiModel(description = "What can or cannot do an organization's administrator.")
-
+@Entity
+@IdClass(PermissionId.class)
 public class Permission   {
+  @Id
   @JsonProperty("administratorId")
   private String administratorId;
 
+  @Id
   @JsonProperty("organizationId")
   private Long organizationId;
 

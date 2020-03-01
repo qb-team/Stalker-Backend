@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Movement;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,7 +18,7 @@ import javax.validation.constraints.*;
  * Movement to a place of an organization made with the anonymous trackingMode.
  */
 @ApiModel(description = "Movement to a place of an organization made with the anonymous trackingMode.")
-
+@Entity
 public class PlaceAnonymousMovement extends Movement  {
   @JsonProperty("placeId")
   private Long placeId;

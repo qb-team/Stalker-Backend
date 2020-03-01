@@ -7,6 +7,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import it.qbteam.model.FavoriteId;
+
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.IdClass;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,11 +20,14 @@ import javax.validation.constraints.*;
  * Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.
  */
 @ApiModel(description = "Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.")
-
+@Entity
+@IdClass(FavoriteId.class)
 public class Favorite   {
+  @Id
   @JsonProperty("userId")
   private String userId;
 
+  @Id
   @JsonProperty("organizationId")
   private Long organizationId;
 

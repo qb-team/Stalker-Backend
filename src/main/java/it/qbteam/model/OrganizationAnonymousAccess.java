@@ -8,6 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,7 +19,7 @@ import javax.validation.constraints.*;
  * Access to an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Access to an organization made with the authenticated trackingMode.")
-
+@Entity
 public class OrganizationAnonymousAccess extends Access  {
   @JsonProperty("organizationId")
   private Long organizationId;

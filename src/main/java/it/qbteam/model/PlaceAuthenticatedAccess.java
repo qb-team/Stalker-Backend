@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Access;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,7 +17,7 @@ import javax.validation.constraints.*;
  * Access to a place of an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Access to a place of an organization made with the authenticated trackingMode.")
-
+@Entity
 public class PlaceAuthenticatedAccess extends Access  {
   @JsonProperty("placeId")
   private Long placeId;

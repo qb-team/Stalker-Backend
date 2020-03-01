@@ -10,6 +10,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -25,8 +30,10 @@ import javax.validation.constraints.*;
   @JsonSubTypes.Type(value = PlaceAnonymousMovement.class, name = "PlaceAnonymousMovement"),
   @JsonSubTypes.Type(value = OrganizationAnonymousMovement.class, name = "OrganizationAnonymousMovement"),
 })
-
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Movement   {
+  @Id
   @JsonProperty("id")
   private Long id;
 
