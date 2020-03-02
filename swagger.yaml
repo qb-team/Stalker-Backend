@@ -386,8 +386,8 @@ paths:
     get:
       tags:
         - presence
-      summary: Gets the the number of presence in a specified organization.
-      description: Gets the the number of presence in a specified organization.
+      summary: Gets the number of presences in an organization given its organizationId.
+      description: Gets the number of presences in an organization given its organizationId.
       operationId: getOrganizationPresenceCounterById
       parameters:
         - name: organizationId
@@ -410,13 +410,13 @@ paths:
     get:
       tags:
         - presence
-      summary: Gets the the number of presence in a specified place.
-      description: Gets the the number of presence in a specified place.
+      summary: Gets the number of presences in a place given its placeId.
+      description: Gets the number of presences in a place given its placeId.
       operationId: getPlacePresenceCounterById
       parameters:
         - name: placeId
           in: path
-          description: ID of an place.
+          description: ID of a place.
           required: true
           schema:
             type: integer
@@ -730,7 +730,7 @@ components:
             description: Unique identifier of the organization in which the user had access.
     OrganizationPresenceCounter:
       type: object
-      description: Number of people currently inside the organization.
+      description: Number of people currently inside the organization's trackingArea.
       required:
         - organizationId
         - counter
@@ -738,12 +738,14 @@ components:
         organizationId:
           type: integer
           format: int64
+          description: Unique identifier of the organization.
         counter:
           type: integer
           format: int32
+          description: Number of people currently inside the organization's trackingArea.
     PlacePresenceCounter:
       type: object
-      description: Number of people currently inside a organization's place.
+      description: Number of people currently inside a place of an organization.
       required:
         - placeId
         - counter
@@ -751,9 +753,11 @@ components:
         placeId:
           type: integer
           format: int64
+          description: Unique identifier of the place.
         counter:
           type: integer
           format: int32     
+          description: Number of people currently inside a place of an organization.
     Movement:
       type: object
       description: Generic movement in an organization or in a place of it.
