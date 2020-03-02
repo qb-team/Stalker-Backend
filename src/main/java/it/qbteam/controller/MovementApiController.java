@@ -5,7 +5,7 @@ import it.qbteam.model.OrganizationAnonymousMovement;
 import it.qbteam.model.OrganizationAuthenticatedMovement;
 import it.qbteam.model.PlaceAnonymousMovement;
 import it.qbteam.model.PlaceAuthenticatedMovement;
-import it.qbteam.repository.OrganizationAnonymousMovementRepository;
+import it.qbteam.repository.nosql.OrganizationAnonymousMovementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
