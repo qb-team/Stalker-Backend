@@ -1,6 +1,8 @@
 package it.qbteam.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -13,11 +15,12 @@ import it.qbteam.repository.nosql.PlacePresenceCounterRepository;
 
 @Controller
 public class PresenceApiController implements PresenceApi {
-    // @Autowired
-    // private OrganizationPresenceCounterRepository orgPresCounterRepo;
+    private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
+    private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
-    // @Autowired
-    // private PlacePresenceCounterRepository plcPresCounterRepo;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
     /**
      * GET /presence/{organizationId} : Gets the number of presences in an organization given its organizationId.
      * Gets the number of presences in an organization given its organizationId.
@@ -28,7 +31,8 @@ public class PresenceApiController implements PresenceApi {
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounterById(Long organizationId) {
-        return null;
+        OrganizationPresenceCounter counter = (OrganizationPresenceCounter) redisTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId);
+        return new ResponseEntity<OrganizationPresenceCounter>(counter, HttpStatus.OK);
     }
 
     /**
@@ -41,6 +45,6 @@ public class PresenceApiController implements PresenceApi {
      */
     @Override
     public ResponseEntity<PlacePresenceCounter> getPlacePresenceCounterById(Long placeId) {
-        return null;
+        return new ResponseEntity<PlacePresenceCounter>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
