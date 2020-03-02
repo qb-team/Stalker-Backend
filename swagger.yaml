@@ -26,6 +26,8 @@ tags:
     description: Movement related endpoints.
   - name: access
     description: Access related endpoints.
+  - name: presence
+    description: Presence related endpoints.
 paths:
   "/authentication/userLogin":
     post:
