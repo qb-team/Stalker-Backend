@@ -28,6 +28,6 @@ services:
     container_name: stalker-nosql
     build: ./containers/redis-container
     ports:
-      - "63800:6380"
+      - "63790:6379"
     volumes:
       - ./containers/redis-container/data:/data
