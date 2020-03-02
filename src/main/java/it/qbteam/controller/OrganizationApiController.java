@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import it.qbteam.api.OrganizationApi;
@@ -44,7 +45,9 @@ public class OrganizationApiController implements OrganizationApi {
         Optional<Organization> org = orgRepo.findById(organizationId);
 
         if(org.isPresent()) {
-            return new ResponseEntity<Organization>(org.get(), HttpStatus.OK);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Access-Control-Allow-Origin","http://localhost:4200");
+            return new ResponseEntity<Organization>(org.get(), responseHeaders, HttpStatus.OK);
         }
 
         return new ResponseEntity<Organization>(HttpStatus.BAD_REQUEST);
@@ -59,10 +62,11 @@ public class OrganizationApiController implements OrganizationApi {
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
         List<Organization> orgList = new ArrayList<Organization>();
-        
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin","http://localhost:4200");
         orgRepo.findAll().forEach(orgList::add);
         
-        return new ResponseEntity<List<Organization>>(orgList, HttpStatus.OK);
+        return new ResponseEntity<List<Organization>>(orgList, responseHeaders, HttpStatus.OK);
     }
 
     /**
