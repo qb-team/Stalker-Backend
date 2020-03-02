@@ -44,9 +44,20 @@ public class RedisConfig {
     }
     
 
-    @Bean
-	RedisTemplate<String,Object> getRedisTemplate() {
-		RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+    @Bean(name="counter")
+	RedisTemplate<String,Integer> getRedisCounterTemplate() {
+		RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(connectionFactory());
+		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+		redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
+		redisTemplate.setKeySerializer(new StringRedisSerializer());
+		redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
+		return redisTemplate;
+    }
+    
+    @Bean(name="movement")
+	RedisTemplate<String,String> getRedisMovementTemplate() {
+		RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(connectionFactory());
 		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
 		redisTemplate.setHashValueSerializer(new StringRedisSerializer());

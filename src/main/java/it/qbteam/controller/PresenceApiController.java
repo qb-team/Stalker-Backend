@@ -1,6 +1,7 @@
 package it.qbteam.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class PresenceApiController implements PresenceApi {
     private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
     private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    @Autowired @Qualifier("counter")
+    RedisTemplate<String, Integer> counterTemplate;
 
     /**
      * GET /presence/{organizationId} : Gets the number of presences in an organization given its organizationId.
@@ -31,8 +32,8 @@ public class PresenceApiController implements PresenceApi {
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounterById(Long organizationId) {
-        OrganizationPresenceCounter counter = (OrganizationPresenceCounter) redisTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId);
-        return new ResponseEntity<OrganizationPresenceCounter>(counter, HttpStatus.OK);
+        Integer counter = (Integer) counterTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId.toString());
+        return new ResponseEntity<OrganizationPresenceCounter>(new OrganizationPresenceCounter().counter(counter).organizationId(organizationId), HttpStatus.OK);
     }
 
     /**

@@ -8,6 +8,7 @@ import it.qbteam.model.PlaceAuthenticatedMovement;
 import it.qbteam.repository.nosql.OrganizationAnonymousMovementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,11 @@ public class MovementApiController implements MovementApi {
     private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
     private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    @Autowired @Qualifier("movement")
+    RedisTemplate<String, String> movementTemplate;
+
+    @Autowired @Qualifier("counter")
+    RedisTemplate<String, Integer> counterTemplate;
     
     @Autowired
     private OrganizationAnonymousMovementRepository orgAnonRepo;
@@ -41,17 +45,17 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
-        redisTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId(), organizationAnonymousMovement);
+        movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
 
         switch(organizationAnonymousMovement.getMovementType()) {
             case ENTRANCE:
                 // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
-                redisTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId(), 0);
+                counterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
                 // increment: increments the presence counter
-                redisTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId(), 1);
+                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
             break;
             case EXIT:
-                redisTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId(), -1);
+                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
             break;
         }
         return new ResponseEntity<>(HttpStatus.OK);
