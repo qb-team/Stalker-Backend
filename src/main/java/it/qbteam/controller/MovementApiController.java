@@ -5,11 +5,16 @@ import it.qbteam.model.OrganizationAnonymousMovement;
 import it.qbteam.model.OrganizationAuthenticatedMovement;
 import it.qbteam.model.PlaceAnonymousMovement;
 import it.qbteam.model.PlaceAuthenticatedMovement;
+import it.qbteam.repository.OrganizationAnonymousMovementRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
 
 public class MovementApiController implements MovementApi {
+    @Autowired
+    private OrganizationAnonymousMovementRepository orgAnonRepo;
     /**
      * POST /movement/track/organization/anonymous : Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
      * Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
@@ -20,6 +25,7 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
+        orgAnonRepo.save(organizationAnonymousMovement);
         return null;
     }
 
