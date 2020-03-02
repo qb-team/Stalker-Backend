@@ -45,9 +45,7 @@ public class OrganizationApiController implements OrganizationApi {
         Optional<Organization> org = orgRepo.findById(organizationId);
 
         if(org.isPresent()) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Access-Control-Allow-Origin","http://localhost:4200");
-            return new ResponseEntity<Organization>(org.get(), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<Organization>(org.get(), HttpStatus.OK);
         }
 
         return new ResponseEntity<Organization>(HttpStatus.BAD_REQUEST);
@@ -62,11 +60,9 @@ public class OrganizationApiController implements OrganizationApi {
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
         List<Organization> orgList = new ArrayList<Organization>();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin","http://localhost:4200");
         orgRepo.findAll().forEach(orgList::add);
         
-        return new ResponseEntity<List<Organization>>(orgList, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<List<Organization>>(orgList, HttpStatus.OK);
     }
 
     /**
