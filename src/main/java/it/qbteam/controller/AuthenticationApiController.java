@@ -6,9 +6,11 @@ import it.qbteam.model.AuthResponseUser;
 import it.qbteam.model.AuthenticationDataAdmin;
 import it.qbteam.model.AuthenticationDataUser;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import javax.validation.Valid;
 
+@Controller
 public class AuthenticationApiController implements AuthenticationApi {
     /**
      * POST /authentication/adminLogin : Lets the admin login via the authentication service.

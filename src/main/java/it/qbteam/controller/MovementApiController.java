@@ -9,9 +9,11 @@ import it.qbteam.repository.OrganizationAnonymousMovementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import javax.validation.Valid;
 
+@Controller
 public class MovementApiController implements MovementApi {
     
     @Autowired

@@ -5,9 +5,11 @@ import it.qbteam.model.OrganizationAuthenticatedAccess;
 import it.qbteam.model.PlaceAuthenticatedAccess;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 public class AccessApiController implements AccessApi {
     /**
      * GET /access/organization/{organizationId}/authenticated : Returns all the authenticated accesses in an organization registered.
