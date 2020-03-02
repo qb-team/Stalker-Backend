@@ -19,7 +19,6 @@ import javax.validation.constraints.*;
  * Movement to an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Movement to an organization made with the authenticated trackingMode.")
-@Entity
 @RedisHash("OrganizationAnonymousMovement")
 public class OrganizationAnonymousMovement extends Movement  {
   @JsonProperty("organizationId")

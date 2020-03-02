@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
 
 public class MovementApiController implements MovementApi {
+    
     @Autowired
     private OrganizationAnonymousMovementRepository orgAnonRepo;
     /**
