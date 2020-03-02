@@ -2,13 +2,13 @@ version: '3'
 services:
   mysql_engine:
     container_name: stalker-rdbms
-    build: ./container
-    env_file: 
+    build: ./containers/mysql-container
+    env_file:
       - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
     volumes:
-      - ./container/mysql:/var/lib/mysql
+      - ./containers/mysql-container/data:/var/lib/mysql
     ports:
       - "33060:3306"
   phpmyadmin:
@@ -18,9 +18,16 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - '5000:80'
-    env_file: 
+      - "5000:80"
+    env_file:
       - .env
     environment:
       PMA_HOST: mysql_engine
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
+  redis_engine:
+    container_name: stalker-nosql
+    build: ./containers/redis-container
+    ports:
+      - "63790:6379"
+    volumes:
+      - ./containers/redis-container/data:/data

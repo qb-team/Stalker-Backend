@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 
 import it.qbteam.api.OrganizationApi;
 import it.qbteam.model.Organization;
-import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.repository.sql.OrganizationRepository;
 
 import javax.validation.Valid;
 

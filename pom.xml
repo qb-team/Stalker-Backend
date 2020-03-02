@@ -63,7 +63,7 @@
 				</exclusion>
 			</exclusions> -->
 		</dependency>
-		
+
 		<!-- Aggiunge annotazioni extra a quelle di Swagger Core di default -->
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -89,6 +89,12 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Plugin per connetersi a redis con lettuce  -->
+		<dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 	</dependencies>
 

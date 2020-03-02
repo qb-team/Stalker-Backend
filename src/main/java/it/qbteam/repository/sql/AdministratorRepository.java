@@ -1,9 +1,10 @@
-package it.qbteam.repository;
+package it.qbteam.repository.sql;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import it.qbteam.model.Administrator;
-
+@Repository
 public interface AdministratorRepository extends CrudRepository<Administrator, Long> {
 
 }

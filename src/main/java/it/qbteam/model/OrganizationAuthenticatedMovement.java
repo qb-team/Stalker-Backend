@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import it.qbteam.model.Movement;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Entity;
 import javax.validation.Valid;
@@ -18,7 +19,7 @@ import javax.validation.constraints.*;
  * Movement to an organization made with the authenticated trackingMode.
  */
 @ApiModel(description = "Movement to an organization made with the authenticated trackingMode.")
-@Entity
+@RedisHash("OrganizationAuthenticatedMovement")
 public class OrganizationAuthenticatedMovement extends Movement  {
   @JsonProperty("organizationId")
   private Long organizationId;
