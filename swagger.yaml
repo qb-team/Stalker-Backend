@@ -382,6 +382,54 @@ paths:
                   $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
           description: Accesses were not found with these organizationId and userIds.
+  "/presence/{organizationId}":
+    get:
+      tags:
+        - presence
+      summary: Gets the the number of presence in a specified organization.
+      description: Gets the the number of presence in a specified organization.
+      operationId: getOrganizationPresenceCounterById
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Organization presence counter returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationPresenceCounter"
+        "400":
+          description: Organization presence counter not found.
+  "/presence/{placeId}":
+    get:
+      tags:
+        - presence
+      summary: Gets the the number of presence in a specified place.
+      description: Gets the the number of presence in a specified place.
+      operationId: getPlacePresenceCounterById
+      parameters:
+        - name: placeId
+          in: path
+          description: ID of an place.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Place presence counter returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlacePresenceCounter"
+        "400":
+          description: Place presence counter not found.
 components:
   schemas:
     AuthenticationDataUser:
@@ -680,6 +728,32 @@ components:
             type: integer
             format: int64
             description: Unique identifier of the organization in which the user had access.
+    OrganizationPresenceCounter:
+      type: object
+      description: Number of people currently inside the organization.
+      required:
+        - organizationId
+        - counter
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+        counter:
+          type: integer
+          format: int32
+    PlacePresenceCounter:
+      type: object
+      description: Number of people currently inside a organization's place.
+      required:
+        - placeId
+        - counter
+      properties:
+        placeId:
+          type: integer
+          format: int64
+        counter:
+          type: integer
+          format: int32     
     Movement:
       type: object
       description: Generic movement in an organization or in a place of it.

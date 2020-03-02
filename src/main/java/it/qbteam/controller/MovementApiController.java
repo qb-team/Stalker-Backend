@@ -8,6 +8,7 @@ import it.qbteam.model.PlaceAuthenticatedMovement;
 import it.qbteam.repository.nosql.OrganizationAnonymousMovementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -29,7 +30,7 @@ public class MovementApiController implements MovementApi {
     @Override
     public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
         orgAnonRepo.save(organizationAnonymousMovement);
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
