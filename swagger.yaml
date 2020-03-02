@@ -384,7 +384,7 @@ paths:
                   $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "400":
           description: Accesses were not found with these organizationId and userIds.
-  "/presence/{organizationId}":
+  "/presence/organization/{organizationId}":
     get:
       tags:
         - presence
@@ -408,7 +408,7 @@ paths:
                 $ref: "#/components/schemas/OrganizationPresenceCounter"
         "400":
           description: Organization presence counter not found.
-  "/presence/{placeId}":
+  "/presence/place/{placeId}":
     get:
       tags:
         - presence

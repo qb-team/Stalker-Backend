@@ -37,7 +37,7 @@ public interface PresenceApi {
     }
 
     /**
-     * GET /presence/{organizationId} : Gets the number of presences in an organization given its organizationId.
+     * GET /presence/organization/{organizationId} : Gets the number of presences in an organization given its organizationId.
      * Gets the number of presences in an organization given its organizationId.
      *
      * @param organizationId ID of an organization. (required)
@@ -48,7 +48,7 @@ public interface PresenceApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization presence counter returned successfully.", response = OrganizationPresenceCounter.class),
         @ApiResponse(code = 400, message = "Organization presence counter not found.") })
-    @RequestMapping(value = "/presence/{organizationId}",
+    @RequestMapping(value = "/presence/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     default ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounterById(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId) {
@@ -67,7 +67,7 @@ public interface PresenceApi {
 
 
     /**
-     * GET /presence/{placeId} : Gets the number of presences in a place given its placeId.
+     * GET /presence/place/{placeId} : Gets the number of presences in a place given its placeId.
      * Gets the number of presences in a place given its placeId.
      *
      * @param placeId ID of a place. (required)
@@ -78,7 +78,7 @@ public interface PresenceApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place presence counter returned successfully.", response = PlacePresenceCounter.class),
         @ApiResponse(code = 400, message = "Place presence counter not found.") })
-    @RequestMapping(value = "/presence/{placeId}",
+    @RequestMapping(value = "/presence/place/{placeId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     default ResponseEntity<PlacePresenceCounter> getPlacePresenceCounterById(@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId) {
