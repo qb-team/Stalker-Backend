@@ -8,6 +8,8 @@ import it.qbteam.model.PlaceAuthenticatedMovement;
 import it.qbteam.repository.nosql.OrganizationAnonymousMovementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,9 +18,23 @@ import javax.validation.Valid;
 
 @Controller
 public class MovementApiController implements MovementApi {
+    private static final String ANONYMOUS_MOVEMENT_ORGANIZATION = "ANONYMOUS_MOVEMENT_ORGANIZATION";
+    private static final String AUTHENTICATED_MOVEMENT_ORGANIZATION = "AUTHENTICATED_MOVEMENT_ORGANIZATION";
+    private static final String ANONYMOUS_MOVEMENT_PLACE = "ANONYMOUS_MOVEMENT_PLACE";
+    private static final String AUTHENTICATED_MOVEMENT_PLACE = "AUTHENTICATED_MOVEMENT_PLACE";
+
+    private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
+    private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
+
+    @Autowired @Qualifier("movement")
+    RedisTemplate<String, String> movementTemplate;
+
+    @Autowired @Qualifier("counter")
+    RedisTemplate<String, Integer> counterTemplate;
     
     @Autowired
     private OrganizationAnonymousMovementRepository orgAnonRepo;
+
     /**
      * POST /movement/track/organization/anonymous : Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
      * Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
@@ -29,7 +45,19 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
-        orgAnonRepo.save(organizationAnonymousMovement);
+        movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
+
+        switch(organizationAnonymousMovement.getMovementType()) {
+            case ENTRANCE:
+                // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
+                counterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
+                // increment: increments the presence counter
+                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
+            break;
+            case EXIT:
+                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
+            break;
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
