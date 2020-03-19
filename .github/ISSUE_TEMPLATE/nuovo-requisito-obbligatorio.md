@@ -2,7 +2,7 @@
 name: Nuovo requisito obbligatorio
 about: Nuovo requisito obbligatorio da implementare
 title: Codice requisito
-labels: Obbligatori
+labels: obbligatorio
 assignees: dlazzaro, TommasoAzz
 
 ---

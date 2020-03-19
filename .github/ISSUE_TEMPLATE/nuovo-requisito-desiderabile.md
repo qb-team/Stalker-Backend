@@ -2,7 +2,7 @@
 name: Nuovo requisito desiderabile
 about: Nuovo requisito desiderabile da implementare
 title: Codice requisito
-labels: Desiderabile
+labels: desiderabile
 assignees: dlazzaro, TommasoAzz
 
 ---

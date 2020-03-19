@@ -1,9 +1,9 @@
 ---
 name: Nuovo requisito opzionale
 about: Nuovo requisito opzionale da implementare
-title: ''
+title: Codice requisito
 labels: opzionale
-assignees: ''
+assignees: dlazzaro, TommasoAzz
 
 ---
 
