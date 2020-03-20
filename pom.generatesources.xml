@@ -119,13 +119,23 @@
 							<packageName>it.qbteam</packageName>
 							<apiPackage>it.qbteam.api</apiPackage>
 							<modelPackage>it.qbteam.model</modelPackage>
+							<enablePostProcessFile>true</enablePostProcessFile>
 							<configHelp>false</configHelp>
 							<configOptions>
+								<basePackage>it.qbteam</basePackage>
+								<apiPackage>it.qbteam.api</apiPackage>
+								<modelPackage>it.qbteam.model</modelPackage>
+								<groupId>it.qbteam</groupId>
+								<artifactId>stalker-backend</artifactId>
+								<artifactDescription>Stalker API</artifactDescription>
+								<title>Stalker API</title>
 								<sourceFolder>spring</sourceFolder>
 								<interfaceOnly>true</interfaceOnly>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
 								<hideGenerationTimestamp>true</hideGenerationTimestamp>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<useOptional>true</useOptional>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -138,13 +148,6 @@
 							<inputSpec>${project.basedir}/swagger.yaml</inputSpec>
 							<skipValidateSpec>false</skipValidateSpec>
 							<generatorName>mysql-schema</generatorName>
-							<invokerPackage>it.qbteam</invokerPackage>
-							<groupId>it.qbteam</groupId>
-							<artifactId>stalker-db-schema</artifactId>
-							<artifactVersion>0.0.1-SNAPSHOT</artifactVersion>
-							<packageName>it.qbteam</packageName>
-							<apiPackage>it.qbteam.api</apiPackage>
-							<modelPackage>it.qbteam.model</modelPackage>
 							<configHelp>false</configHelp>
 							<configOptions>
 								<identifierNamingConvention>snake_case</identifierNamingConvention>
@@ -167,9 +170,23 @@
 							<packageName>it.qbteam</packageName>
 							<apiPackage>it.qbteam.api</apiPackage>
 							<modelPackage>it.qbteam.model</modelPackage>
+							<enablePostProcessFile>true</enablePostProcessFile>
 							<configHelp>false</configHelp>
 							<configOptions>
-								<sourceFolder>src/main/java</sourceFolder>
+								<sourceFolder>android</sourceFolder>
+								<basePackage>it.qbteam</basePackage>
+								<invokerPackage>it.qbteam</invokerPackage>
+								<apiPackage>it.qbteam.api</apiPackage>
+								<modelPackage>it.qbteam.model</modelPackage>
+								<groupId>it.qbteam</groupId>
+								<artifactId>stalker-app</artifactId>
+								<artifactDescription>Stalker API</artifactDescription>
+								<title>Stalker API</title>
+								<androidBuildToolsVersion>28.0.3</androidBuildToolsVersion>
+								<androidGradleVersion>3.6.1</androidGradleVersion>
+								<androidSdkVersion>28</androidSdkVersion>
+								<library>volley</library>
+								<useAndroidMavenGradlePlugin>0</useAndroidMavenGradlePlugin>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
 								<useBeanValidation>true</useBeanValidation>
@@ -192,9 +209,12 @@
 							<packageName>it.qbteam</packageName>
 							<apiPackage>it.qbteam.api</apiPackage>
 							<modelPackage>it.qbteam.model</modelPackage>
+							<enablePostProcessFile>true</enablePostProcessFile>
 							<configHelp>false</configHelp>
 							<configOptions>
-								<ngVersion>9.0.3</ngVersion>
+								<npmName>stalker-web-app</npmName>
+								<ngVersion>9.0.2</ngVersion>
+								<npmVersion>0.0.1</npmVersion>
 								<supportsES6>true</supportsES6>
 							</configOptions>
 						</configuration>
