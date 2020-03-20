@@ -96,6 +96,13 @@
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+	
+		<!-- Plugin per connettersi a Firebase Admin SDK -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.12.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

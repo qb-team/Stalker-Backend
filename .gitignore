@@ -183,3 +183,6 @@ buildNumber.properties
 containers/mysql-container/data
 containers/redis-container/data
 .env
+
+### Firebase ###
+firebase*.json
