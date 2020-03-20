@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN" "https://checkstyle.org/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <module name="EmptyCatchBlock" />
+        <module name="AvoidStarImport" />
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="4" /> <!-- valore accettabile, non ottimale -->
+        </module>
+        <!-- MPC2 (da PdQ) -->
+        <module name="ClassFanOutComplexity">
+            <property name="max" value="4" /> <!-- valore accettabile, non ottimale -->
+        </module>
+        <!-- MPC3 (da PdQ) -->
+        <!-- AGGIUNGERE -->
+        <!-- MPC4 (da PdQ) -->
+        <module name="ParameterNumber">
+            <property name="max" value="8" /> <!-- valore accettabile, non ottimale -->
+        </module>
+        <!-- MPC5 (da PdQ) -->
+        <!-- AGGIUNGERE -->
+        <!-- MPD2 (da PdQ) -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="7" /> <!-- valore accettabile, non ottimale -->
+        </module>
+        <!-- MPD3 (da PdQ) -->
+        <!-- AGGIUNGERE -->
+    </module>
+    <module name="FileTabCharacter" />
+</module>
