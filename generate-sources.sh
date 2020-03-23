@@ -24,7 +24,7 @@ openapi-generator validate \
 openapi-generator generate \
 --input-spec swagger.yaml \
 --generator-name android \
---config openapi-config/android.yaml \
+--config openapi-config/android.json \
 --output generated-sources/android
 
 #
@@ -33,7 +33,7 @@ openapi-generator generate \
 openapi-generator generate \
 --input-spec swagger.yaml \
 --generator-name spring \
---config openapi-config/spring.yaml \
+--config openapi-config/spring.json \
 --output generated-sources/spring
 
 #
@@ -42,5 +42,5 @@ openapi-generator generate \
 openapi-generator generate \
 --input-spec swagger.yaml \
 --generator-name typescript-angular \
---config openapi-config/typescript.yaml \
+--config openapi-config/typescript.json \
 --output generated-sources/typescript
