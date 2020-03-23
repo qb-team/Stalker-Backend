@@ -1,4 +1,4 @@
-package it.qbteam.file;
+package it.qbteam.pubsub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,8 +15,13 @@ public class RedisMessagePublisher implements MessagePublisher {
 
     public RedisMessagePublisher() {
     }
-    public void publish(Moviment moviment) {
-        redisTemplate.convertAndSend(topic.getTopic(), moviment);
+
+    public RedisMessagePublisher(final RedisTemplate<String, String> redisTemplate2, final ChannelTopic topic) {
+        this.redisTemplate = redisTemplate2;
+        this.topic = topic;
+    }
+
+    public void publish(final String message) {
+        redisTemplate.convertAndSend(topic.getTopic(), message);
     }
 }
-

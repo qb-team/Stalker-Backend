@@ -15,9 +15,15 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+
+import it.qbteam.pubsub.MessagePublisher;
+import it.qbteam.pubsub.RedisMessagePublisher;
+import it.qbteam.pubsub.RedisMessageSubscriber;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
@@ -43,14 +49,9 @@ public class RedisConfig {
         configuration.setPassword(redisPassword);
         return new LettuceConnectionFactory(configuration);
     }
-
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("payments");
-    }
     
     @Bean(name="movement")
-    RedisTemplate<String,String> getRedisMovementTemplate() {
+    RedisTemplate<String,String> redisTemplate() {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
@@ -59,5 +60,28 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
+    @Bean
+    RedisMessageListenerContainer redisContainer() {
+        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory());
+        container.addMessageListener(messageListener(), topic());
+        return container;
+    }
+
+    @Bean
+    MessagePublisher redisPublisher() {
+        return new RedisMessagePublisher(redisTemplate(), topic());
+    }
+
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("pubsub:queue");
+    }
+    
+    @Bean
+    MessageListenerAdapter messageListener() {
+        return new MessageListenerAdapter(new RedisMessageSubscriber());
+    }
+
  
 }
