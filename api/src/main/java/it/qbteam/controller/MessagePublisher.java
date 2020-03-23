@@ -1,4 +1,4 @@
-package it.qbteam.pubsub;
+package it.qbteam.controller;
 
 public interface MessagePublisher {
 
