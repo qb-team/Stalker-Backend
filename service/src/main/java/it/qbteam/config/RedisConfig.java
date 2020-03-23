@@ -1,9 +1,5 @@
 package it.qbteam.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,16 +9,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
-import it.qbteam.pubsub.MessagePublisher;
-import it.qbteam.pubsub.RedisMessagePublisher;
 import it.qbteam.pubsub.RedisMessageSubscriber;
 
 @Configuration
@@ -69,14 +60,10 @@ public class RedisConfig {
     }
 
     @Bean
-    MessagePublisher redisPublisher() {
-        return new RedisMessagePublisher(redisTemplate(), topic());
-    }
-
-    @Bean
     ChannelTopic topic() {
         return new ChannelTopic("pubsub:queue");
     }
+ 
     
     @Bean
     MessageListenerAdapter messageListener() {

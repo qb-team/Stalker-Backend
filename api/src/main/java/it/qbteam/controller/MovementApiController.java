@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 @Controller
@@ -58,6 +60,9 @@ public class MovementApiController implements MovementApi {
                 counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
             break;
         }
+        String message = "Message " + UUID.randomUUID();
+        RedisMessagePublisher redisMessagePublisher = new RedisMessagePublisher();
+        redisMessagePublisher.publish(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

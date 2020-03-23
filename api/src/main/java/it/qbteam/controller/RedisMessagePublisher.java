@@ -1,4 +1,4 @@
-package it.qbteam.pubsub;
+package it.qbteam.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
