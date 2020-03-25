@@ -48,7 +48,9 @@ paths:
         "204":
           description: List of all organizations is empty. Nothing gets returned.
         "401":
-          description: The user or the administrator is not authenticated.
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of all organizations could not be found. Nothing gets returned.
   "/organization/{organizationId}":
@@ -56,7 +58,7 @@ paths:
       tags:
         - organization
       summary: Gets the available data for a single organization.
-      description: Gets the data available for a single organization. Both app and web-app admininistrators can access this end-point but, app users can request information for all the organizations while web-app administrators can only for the organizations they have access.
+      description: Gets the data available for a single organization. Both app users and web-app admininistrators can access this end-point but, app users can request information for all the organizations while web-app administrators can only for the organizations they have access.
       operationId: getOrganizationById
       parameters:
         - name: organizationId
@@ -75,7 +77,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Organization"
         "401":
-          description: The user or the administrator is not authenticated.
+          description: The user or the administrator is not authenticated. Nothing gets returned.
         "404":
           description: Organization not found. Nothing gets returned.
     put:
@@ -95,15 +97,17 @@ paths:
             minimum: 1
       responses:
         "200":
-          description: Organization updated successfully.
+          description: Organization updated successfully. The updated organization gets returned.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Organization"
         "401":
-          description: The administrator is not authenticated.
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
         "404":
-          description: Invalid organization ID supplied.
+          description: Invalid organization ID supplied. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -116,27 +120,30 @@ paths:
         - organization
         - favorite
       summary: Gets the list of favorite organizations of a user.
-      description: Gets the list of favorite organizations of a user.
+      description: Gets the list of favorite organizations of a user. Only app users can access this end-point.
       operationId: getFavoriteOrganizationList
       parameters:
         - name: userId
           in: path
-          description: ID of an user.
+          description: ID of the user. It must be the same of the userId of the authenticated user.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: List of favorite organizations returned successfully.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organization"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
         "204":
-          description: List of favorite organizations is empty.
+          description: List of favorite organizations is empty. Nothing gets returned.
+        "401":
+          description: The user or the administrator is not authenticated. Nothing gets returned.
         "404":
-          description: List of organizations could not be found.
+          description: List of organizations could not be found. Nothing gets returned.
   "/organization/favorite/{userId}/add/{organizationId}":
     post:
       tags:
