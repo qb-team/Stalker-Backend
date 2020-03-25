@@ -27,7 +27,7 @@ tags:
   - name: presence
     description: Presence related endpoints.
   - name: administrator
-    description: Administrator related endpoints.
+    description: End-points for retrieving, adding, binding and unbinding administrators.
 paths:
   "/organization":
     get:
@@ -65,7 +65,7 @@ paths:
         Both app users and web-app admininistrators can access this end-point but, 
         app users can request information for all the organizations while web-app 
         administrators can only for the organizations they have access.
-      operationId: getOrganizationById
+      operationId: getOrganization
       parameters:
         - name: organizationId
           in: path
@@ -152,6 +152,8 @@ paths:
           description: List of favorite organizations is empty. Nothing gets returned.
         "401":
           description: The user or the administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
   "/organization/favorite/{userId}/add/{organizationId}":
@@ -189,12 +191,15 @@ paths:
                 $ref: "#/components/schemas/Favorite"
         "401":
           description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/organization/favorite/{userId}/remove/{organizationId}":
     delete:
       tags:
         - organization
+        - favorite
       summary: Removes the organization from the user's favorite organization list.
       description: >-
         Removes the organization from the user's favorite organization list.
@@ -219,152 +224,219 @@ paths:
           description: Organization successfully removed from the list of favorites.
         "401":
           description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.     
-  "/organization/{organizationId}/administrator/new":
+  "/organization/{organizationId}/administrator/create":
     post:
       tags:
         - organization
-      summary: Adds a new administrator to the organization.
-      description: Create a new administrator account and bind him/her to the current organization
-      operationId: addNewAdministratorToOrganization
+        - administrator
+      summary: Creates and binds a new administrator to the organization.
+      description: >-
+        Creates and binds a new administrator to the current organization. 
+        Only web-app administrators can access this end-point.
+      operationId: createNewAdministratorToOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >-
+            ID of an organization.
+            The administrator must have at least manager permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "201":
-          description: Administrator created and binded successfully.
-        "400":
-          description: Invalid organizationId supplied.
+          description: Administrator created and binded successfully. The permission record gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Administrator"
-  "/organization/{organizationId}/administrator/bind":
+  "/organization/{organizationId}/administrator/bind/{administratorId}":
     post:
       tags:
         - organization
+        - administrator
       summary: Bind an already existent administrator to the current organization.
-      description: Bind an already existent administrator to the current organization.
+      description: >-
+        Bind an already existent administrator to the current organization.
+        Only web-app admininistrators can access this end-point.
       operationId: bindAdministratorToOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >- #controllare
+            ID of an organization.
+            The administrator must have at least manager permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
+        - name: administratorId
+          in: path
+          description: ID of an administrator.
+          required: true
+          schema:
+            type: string
       responses:
         "201":
-          description: Administrator created and binded successfully.
-        "400":
-          description: Invalid organizationId supplied.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Administrator" # missing
+          description: Administrator binded successfully. The permission record gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator/unbind":
     post:
       tags:
         - organization
+        - administrator
       summary: Unbind an administrator to the current organization.
-      description: Unbind an administrator to the current organization.
-      operationId: unbindAdministratorToOrganization
+      description: >-
+        Unbind an administrator to the current organization.
+        Only web-app admininistrators can access this end-point.
+      operationId: unbindAdministratorFromOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >- #controllare
+            ID of an organization.
+            The administrator must have at least manager permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
+        - name: administratorId
+          in: path
+          description: ID of an administrator.
+          required: true
+          schema:
+            type: string
       responses:
-        "200":
-          description: Administrator unbinded successfully.
-        "400":
-          description: Invalid organizationId supplied.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Administrator" # missing
+        "204":
+          description: Administrator unbinded successfully. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator":
     get:
       tags:
         - organization
+        - administrator
       summary: Returns the list of administrators of the current organization.
-      description: Returns the list of administrators of the current organization.
+      description: >- 
+        Returns the list of administrators of the current organization.
+        Only web-app admininistrators can access this end-point.
       operationId: getAdministratorListOfOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >- #controllare
+            ID of an organization.
+            The administrator must have at least manager permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "200":
-          description: Administrators information returned successfully.
+          description: Administrators' information returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/AdministratorInfo"
-        "400":
-          description: Invalid organizationId supplied.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/requestdeletion":
     post:
       tags:
         - organization
-      summary: Send a deletion request to the system. The request will be examined by Stalker administrators.
-      description: Send a deletion request to the system. The request will be examined by Stalker administrators.
-      operationId: requestDeletion
+      summary: Sends a deletion request to the system. The request will be examined by Stalker administrators.
+      description: >-
+        Sends a deletion request to the system. 
+        The request will be examined by Stalker administrators.
+        Only web-app admininistrators can access this end-point.
+      operationId: requestDeletionOfOrganization
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >- #controllare
+            ID of an organization.
+            The administrator must have at least owner permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        "200":
-          description: Request sent successfully.
-        "400":
-          description: Invalid organizationId supplied.
+        "204":
+          description: Request sent successfully. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/trackingArea":
     put:
       tags:
         - organization
       summary: Updates the coordinates of the tracking area of an organization.
-      description: Updates the coordinates of the tracking area of an organization.
+      description: >-
+        Updates the coordinates of the tracking area of an organization.
+        Only web-app admininistrators can access this end-point.
       operationId: updateTrackingArea
       parameters:
         - name: organizationId
           in: path
-          description: ID of an organization.
+          description: >- #controllare
+            ID of an organization.
+            The administrator must have at least manager permission to the organization.
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "200":
-          description: Request sent successfully.
-        "400":
-          description: Invalid organizationId supplied.
+          description: The tracking area of the organization was updated successfully. The organization gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -733,56 +805,6 @@ paths:
           description: Place presence counter not found.
 components:
   schemas:
-    # AuthenticationDataUser:
-    #   type: object
-    #   description: Data requested to the user when authenticating or registering to the system.
-    #   required:
-    #     - mail
-    #     - password
-    #   properties:
-    #     mail:
-    #       type: string
-    #       format: email
-    #     password:
-    #       type: string
-    #       format: password
-    # AuthResponseUser:
-    #   type: object
-    #   description: Data given to the user when authenticated.
-    #   required:
-    #     - token
-    #     - expirationDate
-    #   properties:
-    #     token:
-    #       type: string
-    #     expirationDate:
-    #       type: string
-    #       format: date-time
-    # AuthenticationDataAdmin:
-    #   type: object
-    #   description: Data requested to the admin when authenticating to the system.
-    #   required:
-    #     - mail
-    #     - password
-    #   properties:
-    #     mail:
-    #       type: string
-    #       format: email
-    #     password:
-    #       type: string
-    #       format: password
-    # AuthResponseAdmin:
-    #   type: object
-    #   description: Data given to the admin when authenticated.
-    #   required:
-    #     - token
-    #     - expirationDate
-    #   properties:
-    #     token:
-    #       type: string
-    #     expirationDate:
-    #       type: string
-    #       format: date-time
     Organization:
       type: object
       description: >-
