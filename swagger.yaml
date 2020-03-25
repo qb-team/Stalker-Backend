@@ -34,7 +34,9 @@ paths:
       tags:
         - organization
       summary: Returns the list of all organizations.
-      description: Returns the list of all organizations available in th system. The list can be empty. Only app users can access this end-point.
+      description: >-
+        Returns the list of all organizations available in the system.
+        The list can be empty. Only app users can access this end-point.
       operationId: getOrganizationList
       responses:
         "200":
@@ -58,7 +60,11 @@ paths:
       tags:
         - organization
       summary: Gets the available data for a single organization.
-      description: Gets the data available for a single organization. Both app users and web-app admininistrators can access this end-point but, app users can request information for all the organizations while web-app administrators can only for the organizations they have access.
+      description: >-
+        Gets the data available for a single organization. 
+        Both app users and web-app admininistrators can access this end-point but, 
+        app users can request information for all the organizations while web-app 
+        administrators can only for the organizations they have access.
       operationId: getOrganizationById
       parameters:
         - name: organizationId
@@ -84,7 +90,9 @@ paths:
       tags:
         - organization
       summary: Updates one or more properties of an organization.
-      description: Updates one or more properties of an organization. Only web-app administrators (if they have the access rights) can access this end-point.
+      description: >-
+        Updates one or more properties of an organization. 
+        Only web-app administrators (if they have the access rights) can access this end-point.
       operationId: updateOrganization
       parameters:
         - name: organizationId
@@ -120,7 +128,9 @@ paths:
         - organization
         - favorite
       summary: Gets the list of favorite organizations of a user.
-      description: Gets the list of favorite organizations of a user. Only app users can access this end-point.
+      description: >-
+        Gets the list of favorite organizations of a user. 
+        Only app users can access this end-point.
       operationId: getFavoriteOrganizationList
       parameters:
         - name: userId
@@ -148,17 +158,19 @@ paths:
     post:
       tags:
         - organization
-      summary: Adds an organization to the list of favorite organizations of the user.
-      description: Adds an organization to the list of favorite organizations of the user.
+        - favorite
+      summary: Adds a new organization to the user's favorite organization list.
+      description: >-
+        Adds a new organization to the user's favorite organization list. 
+        Only app users can access this end-point.
       operationId: addFavoriteOrganization
       parameters:
         - name: userId
           in: path
-          description: ID of an user.
+          description: ID of the user. It must be the same of the userId of the authenticated user.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: organizationId
           in: path
           description: ID of an organization.
@@ -168,26 +180,33 @@ paths:
             format: int64
       responses:
         "201":
-          description: Organization successfully added to the list of favorite.
+          description: >-
+            Organization successfully added to the list of favorite. 
+            The favorite record just added (including the organization) gets returned.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Favorite"
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/organization/favorite/{userId}/remove/{organizationId}":
     delete:
       tags:
         - organization
       summary: Removes the organization from the user's favorite organization list.
-      description: Removes the organization from the user's favorite organization list.
+      description: >-
+        Removes the organization from the user's favorite organization list.
+        Only app users can access this end-point.
       operationId: removeFavoriteOrganization
       parameters:
         - name: userId
           in: path
-          description: ID of an user.
+          description: ID of the user. It must be the same of the userId of the authenticated user.
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: organizationId
           in: path
           description: ID of an organization.
@@ -198,6 +217,10 @@ paths:
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.     
   "/organization/{organizationId}/administrator/new":
     post:
       tags:
