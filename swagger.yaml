@@ -12,12 +12,10 @@ servers:
   - description: Server attualmente localhost
     url: http://localhost:8080/
 tags:
-  - name: userAuthentication
-    description: User authentication related endpoints.
-  - name: adminAuthentication
-    description: Administrator authentication related endpoints.
   - name: organization
-    description: Organization related endpoints.
+    description: End-points for retrieving, updating and asking for deletion of organizations.
+  - name: favorite
+    description: End-points for retrieving, adding and removing organizations.
   - name: place
     description: Place related endpoints.
   - name: tracking
@@ -28,117 +26,37 @@ tags:
     description: Access related endpoints.
   - name: presence
     description: Presence related endpoints.
+  - name: administrator
+    description: Administrator related endpoints.
 paths:
-  "/authentication/userLogin":
-    post:
-      tags:
-        - userAuthentication
-      summary: Lets the user login via the authentication service.
-      description: Lets the user login via the authentication service.
-      operationId: userLogin
-      responses:
-        "200":
-          description: Logged in successfully.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponseUser"
-        "400":
-          description: Incorrect credentials.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthenticationDataUser"
-  "/authentication/userRegistration":
-    post:
-      tags:
-        - userAuthentication
-      summary: Lets the user registrate into the system.
-      description: Lets the user registrate into the system.
-      operationId: userRegistration
-      responses:
-        "200":
-          description: Registered successfully.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponseUser"
-        "400":
-          description: Too weak password.
-        "406":
-          description: Account already present with this e-mail address.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthenticationDataUser"
-  "/authentication/userLogout":
-    post:
-      tags:
-        - userAuthentication
-      summary: Lets the user logout from the system.
-      description: Lets the user logout from the system.
-      operationId: userLogout
-      responses:
-        "200":
-          description: Logged out successfully.
-  "/authentication/adminLogin":
-    post:
-      tags:
-        - adminAuthentication
-      summary: Lets the admin login via the authentication service.
-      description: Lets the admin login via the authentication service.
-      operationId: adminLogin
-      responses:
-        "200":
-          description: Logged in successfully.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponseAdmin"
-        "400":
-          description: Incorrect credentials.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthenticationDataAdmin"
-  "/authentication/adminLogout":
-    post:
-      tags:
-        - adminAuthentication
-      summary: Lets the admin logout from the system.
-      description: Lets the admin logout from the system.
-      operationId: adminLogout
-      responses:
-        "200":
-          description: Logged out successfully.
   "/organization":
     get:
       tags:
         - organization
       summary: Returns the list of all organizations.
-      description: Returns the list of all organizations.
+      description: Returns the list of all organizations available in th system. The list can be empty. Only app users can access this end-point.
       operationId: getOrganizationList
       responses:
         "200":
-          description: Organizations returned successfully.
+          description: List of all organizations is non-empty and gets returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Organization"
+        "204":
+          description: List of all organizations is empty. Nothing gets returned.
+        "401":
+          description: The user or the administrator is not authenticated.
+        "404":
+          description: List of all organizations could not be found. Nothing gets returned.
   "/organization/{organizationId}":
     get:
       tags:
         - organization
-      summary: Gets the data of a single organization.
-      description: Gets the data of a single organization.
+      summary: Gets the available data for a single organization.
+      description: Gets the data available for a single organization. Both app and web-app admininistrators can access this end-point but, app users can request information for all the organizations while web-app administrators can only for the organizations they have access.
       operationId: getOrganizationById
       parameters:
         - name: organizationId
@@ -148,6 +66,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Organization returned successfully.
@@ -155,14 +74,182 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Organization"
-        "400":
-          description: Organization not found.
+        "401":
+          description: The user or the administrator is not authenticated.
+        "404":
+          description: Organization not found. Nothing gets returned.
     put:
       tags:
         - organization
-      summary: Updates one or more properties of a single organization.
-      description: Updates one or more properties of a single organization.
+      summary: Updates one or more properties of an organization.
+      description: Updates one or more properties of an organization. Only web-app administrators (if they have the access rights) can access this end-point.
       operationId: updateOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: Organization updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401":
+          description: The administrator is not authenticated.
+        "404":
+          description: Invalid organization ID supplied.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
+  "/organization/favorite/{userId}":
+    get:
+      tags:
+        - organization
+        - favorite
+      summary: Gets the list of favorite organizations of a user.
+      description: Gets the list of favorite organizations of a user.
+      operationId: getFavoriteOrganizationList
+      parameters:
+        - name: userId
+          in: path
+          description: ID of an user.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of favorite organizations returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "204":
+          description: List of favorite organizations is empty.
+        "404":
+          description: List of organizations could not be found.
+  "/organization/favorite/{userId}/add/{organizationId}":
+    post:
+      tags:
+        - organization
+      summary: Adds an organization to the list of favorite organizations of the user.
+      description: Adds an organization to the list of favorite organizations of the user.
+      operationId: addFavoriteOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of an user.
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "201":
+          description: Organization successfully added to the list of favorite.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Favorite"
+  "/organization/favorite/{userId}/remove/{organizationId}":
+    delete:
+      tags:
+        - organization
+      summary: Removes the organization from the user's favorite organization list.
+      description: Removes the organization from the user's favorite organization list.
+      operationId: removeFavoriteOrganization
+      parameters:
+        - name: userId
+          in: path
+          description: ID of an user.
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "205":
+          description: Organization successfully removed from the list of favorites.
+  "/organization/{organizationId}/administrator/new":
+    post:
+      tags:
+        - organization
+      summary: Adds a new administrator to the organization.
+      description: Create a new administrator account and bind him/her to the current organization
+      operationId: addNewAdministratorToOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "201":
+          description: Administrator created and binded successfully.
+        "400":
+          description: Invalid organizationId supplied.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Administrator"
+  "/organization/{organizationId}/administrator/bind":
+    post:
+      tags:
+        - organization
+      summary: Bind an already existent administrator to the current organization.
+      description: Bind an already existent administrator to the current organization.
+      operationId: bindAdministratorToOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "201":
+          description: Administrator created and binded successfully.
+        "400":
+          description: Invalid organizationId supplied.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Administrator" # missing
+  "/organization/{organizationId}/administrator/unbind":
+    post:
+      tags:
+        - organization
+      summary: Unbind an administrator to the current organization.
+      description: Unbind an administrator to the current organization.
+      operationId: unbindAdministratorToOrganization
       parameters:
         - name: organizationId
           in: path
@@ -173,21 +260,147 @@ paths:
             format: int64
       responses:
         "200":
-          description: Organization updated successfully.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Organization"
+          description: Administrator unbinded successfully.
         "400":
           description: Invalid organizationId supplied.
-        "405":
-          description: Organization not found.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Organization"
+              $ref: "#/components/schemas/Administrator" # missing
+  "/organization/{organizationId}/administrator":
+    get:
+      tags:
+        - organization
+      summary: Returns the list of administrators of the current organization.
+      description: Returns the list of administrators of the current organization.
+      operationId: getAdministratorListOfOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Administrators information returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdministratorInfo"
+        "400":
+          description: Invalid organizationId supplied.
+  "/organization/{organizationId}/requestdeletion":
+    post:
+      tags:
+        - organization
+      summary: Send a deletion request to the system. The request will be examined by Stalker administrators.
+      description: Send a deletion request to the system. The request will be examined by Stalker administrators.
+      operationId: requestDeletion
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Request sent successfully.
+        "400":
+          description: Invalid organizationId supplied.
+  "/organization/{organizationId}/trackingArea":
+    put:
+      tags:
+        - organization
+      summary: Updates the coordinates of the tracking area of an organization.
+      description: Updates the coordinates of the tracking area of an organization.
+      operationId: updateTrackingArea
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Request sent successfully.
+        "400":
+          description: Invalid organizationId supplied.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - trackingArea
+              properties:
+                trackingArea:
+                  type: string
+                  description: JSON representation of a tracking area.       
+  "/place":
+    post:
+      tags:
+        - place
+      summary: Creates a new place to a given organization.
+      description: Creates a new place to a given organization.
+      operationId: createNewPlace
+      responses:
+        "200":
+          description: Place successfully created to the organization.
+        "400":
+          description: Place could not be created.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Place"
+    put:
+      tags:
+        - place
+      summary: Updates a place of a given organization.
+      description: Updates a place of a given organization.
+      operationId: updatePlace
+      responses:
+        "200":
+          description: Place successfully updated.
+        "400":
+          description: Place could not be updated.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Place"
+  "/place/{placeId}":
+    delete:
+      tags:
+        - place
+      summary: Deletes a place of an organization.
+      description: Deletes a place of an organization.
+      operationId: deletePlace
+      parameters:
+        - name: placeId
+          in: path
+          description: ID of a place.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Place successfully deleted.
+        "400":
+          description: Place could not be deleted.
   "/movement/track/organization/authenticated":
     post:
       tags:
@@ -284,6 +497,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+        "204":
+          description: Authenticated accesses in a place were not found.
         "400":
           description: Accesses were not found with these placeId.
   "/access/place/{placeId}/authenticated/{userIds}":
@@ -346,6 +561,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
+        "204":
+          description: Authenticated accesses in an organization were not found.
         "400":
           description: Accesses were not found with these organizationId.
   "/access/organization/{organizationId}/authenticated/{userIds}":
@@ -388,8 +605,34 @@ paths:
     get:
       tags:
         - presence
-      summary: Gets the number of presences in an organization given its organizationId.
-      description: Gets the number of presences in an organization given its organizationId.
+      summary: Gets the list of people currently inside the organization's trackingArea (organization is required to track people with trackingMode = authenticated)
+      description: Gets the list of people currently inside the organization's trackingArea (organization is required to track people with trackingMode = authenticated)
+      operationId: getOrganizationPresenceListById
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Organization presence list returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+        "400":
+          description: Organization presence list not found.
+  "/presence/organization/{organizationId}/counter":
+    get:
+      tags:
+        - presence
+      summary: Gets the number of people currently inside of an organization given its organizationId.
+      description: Gets the number of people currently inside of an organization given its organizationId.
       operationId: getOrganizationPresenceCounterById
       parameters:
         - name: organizationId
@@ -412,8 +655,34 @@ paths:
     get:
       tags:
         - presence
-      summary: Gets the number of presences in a place given its placeId.
-      description: Gets the number of presences in a place given its placeId.
+      summary: Gets the list of people currently inside the place's trackingArea (organization is required to track people with trackingMode = authenticated)
+      description: Gets the list of people currently inside the place's trackingArea (organization is required to track people with trackingMode = authenticated)
+      operationId: getPlacePresenceListById
+      parameters:
+        - name: placeId
+          in: path
+          description: ID of a place.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Organization presence list returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+        "400":
+          description: Organization presence list not found.
+  "/presence/place/{placeId}/counter":
+    get:
+      tags:
+        - presence
+      summary: Gets the number of people currently inside of a place given its placeId.
+      description: Gets the number of presences inside of a place given its placeId.
       operationId: getPlacePresenceCounterById
       parameters:
         - name: placeId
@@ -434,56 +703,56 @@ paths:
           description: Place presence counter not found.
 components:
   schemas:
-    AuthenticationDataUser:
-      type: object
-      description: Data requested to the user when authenticating or registering to the system.
-      required:
-        - mail
-        - password
-      properties:
-        mail:
-          type: string
-          format: email
-        password:
-          type: string
-          format: password
-    AuthResponseUser:
-      type: object
-      description: Data given to the user when authenticated.
-      required:
-        - token
-        - expirationDate
-      properties:
-        token:
-          type: string
-        expirationDate:
-          type: string
-          format: date-time
-    AuthenticationDataAdmin:
-      type: object
-      description: Data requested to the admin when authenticating to the system.
-      required:
-        - mail
-        - password
-      properties:
-        mail:
-          type: string
-          format: email
-        password:
-          type: string
-          format: password
-    AuthResponseAdmin:
-      type: object
-      description: Data given to the admin when authenticated.
-      required:
-        - token
-        - expirationDate
-      properties:
-        token:
-          type: string
-        expirationDate:
-          type: string
-          format: date-time
+    # AuthenticationDataUser:
+    #   type: object
+    #   description: Data requested to the user when authenticating or registering to the system.
+    #   required:
+    #     - mail
+    #     - password
+    #   properties:
+    #     mail:
+    #       type: string
+    #       format: email
+    #     password:
+    #       type: string
+    #       format: password
+    # AuthResponseUser:
+    #   type: object
+    #   description: Data given to the user when authenticated.
+    #   required:
+    #     - token
+    #     - expirationDate
+    #   properties:
+    #     token:
+    #       type: string
+    #     expirationDate:
+    #       type: string
+    #       format: date-time
+    # AuthenticationDataAdmin:
+    #   type: object
+    #   description: Data requested to the admin when authenticating to the system.
+    #   required:
+    #     - mail
+    #     - password
+    #   properties:
+    #     mail:
+    #       type: string
+    #       format: email
+    #     password:
+    #       type: string
+    #       format: password
+    # AuthResponseAdmin:
+    #   type: object
+    #   description: Data given to the admin when authenticated.
+    #   required:
+    #     - token
+    #     - expirationDate
+    #   properties:
+    #     token:
+    #       type: string
+    #     expirationDate:
+    #       type: string
+    #       format: date-time
     Organization:
       type: object
       description: >-
@@ -581,6 +850,14 @@ components:
             rea subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
+    TrackingArea:
+      type: object
+      required:
+      - trackingArea
+      properties:
+        trackingArea:
+          type: string
+          description: JSON representation of a tracking area.       
     User:
       type: object
       required:
@@ -603,11 +880,40 @@ components:
         ldapId:
           type: integer
           description: Organization LDAP server's administrator unique identifier.
+    AdministratorInfo:
+      type: object
+      required:
+        - mail
+        - permission
+      properties:
+        mail:
+          type: string
+          format: email
+          description: Mail of the administrator.
+        permission:
+          $ref: "#/components/schemas/Permission"
+    UserInfo:
+      type: object
+      required:
+        - name
+        - surname
+        - mail
+      properties:
+        name:
+          type: string
+          description: Name of the user (if available in the organization LDAP server).
+        surname:
+          type: string
+          description: Surname of the user (if available in the organization LDAP server).
+        mail:
+          type: string
+          format: email
+          description: Mail of the user.
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
       required:
-        - userId
+        - administratorId
         - organizationId
         - permission
       properties:
