@@ -189,6 +189,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Favorite"
+        "400":
+          description: The user already added the organization to the list of favorite organizations.
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
@@ -222,6 +224,8 @@ paths:
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
+        "400":
+          description: The organization is not part of the list of favorite organizations.
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
@@ -243,7 +247,7 @@ paths:
           in: path
           description: >-
             ID of an organization.
-            The administrator must have at least manager permission to the organization.
+            The administrator must have at least owner permission to the organization.
           required: true
           schema:
             type: integer
@@ -258,7 +262,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -280,9 +284,9 @@ paths:
       parameters:
         - name: organizationId
           in: path
-          description: >- #controllare
+          description: >-
             ID of an organization.
-            The administrator must have at least manager permission to the organization.
+            The administrator must have at least owner permission to the organization.
           required: true
           schema:
             type: integer
@@ -303,7 +307,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization or the administrator could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator/unbind/{administratorId}":
@@ -319,9 +323,9 @@ paths:
       parameters:
         - name: organizationId
           in: path
-          description: >- #controllare
+          description: >-
             ID of an organization.
-            The administrator must have at least manager permission to the organization.
+            The administrator must have at least owner permission to the organization.
           required: true
           schema:
             type: integer
@@ -338,7 +342,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization or the administrator could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator":
@@ -356,7 +360,7 @@ paths:
           in: path
           description: >- #controllare
             ID of an organization.
-            The administrator must have at least manager permission to the organization.
+            The administrator must have at least owner permission to the organization.
           required: true
           schema:
             type: integer
@@ -373,7 +377,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/requestdeletion":
@@ -389,7 +393,7 @@ paths:
       parameters:
         - name: organizationId
           in: path
-          description: >- #controllare
+          description: >-
             ID of an organization.
             The administrator must have at least owner permission to the organization.
           required: true
@@ -402,7 +406,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users and administrators not managing the organization cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/trackingArea":
@@ -417,7 +421,7 @@ paths:
       parameters:
         - name: organizationId
           in: path
-          description: >- #controllare
+          description: >-
             ID of an organization.
             The administrator must have at least manager permission to the organization.
           required: true
@@ -431,10 +435,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Organization"
+        "400":
+          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -464,6 +470,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Place"
+        "400":
+          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -490,6 +498,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Place"
+        "400":
+          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned. 
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
