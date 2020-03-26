@@ -537,78 +537,64 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.  
-  "/movement/track/organization/authenticated":
+  "/movement/track/organization":
     post:
       tags:
-        - tracking
-      summary: Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
-      description: Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
-      operationId: trackAuthenticatedMovementInOrganization
+        - movement
+        - organization
+      summary: Tracks the user movement inside the trackingArea of an organization.
+      description: Tracks the user movement inside the trackingArea of an organization.
+      operationId: trackMovementInOrganization
       responses:
-        "200":
-          description: Movement successfully tracked.
+        "201":
+          description: Entrance movement successfully tracked. The movement with the exitToken gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationMovement"
+        "202":
+          description: Exit movement successfully tracked. Nothing gets returned.
         "400":
-          description: Movement could not be tracked due to incorrect data sent to the system.
+          description: Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned.
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganizationAuthenticatedMovement"
-  "/movement/track/organization/anonymous":
+              $ref: "#/components/schemas/OrganizationMovement"
+  "/movement/track/place":
     post:
       tags:
-        - tracking
-      summary: Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
-      description: Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
-      operationId: trackAnonymousMovementInOrganization
+        - movement
+        - place
+      summary: Tracks the user movement inside the trackingArea of a place of an organization.
+      description: Tracks the user movement inside the trackingArea of a place of an organization.
+      operationId: trackMovementInPlace
       responses:
-        "200":
-          description: Movement successfully tracked.
+        "201":
+          description: Entrance movement successfully tracked. The movement with the exitToken gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlaceMovement"
+        "202":
+          description: Exit movement successfully tracked. Nothing gets returned.
         "400":
-          description: Movement could not be tracked due to incorrect data sent to the system.
+          description: Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned.
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganizationAnonymousMovement"
-  "/movement/track/place/authenticated":
-    post:
-      tags:
-        - tracking
-      summary: Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-      description: Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-      operationId: trackAuthenticatedMovementInPlace
-      responses:
-        "200":
-          description: Movement successfully tracked.
-        "400":
-          description: Movement could not be tracked due to incorrect data sent to the system.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PlaceAuthenticatedMovement"
-  "/movement/track/place/anonymous":
-    post:
-      tags:
-        - tracking
-      summary: Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
-      description: Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
-      operationId: trackAnonymousMovementInPlace
-      responses:
-        "200":
-          description: Movement successfully tracked.
-        "400":
-          description: Movement could not be tracked due to incorrect data sent to the system.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PlaceAnonymousMovement"
+              $ref: "#/components/schemas/PlaceMovement"
   "/access/place/{placeId}/authenticated/{userIds}":
     get:
       tags:
@@ -649,13 +635,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+                  $ref: "#/components/schemas/PlaceAccess"
         "204":
           description: List of authenticated accesses in a place were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "404":
-          description: List of all accesses could not be found. Nothing gets returned.
+          description: The place could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{userIds}":
     get:
       tags:
@@ -696,13 +682,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+                  $ref: "#/components/schemas/OrganizationAccess"
         "204":
           description: List of authenticated accesses in an organization were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "404":
-          description: List of all accesses could not be found. Nothing gets returned.
+          description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}":
     get:
       tags:
@@ -1113,13 +1099,16 @@ components:
       type: object
       description: Movement in a place of an organization.
       required:
-        - id
         - timestamp
         - movementType
+        - placeId
       properties:
-        id:
-          type: integer
-          format: int64
+        exitToken:
+          type: string
+          description: >-
+            Token generated by the server when the user entered in the organization.
+            It is required only to track an exit movement.
+            If this property is not empty in an entrance movement it will not be considered.
         timestamp:
           type: string
           format: date-time
@@ -1142,13 +1131,16 @@ components:
       type: object
       description: Movement in an organization.
       required:
-        - id
         - timestamp
         - movementType
+        - organizationId
       properties:
-        id:
-          type: integer
-          format: int64
+        exitToken:
+          type: string
+          description: >-
+            Token generated by the server when the user entered in the organization.
+            It is required only to track an exit movement.
+            If this property is not empty in an entrance movement it will not be considered.
         timestamp:
           type: string
           format: date-time
