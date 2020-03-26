@@ -1025,30 +1025,6 @@ components:
           type: string
           format: date-time
           description: When the favorite was added by the user.
-    Access:
-      type: object
-      description: Generic access to an organization or a place of it.
-      required:
-        - id
-        - entranceTimestamp
-        - exitTimestamp
-        - accessDiscriminator
-      discriminator:
-        propertyName: accessDiscriminator
-      properties:
-        id:
-          type: integer
-          format: int64
-        accessDiscriminator:
-          type: string
-        entranceTimestamp:
-          type: string
-          format: date-time
-          description: Date and time of the moment in which the user entered the place.
-        exitTimestamp:
-          type: string
-          format: date-time
-          description: Date and time of the moment in which the user left the place.
     PlaceAccess:
       type: object
       description: Access to a place of an organization.
@@ -1133,87 +1109,61 @@ components:
           type: integer
           format: int32     
           description: Number of people currently inside a place of an organization.
-    Movement:
+    PlaceMovement:
       type: object
-      description: Generic movement in an organization or in a place of it.
+      description: Movement in a place of an organization.
       required:
         - id
         - timestamp
         - movementType
-        - movementDiscriminator
-      discriminator:
-        propertyName: movementDiscriminator
       properties:
         id:
           type: integer
           format: int64
-        movementDiscriminator:
-          type: string
         timestamp:
           type: string
           format: date-time
           description: Date and time of the moment in which the user entered the place.
         movementType:
+          type: integer
+          format: int32
+          description: >-
+            Type of movement. It can be:
+            - Entrance: 1
+            - Exit: -1
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+        orgAuthServerId:
           type: string
-          description: Type of movement.
-          enum:
-            - entrance
-            - exit
-    PlaceAuthenticatedMovement:
-      description: Movement in a place of an organization made with the authenticated trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Movement"
-      - type: object
-        required:
-          - placeId
-          - orgAuthServerId
-        properties:
-          placeId:
-            type: integer
-            format: int64
-            description: Unique identifier of the place in which the user had access.
-          orgAuthServerId:
-            type: integer
-            format: int64
-            description: Organization LDAP server's user unique identifier.
-    OrganizationAuthenticatedMovement:
-      description: Movement to an organization made with the authenticated trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Movement"
-      - type: object
-        required:
-          - organizationId
-          - orgAuthServerId
-        properties:
-          organizationId:
-            type: integer
-            format: int64
-            description: Unique identifier of the organization in which the user had access.
-          orgAuthServerId:
-            type: integer
-            format: int64
-            description: Organization LDAP server's user unique identifier.
-    PlaceAnonymousMovement:
-      description: Movement to a place of an organization made with the anonymous trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Movement"
-      - type: object
-        required:
-          - placeId
-        properties:
-          placeId:
-            type: integer
-            format: int64
-            description: Unique identifier of the place in which the user had access.
-    OrganizationAnonymousMovement:
-      description: Movement to an organization made with the authenticated trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Movement"
-      - type: object
-        required:
-          - organizationId
-        properties:
-          organizationId:
-            type: integer
-            format: int64
-            description: Unique identifier of the organization in which the user had access.
+          description: User unique identifier from the authentication server of the organization.
+    OrganizationMovement:
+      type: object
+      description: Movement in an organization.
+      required:
+        - id
+        - timestamp
+        - movementType
+      properties:
+        id:
+          type: integer
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the place.
+        movementType:
+          type: integer
+          format: int32
+          description: >-
+            Type of movement. It can be:
+            - Entrance: 1
+            - Exit: -1
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
