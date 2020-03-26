@@ -64,7 +64,7 @@ paths:
         Gets the data available for a single organization. 
         Both app users and web-app admininistrators can access this end-point but, 
         app users can request information for all the organizations while web-app 
-        administrators can only for the organizations they have access.
+        administrators can only for the organizations they have access to.
       operationId: getOrganization
       parameters:
         - name: organizationId
@@ -92,7 +92,7 @@ paths:
       summary: Updates one or more properties of an organization.
       description: >-
         Updates one or more properties of an organization. 
-        Only web-app administrators (if they have the access rights) can access this end-point.
+        Only web-app administrators (if they have the correct access rights) can access this end-point.
       operationId: updateOrganization
       parameters:
         - name: organizationId
@@ -305,7 +305,7 @@ paths:
         "403":
           description: Users cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.
+          description: The organization or the administrator could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator/unbind/{administratorId}":
     post:
       tags:
@@ -340,7 +340,7 @@ paths:
         "403":
           description: Users cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.
+          description: The organization or the administrator could not be found. Nothing gets returned.
   "/organization/{organizationId}/administrator":
     get:
       tags:
@@ -402,7 +402,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users and administrators not managing the organization cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/organization/{organizationId}/trackingArea":
@@ -599,45 +599,24 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceAnonymousMovement"
-  "/access/place/{placeId}/authenticated":
-    get:
-      tags:
-        - access
-      summary: Returns all the authenticated accesses in a place registered.
-      description: Returns all the authenticated accesses in a place registered.
-      operationId: getAccessListInPlace
-      parameters:
-        - name: placeId
-          in: path
-          description: ID of a place
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: Authenticated accesses in a place returned successfully.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
-        "204":
-          description: Authenticated accesses in a place were not found.
-        "400":
-          description: Accesses were not found with these placeId.
   "/access/place/{placeId}/authenticated/{userIds}":
     get:
       tags:
         - access
+        - place
       summary: Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
-      description: Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
-      operationId: getAccessListInPlaceOfUsers
+      description: >-
+        Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas) that are fully registered.
+        Fully registered means that there are both the entrance and the exit timestamp.
+        Both app users and web-app admininistrators can access this end-point.
+      operationId: getAuthenticatedAccessListInPlace
       parameters:
         - name: userIds
           in: path
-          description: One or more userIds
+          description: >-
+            One or more userIds.
+            If it is called by the app user, the userIds parameter can only consist in one identifier.
+            Otherwise it can be more than one identifier.
           required: true
           explode: true
           schema:
@@ -647,61 +626,44 @@ paths:
               format: int64
         - name: placeId
           in: path
-          description: ID of a place
+          description: ID of a place.
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "200":
-          description: Authenticated accesses in a place returned successfully.
+          description: List of authenticated accesses in a place gets returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/PlaceAuthenticatedAccess"
-        "400":
-          description: Accesses were not found with these placeId and userIds.
-  "/access/organization/{organizationId}/authenticated":
-    get:
-      tags:
-        - access
-      summary: Returns all the authenticated accesses in an organization registered.
-      description: Returns all the authenticated accesses in an organization registered.
-      operationId: getAccessListInOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: ID of an organization
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: Authenticated accesses in an organization returned successfully.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
         "204":
-          description: Authenticated accesses in an organization were not found.
-        "400":
-          description: Accesses were not found with these organizationId.
+          description: List of authenticated accesses in a place were not found. Nothing gets returned.
+        "401":
+          description: The administrator or the user is not authenticated. Nothing gets returned.
+        "404":
+          description: List of all accesses could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{userIds}":
     get:
       tags:
         - access
+        - organization
       summary: Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
-      description: Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
-      operationId: getAccessListInOrganizationOfUsers
+      description: >-
+        Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas) that are fully registered.
+        Fully registered means that there are both the entrance and the exit timestamp.
+        Both app users and web-app admininistrators can access this end-point.
+      operationId: getAuthenticatedAccessListInOrganization
       parameters:
         - name: userIds
           in: path
-          description: One or more userIds
+          description: >-
+            One or more userIds.
+            If it is called by the app user, the userIds parameter can only consist in one identifier.
+            Otherwise it can be more than one identifier.
           required: true
           explode: true
           schema:
@@ -718,15 +680,19 @@ paths:
             format: int64
       responses:
         "200":
-          description: Authenticated accesses in an organization returned successfully.
+          description: List of authenticated accesses in an organization gets returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/OrganizationAuthenticatedAccess"
-        "400":
-          description: Accesses were not found with these organizationId and userIds.
+                  $ref: "#/components/schemas/PlaceAuthenticatedAccess"
+        "204":
+          description: List of authenticated accesses in an organization were not found. Nothing gets returned.
+        "401":
+          description: The administrator or the user is not authenticated. Nothing gets returned.
+        "404":
+          description: List of all accesses could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}":
     get:
       tags:
