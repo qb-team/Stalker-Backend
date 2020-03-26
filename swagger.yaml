@@ -463,6 +463,16 @@ paths:
         Creates a new place for an organization.
         Only web-app admininistrators can access this end-point.
       operationId: createNewPlace
+      parameters:
+        - name: placeId
+          in: path
+          description: >-
+            ID of a place.
+            The admininistrator must have at least manager permission to the organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "201":
           description: The new place of the organization was created. The place gets returned.
@@ -475,7 +485,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer permission cannot have access. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -491,6 +501,14 @@ paths:
         Updates one or more properties of a place of an organization.
         Only web-app admininistrators can access this end-point.
       operationId: updatePlace
+      parameters:
+        - name: placeId
+          in: path
+          description: ID of a place.
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: Place updated successfully. The updated place gets returned.
@@ -503,7 +521,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users or administrator with viewer permission cannot have access. Nothing gets returned.
         "404":
           description: Invalid place ID supplied. Nothing gets returned.
       requestBody:
