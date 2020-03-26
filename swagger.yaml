@@ -306,7 +306,7 @@ paths:
           description: Users cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/organization/{organizationId}/administrator/unbind":
+  "/organization/{organizationId}/administrator/unbind/{administratorId}":
     post:
       tags:
         - organization
@@ -452,31 +452,22 @@ paths:
     post:
       tags:
         - place
-      summary: Creates a new place to a given organization.
-      description: Creates a new place to a given organization.
+      summary: Creates a new place for an organization.
+      description: >-
+        Creates a new place for an organization.
+        Only web-app admininistrators can access this end-point.
       operationId: createNewPlace
       responses:
-        "200":
-          description: Place successfully created to the organization.
-        "400":
-          description: Place could not be created.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Place"
-    put:
-      tags:
-        - place
-      summary: Updates a place of a given organization.
-      description: Updates a place of a given organization.
-      operationId: updatePlace
-      responses:
-        "200":
-          description: Place successfully updated.
-        "400":
-          description: Place could not be updated.
+        "201":
+          description: The new place of the organization was created. The place gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Place"
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -484,11 +475,40 @@ paths:
             schema:
               $ref: "#/components/schemas/Place"
   "/place/{placeId}":
+    put:
+      tags:
+        - place
+      summary: Updates one or more properties of a place of an organization.
+      description: >-
+        Updates one or more properties of a place of an organization.
+        Only web-app admininistrators can access this end-point.
+      operationId: updatePlace
+      responses:
+        "200":
+          description: Place updated successfully. The updated place gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Place"
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: Invalid place ID supplied. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Place"
     delete:
       tags:
         - place
       summary: Deletes a place of an organization.
-      description: Deletes a place of an organization.
+      description: >-
+        Deletes a place of an organization.
+        Only web-app admininistrators can access this end-point.
       operationId: deletePlace
       parameters:
         - name: placeId
@@ -499,10 +519,14 @@ paths:
             type: integer
             format: int64
       responses:
-        "200":
-          description: Place successfully deleted.
-        "400":
-          description: Place could not be deleted.
+        "205":
+          description: Place successfully removed from the list of favorites. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.  
   "/movement/track/organization/authenticated":
     post:
       tags:
