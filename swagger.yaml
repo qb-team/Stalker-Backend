@@ -707,9 +707,13 @@ paths:
     get:
       tags:
         - presence
-      summary: Gets the list of people currently inside the organization's trackingArea (organization is required to track people with trackingMode = authenticated)
-      description: Gets the list of people currently inside the organization's trackingArea (organization is required to track people with trackingMode = authenticated)
-      operationId: getOrganizationPresenceListById
+        - organization
+      summary: Gets the list of people currently inside the organization's trackingArea.
+      description: >-
+        Gets the list of people currently inside the organization's trackingArea.
+        The organization is required to track people with trackingMode: authenticated.
+        Only web-app admininistrators can access this end-point.
+      operationId: getOrganizationPresenceList
       parameters:
         - name: organizationId
           in: path
@@ -726,16 +730,23 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserInfo"
-        "400":
-          description: Organization presence list not found.
+                  $ref: "#/components/schemas/OrganizationAccess"
+        "204":
+          description: There is currently nobody inside the organization's trackingArea. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}/counter":
     get:
       tags:
         - presence
-      summary: Gets the number of people currently inside of an organization given its organizationId.
-      description: Gets the number of people currently inside of an organization given its organizationId.
-      operationId: getOrganizationPresenceCounterById
+        - organization
+      summary: Gets the number of people currently inside the organization's trackingArea.
+      description: >-
+        Gets the number of people currently inside the organization's trackingArea.
+        Only web-app admininistrators can access this end-point.
+      operationId: getOrganizationPresenceCounter
       parameters:
         - name: organizationId
           in: path
@@ -751,15 +762,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrganizationPresenceCounter"
-        "400":
-          description: Organization presence counter not found.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/presence/place/{placeId}":
     get:
       tags:
         - presence
-      summary: Gets the list of people currently inside the place's trackingArea (organization is required to track people with trackingMode = authenticated)
-      description: Gets the list of people currently inside the place's trackingArea (organization is required to track people with trackingMode = authenticated)
-      operationId: getPlacePresenceListById
+        - place
+      summary: Gets the list of people currently inside the place's trackingArea.
+      description: >-
+        Gets the list of people currently inside the place's trackingArea.
+        The place is required to track people with trackingMode: authenticated.
+        Only web-app admininistrators can access this end-point.
+      operationId: getPlacePresenceList
       parameters:
         - name: placeId
           in: path
@@ -770,22 +787,29 @@ paths:
             format: int64
       responses:
         "200":
-          description: Organization presence list returned successfully.
+          description: Place presence list returned successfully.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserInfo"
-        "400":
-          description: Organization presence list not found.
+                  $ref: "#/components/schemas/PlaceAccess"
+        "204":
+          description: There is currently nobody inside the place's trackingArea. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "404":
+          description: The place could not be found. Nothing gets returned.
   "/presence/place/{placeId}/counter":
     get:
       tags:
         - presence
-      summary: Gets the number of people currently inside of a place given its placeId.
-      description: Gets the number of presences inside of a place given its placeId.
-      operationId: getPlacePresenceCounterById
+        - place
+      summary: Gets the number of people currently inside the place's trackingArea.
+      description: >-
+        Gets the number of people currently inside the place's trackingArea.
+        Only web-app admininistrators can access this end-point.
+      operationId: getPlacePresenceCounter
       parameters:
         - name: placeId
           in: path
@@ -801,8 +825,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PlacePresenceCounter"
-        "400":
-          description: Place presence counter not found.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "404":
+          description: The place could not be found. Nothing gets returned.
 components:
   schemas:
     Organization:
@@ -851,11 +877,11 @@ components:
         country:
           type: string
           description: The country where the organization is located.
-        serverLDAP:
+        authenticationServerURL:
           type: string
           description: >-
-            URL or IP address of the LDAP server of the organization.
-            If it's required a specific TCP port (different from LDAP's default) it must be specified.
+            URL or IP address of the authentication server of the organization.
+            If it's required a specific port or protocol it must be specified.
             Needed only if trackingMethod is set to authenticated.
         creationDate:
           type: string
@@ -901,15 +927,7 @@ components:
           description: >-
             rea subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
-            The string is expressed in JSON format.
-    TrackingArea:
-      type: object
-      required:
-      - trackingArea
-      properties:
-        trackingArea:
-          type: string
-          description: JSON representation of a tracking area.       
+            The string is expressed in JSON format.     
     User:
       type: object
       required:
@@ -918,9 +936,9 @@ components:
         userId:
           type: string
           description: Authentication service's user unique identifier.
-        ldapId:
-          type: integer
-          description: Organization LDAP server's user unique identifier.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
     Administrator:
       type: object
       required:
@@ -929,9 +947,9 @@ components:
         administratorId:
           type: string
           description: Authentication service's administrator unique identifier.
-        ldapId:
-          type: integer
-          description: Organization LDAP server's administrator unique identifier.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
     AdministratorInfo:
       type: object
       required:
@@ -953,14 +971,14 @@ components:
       properties:
         name:
           type: string
-          description: Name of the user (if available in the organization LDAP server).
+          description: Name of the user (if available in the authentication server of the organization).
         surname:
           type: string
-          description: Surname of the user (if available in the organization LDAP server).
+          description: Surname of the user (if available in the authentication server of the organization).
         mail:
           type: string
           format: email
-          description: Mail of the user.
+          description: Mail address of the user.
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
@@ -977,18 +995,20 @@ components:
           format: int64
           description: Unique identifier of the organization the administrator is part of.
         permission:
-          type: string
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 3
           description: >-
             What can or cannot do an organization's administrator.
-            Owner is the highest level of permissions while viewer is the lowest.
-          enum:
-            - owner
-            - manager
-            - viewer
+            The permission levels are:
+            - Owner: 3 (higher level)
+            - Manager: 2
+            - Viewer: 1 (lowest level)
     Favorite:
       type: object
       description: >-
-        Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.
+        Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
       required:
         - userId
         - organizationId
@@ -1029,65 +1049,60 @@ components:
           type: string
           format: date-time
           description: Date and time of the moment in which the user left the place.
-    PlaceAuthenticatedAccess:
-      description: Access to a place of an organization made with the authenticated trackingMode.
-      allOf:
-        - $ref: "#/components/schemas/Access"
-        - type: object
-          required:
-            - placeId
-            - ldapId
-          properties:
-            placeId:
-              type: integer
-              format: int64
-              description: Unique identifier of the place in which the user had access.
-            ldapId:
-              type: integer
-              format: int64
-              description: Organization LDAP server's user unique identifier.
-    OrganizationAuthenticatedAccess:
-      description: Access to an organization made with the authenticated trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Access"
-      - type: object
-        required:
-          - organizationId
-          - ldapId
-        properties:
-          organizationId:
-            type: integer
-            format: int64
-            description: Unique identifier of the organization in which the user had access.
-          ldapId:
-            type: integer
-            format: int64
-            description: Organization LDAP server's user unique identifier.
-    PlaceAnonymousAccess:
-      description: Access to a place of an organization made with the anonymous trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Access"
-      - type: object
-        required:
-          - placeId
-        properties:
-          placeId:
-            type: integer
-            format: int64
-            description: Unique identifier of the place in which the user had access.
-    OrganizationAnonymousAccess:
-      description: Access to an organization made with the authenticated trackingMode.
-      allOf:
-      - $ref: "#/components/schemas/Access"
-      - type: object
-        required:
-          - access
-          - organizationId
-        properties:
-          organizationId:
-            type: integer
-            format: int64
-            description: Unique identifier of the organization in which the user had access.
+    PlaceAccess:
+      type: object
+      description: Access to a place of an organization.
+      required:
+        - id
+        - entranceTimestamp
+        - exitTimestamp
+        - placeId
+      properties:
+        id:
+          type: integer
+          format: int64
+        entranceTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the place.
+        exitTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user left the place.
+        placeId:
+          type: integer
+          format: int64
+          description: Unique identifier of the place in which the user had access.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
+    OrganizationAccess:
+      type: object
+      description: Access to an organization.
+      required:
+        - id
+        - entranceTimestamp
+        - exitTimestamp
+        - organizationId
+      properties:
+        id:
+          type: integer
+          format: int64
+        entranceTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user entered the place.
+        exitTimestamp:
+          type: string
+          format: date-time
+          description: Date and time of the moment in which the user left the place.
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
     OrganizationPresenceCounter:
       type: object
       description: Number of people currently inside the organization's trackingArea.
@@ -1151,13 +1166,13 @@ components:
       - type: object
         required:
           - placeId
-          - ldapId
+          - orgAuthServerId
         properties:
           placeId:
             type: integer
             format: int64
             description: Unique identifier of the place in which the user had access.
-          ldapId:
+          orgAuthServerId:
             type: integer
             format: int64
             description: Organization LDAP server's user unique identifier.
@@ -1168,13 +1183,13 @@ components:
       - type: object
         required:
           - organizationId
-          - ldapId
+          - orgAuthServerId
         properties:
           organizationId:
             type: integer
             format: int64
             description: Unique identifier of the organization in which the user had access.
-          ldapId:
+          orgAuthServerId:
             type: integer
             format: int64
             description: Organization LDAP server's user unique identifier.
