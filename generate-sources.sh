@@ -11,6 +11,8 @@ rm -r generated-sources/spring/*
 touch generated-sources/spring/.gitkeep
 rm -r generated-sources/typescript/*
 touch generated-sources/typescript/.gitkeep
+rm -r generated-sources/html/*
+touch generated-sources/html/.gitkeep
 
 #
 # Validate API specification
@@ -44,3 +46,12 @@ openapi-generator generate \
 --generator-name typescript-angular \
 --config openapi-config/typescript.json \
 --output generated-sources/typescript
+
+#
+# Generate Stalker API documentation
+#
+openapi-generator generate \
+--input-spec swagger.yaml \
+--generator-name html \
+--config openapi-config/html.json \
+--output generated-sources/html

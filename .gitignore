@@ -196,3 +196,5 @@ generated-sources/spring/*
 !generated-sources/spring/.gitkeep
 generated-sources/typescript/*
 !generated-sources/typescript/.gitkeep
+generated-sources/html/*
+!generated-sources/html/.gitkeep
