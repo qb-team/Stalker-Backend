@@ -319,6 +319,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Permission"
+        "400":
+          description: The administrator to be created has already an account. The process could not succeed. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -330,7 +332,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Administrator"
+              $ref: "#/components/schemas/AdministratorInfo"
   "/organization/administrator/update":
     post:
       tags:
@@ -1051,6 +1053,8 @@ components:
           type: string
           format: email
           description: Mail of the administrator.
+        admininistrator:
+          $ref: "#/components/schemas/Administrator"
         permission:
           $ref: "#/components/schemas/Permission"
     UserInfo:
