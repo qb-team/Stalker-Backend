@@ -922,6 +922,43 @@ paths:
           description: The administrator is not authenticated. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
+  "/report/organization/{organizationId}":
+    get:
+      tags:
+        - organization
+        - report
+      summary: Gets the report of total time spent per user inside the organization.
+      description: >-
+        Gets the report of total time spent by each user inside the organization.
+        Only web-app admininistrators can access this end-point.
+      operationId: getTimePerUserReport
+      parameters:
+        - name: organizationId
+          in: path
+          description: >-
+            ID of the organization.
+            The viewer admininistrator must have permissions for this organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Report of time spent in the organization per user returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TimePerUserReport"
+        "204":
+          description: Report is empty. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
 components:
   schemas:
     Organization:
@@ -1081,6 +1118,7 @@ components:
         - administratorId
         - organizationId
         - permission
+        - nominatedBy
       properties:
         administratorId:
           type: string
@@ -1271,3 +1309,20 @@ components:
         orgAuthServerId:
           type: string
           description: User unique identifier from the authentication server of the organization.
+    TimePerUserReport:
+      type: object
+      description: Represents a row in the report generated for an user by the viewer administrator.
+      required:
+        - null
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization in which the user had access.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
+        totalTime:
+          type: string
+          format: date-time
+          description: Total amount of time spent inside the organization by the user.
