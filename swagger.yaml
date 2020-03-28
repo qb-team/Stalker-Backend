@@ -110,6 +110,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Organization"
+        "400":
+          description: The inserted data has some issues. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -290,6 +292,38 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
+  "/organization/administrator/update":
+    post:
+      tags:
+        - organization
+        - permission
+        - administrator
+      summary: Update the permission for an already existent administrator in the organization.
+      description: >-
+        Update the permission for an already existent administrator in the organization.
+        Only web-app admininistrators can access this end-point.
+      operationId: updateAdministratorPermission
+      responses:
+        "201":
+          description: Administrator's permissions updated successfully. The permission record gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+        "400":
+          description: Only the permission can be changed. The request was not satisfied. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
+        "404":
+          description: The organization or the administrator could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Permission"
   "/organization/{organizationId}/administrator":
     get:
       tags:
@@ -354,6 +388,17 @@ paths:
           description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - requestReason
+              properties:
+                requestReason:
+                  type: string
+                  description: Request reason for the deletion request.
   "/organization/{organizationId}/trackingArea":
     put:
       tags:
@@ -1012,6 +1057,9 @@ components:
             - Owner: 3 (higher level)
             - Manager: 2
             - Viewer: 1 (lowest level)
+        nominatedBy:
+          type: string
+          description: admininistratorId of the owner admininistrator who nominated the current admininistrator.
     Favorite:
       type: object
       description: >-
