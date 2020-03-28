@@ -15,11 +15,11 @@ tags:
   - name: organization
     description: End-points for retrieving, updating and asking for deletion of organizations.
   - name: favorite
-    description: End-points for retrieving, adding and removing organizations.
+    description: End-points for retrieving, adding and removing organizations to an user's favorite organization list.
+  - name: permission
+    description: End-points for retrieving, adding and removing organizations to an administrator's permissions.
   - name: place
     description: Place related endpoints.
-  - name: tracking
-    description: Tracking related endpoints.
   - name: movement
     description: Movement related endpoints.
   - name: access
@@ -85,7 +85,7 @@ paths:
         "401":
           description: The user or the administrator is not authenticated. Nothing gets returned.
         "404":
-          description: Organization not found. Nothing gets returned.
+          description: The organization could not be found. Nothing gets returned.
     put:
       tags:
         - organization
@@ -115,7 +115,7 @@ paths:
         "403":
           description: Users cannot have access. Nothing gets returned.
         "404":
-          description: Invalid organization ID supplied. Nothing gets returned.
+          description: The organization could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -150,6 +150,8 @@ paths:
                   $ref: "#/components/schemas/Organization"
         "204":
           description: List of favorite organizations is empty. Nothing gets returned.
+        "400":
+          description: The supplied userId is incorrect. Nothing gets returned.
         "401":
           description: The user or the administrator is not authenticated. Nothing gets returned.
         "403":
@@ -232,71 +234,17 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.     
-  "/organization/{organizationId}/administrator/create":
+  "/organization/administrator/bind":
     post:
       tags:
         - organization
+        - permission
         - administrator
-      summary: Creates and binds a new administrator to the organization.
+      summary: Bind an already existent administrator to the organization.
       description: >-
-        Creates and binds a new administrator to the current organization. 
-        Only web-app administrators can access this end-point.
-      operationId: createNewAdministratorToOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: >-
-            ID of an organization.
-            The administrator must have at least owner permission to the organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "201":
-          description: Administrator created and binded successfully. The permission record gets returned.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Permission"
-        "401":
-          description: The administrator is not authenticated. Nothing gets returned.
-        "403":
-          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Administrator"
-  "/organization/{organizationId}/administrator/bind/{administratorId}":
-    post:
-      tags:
-        - organization
-        - administrator
-      summary: Bind an already existent administrator to the current organization.
-      description: >-
-        Bind an already existent administrator to the current organization.
+        Bind an already existent administrator to the organization.
         Only web-app admininistrators can access this end-point.
       operationId: bindAdministratorToOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: >-
-            ID of an organization.
-            The administrator must have at least owner permission to the organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: administratorId
-          in: path
-          description: ID of an administrator.
-          required: true
-          schema:
-            type: string
       responses:
         "201":
           description: Administrator binded successfully. The permission record gets returned.
@@ -310,32 +258,23 @@ paths:
           description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization or the administrator could not be found. Nothing gets returned.
-  "/organization/{organizationId}/administrator/unbind/{administratorId}":
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Permission"
+  "/organization/administrator/unbind":
     post:
       tags:
         - organization
+        - permission
         - administrator
-      summary: Unbind an administrator to the current organization.
+      summary: Unbind an administrator to the organization.
       description: >-
-        Unbind an administrator to the current organization.
+        Unbind an administrator to the organization.
         Only web-app admininistrators can access this end-point.
       operationId: unbindAdministratorFromOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: >-
-            ID of an organization.
-            The administrator must have at least owner permission to the organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: administratorId
-          in: path
-          description: ID of an administrator.
-          required: true
-          schema:
-            type: string
       responses:
         "204":
           description: Administrator unbinded successfully. Nothing gets returned.
@@ -345,20 +284,26 @@ paths:
           description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization or the administrator could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Permission"
   "/organization/{organizationId}/administrator":
     get:
       tags:
         - organization
         - administrator
-      summary: Returns the list of administrators of the current organization.
+      summary: Returns the list of administrators of the organization.
       description: >- 
-        Returns the list of administrators of the current organization.
+        Returns the list of administrators of the organization.
         Only web-app admininistrators can access this end-point.
       operationId: getAdministratorListOfOrganization
       parameters:
         - name: organizationId
           in: path
-          description: >- #controllare
+          description: >-
             ID of an organization.
             The administrator must have at least owner permission to the organization.
           required: true
@@ -453,7 +398,75 @@ paths:
               properties:
                 trackingArea:
                   type: string
-                  description: JSON representation of a tracking area.       
+                  description: JSON representation of a tracking trackingArea.
+  "/organization/permission/{administratorId}":
+    get:
+      tags:
+        - organization
+        - permission
+        - administrator
+      summary: Gets the list of permission that an administrator has permissions to view/manage/own.
+      description: >-
+        Gets the list of organizations that an administrator has permissions to view/manage/own.
+        Only web-app admininistrators can access this end-point.
+      operationId: getPermissionList
+      parameters:
+        - name: administratorId
+          in: path
+          description: ID of the administrator. It must be the same of the administratorId of the authenticated administrator.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of permissions returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Permission"
+        "204":
+          description: List of permissions is empty. Nothing gets returned.
+        "401":
+          description: The user or the administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
+        "404":
+          description: List of organizations could not be found. Nothing gets returned.
+  "/organization/{organizationId}/place":
+    get:
+      tags:
+        - organization
+        - place
+      summary: Returns the list of places of the organization.
+      description: >- 
+        Returns the list of places of the organization.
+        Both app users and web-app admininistrators can access this end-point.
+      operationId: getPlaceListOfOrganization
+      parameters:
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Place list of organization returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Place"
+        "204":
+          description: Place list of organization is empty. Nothing gets returned.
+        "401":
+          description: The administrator or the user is not authenticated. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
   "/place":
     post:
       tags:
@@ -463,16 +476,6 @@ paths:
         Creates a new place for an organization.
         Only web-app admininistrators can access this end-point.
       operationId: createNewPlace
-      parameters:
-        - name: placeId
-          in: path
-          description: >-
-            ID of a place.
-            The admininistrator must have at least manager permission to the organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         "201":
           description: The new place of the organization was created. The place gets returned.
