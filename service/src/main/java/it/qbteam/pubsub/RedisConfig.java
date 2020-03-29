@@ -1,4 +1,4 @@
-package it.qbteam.config;
+package it.qbteam.pubsub;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -10,11 +10,10 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-
-import it.qbteam.pubsub.RedisMessageSubscriber;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
@@ -51,24 +50,24 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-    @Bean
-    RedisMessageListenerContainer redisContainer() {
-        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory());
-        container.addMessageListener(messageListener(), topic());
-        return container;
-    }
-
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("pubsub:queue");
-    }
- 
     
     @Bean
     MessageListenerAdapter messageListener() {
         return new MessageListenerAdapter(new RedisMessageSubscriber());
     }
+
+    @Bean
+	RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
+			MessageListenerAdapter listenerAdapter) {
+
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
+		container.addMessageListener(listenerAdapter, new PatternTopic("pubsub:queue"));
+
+		return container;
+	}
+
+    
 
  
 }
