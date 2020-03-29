@@ -60,6 +60,17 @@ public class RedisConfig {
         return redisTemplate;
     }
     
+    /*@Bean(name="movement")
+    RedisTemplate<String,String> getRedisMovementTemplate() {
+        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }*/
+    
     @Bean(name="movement")
     RedisTemplate<String,String> getRedisMovementTemplate() {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
