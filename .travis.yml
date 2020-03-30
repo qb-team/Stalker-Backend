@@ -12,7 +12,7 @@ before_install:
   - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
   - sudo apt-get install -y nodejs
   - sudo npm install @openapitools/openapi-generator-cli -g
-  - openapi-generator validate --input-spec swagger.yaml
+  - openapi-generator validate --input-spec stalker.yaml
 
 script:
   - mvn clean install

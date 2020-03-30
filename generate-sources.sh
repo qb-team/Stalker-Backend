@@ -18,13 +18,13 @@ touch generated-sources/html/.gitkeep
 # Validate API specification
 #
 openapi-generator validate \
---input-spec swagger.yaml
+--input-spec stalker.yaml
 
 #
 # Generate Stalker-App source code
 #
 openapi-generator generate \
---input-spec swagger.yaml \
+--input-spec stalker.yaml \
 --generator-name android \
 --config openapi-config/android.json \
 --output generated-sources/android
@@ -33,7 +33,7 @@ openapi-generator generate \
 # Generate Stalker-Backend source code
 #
 openapi-generator generate \
---input-spec swagger.yaml \
+--input-spec stalker.yaml \
 --generator-name spring \
 --config openapi-config/spring.json \
 --output generated-sources/spring
@@ -42,7 +42,7 @@ openapi-generator generate \
 # Generate Stalker-Admin source code
 #
 openapi-generator generate \
---input-spec swagger.yaml \
+--input-spec stalker.yaml \
 --generator-name typescript-angular \
 --config openapi-config/typescript.json \
 --output generated-sources/typescript
@@ -51,7 +51,7 @@ openapi-generator generate \
 # Generate Stalker API documentation
 #
 openapi-generator generate \
---input-spec swagger.yaml \
+--input-spec stalker.yaml \
 --generator-name html \
 --config openapi-config/html.json \
 --output generated-sources/html
