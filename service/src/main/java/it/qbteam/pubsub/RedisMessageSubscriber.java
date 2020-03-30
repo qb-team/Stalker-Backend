@@ -1,5 +1,8 @@
 package it.qbteam.pubsub;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.springframework.boot.SpringApplication;
@@ -11,23 +14,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RedisMessageSubscriber implements MessageListener {
- 
+
     public static List<String> messageList = new ArrayList<String>();
-    public int countere=0;
- 
+    public int countere = 0;
+
+    @Override
     public void onMessage(Message message, byte[] pattern) {
         messageList.add(message.toString());
         countere++;
-        System.out.println("Message received");
+        BufferedWriter writer;
+        try {
+            writer = new BufferedWriter(new FileWriter("provaFile.txt"));
+            writer.write(message.toString());
+            writer.close();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
     }
 
 public static void main(String[] args) throws InterruptedException {
     SpringApplication.run(RedisMessageSubscriber.class, args);
     RedisMessageSubscriber rms = new RedisMessageSubscriber();
-    while (rms.countere==0) {
-
-        System.out.println("attendo");
-        Thread.sleep(2000L);
-    }
   }
 }
