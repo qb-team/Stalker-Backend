@@ -16,7 +16,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
-@EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {
 
 
@@ -53,20 +52,22 @@ public class RedisConfig {
     
     @Bean
     MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+        return new MessageListenerAdapter(new RedisMessageSubscriber(), "onMessage");
     }
 
     @Bean
 	RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
-			MessageListenerAdapter listenerAdapter) {
+			MessageListenerAdapter listenerAdapter, ChannelTopic topic) {
 
 		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
-		container.addMessageListener(listenerAdapter, new PatternTopic("pubsub:queue"));
-
+		container.addMessageListener(listenerAdapter, topic);
 		return container;
 	}
-
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("pubsub:queue");
+    }
     
 
  
