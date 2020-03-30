@@ -1303,7 +1303,9 @@ components:
       type: object
       description: Represents a row in the report generated for an user by the viewer administrator.
       required:
-        - null
+        - organizationId
+        - orgAuthServerId
+        - totalTime
       properties:
         organizationId:
           type: integer
