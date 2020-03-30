@@ -184,6 +184,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "201":
           description: >-
@@ -225,6 +226,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
@@ -375,6 +377,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Administrators' information returned successfully.
@@ -410,6 +413,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "204":
           description: Request sent successfully. Nothing gets returned.
@@ -449,6 +453,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: The tracking area of the organization was updated successfully. The organization gets returned.
@@ -528,6 +533,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Place list of organization returned successfully.
@@ -588,6 +594,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Place updated successfully. The updated place gets returned.
@@ -625,6 +632,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "205":
           description: Place successfully removed from the list of favorites. Nothing gets returned.
@@ -692,31 +700,30 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PlaceMovement"
-  "/access/place/{placeId}/authenticated/{userIds}":
+  "/access/place/{placeId}/authenticated/{orgAuthServerIds}":
     get:
       tags:
         - access
         - place
-      summary: Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
+      summary: Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
-        Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas) that are fully registered.
+        Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
         Both app users and web-app admininistrators can access this end-point.
       operationId: getAuthenticatedAccessListInPlace
       parameters:
-        - name: userIds
+        - name: orgAuthServerIds
           in: path
           description: >-
-            One or more userIds.
-            If it is called by the app user, the userIds parameter can only consist in one identifier.
+            One or more orgAuthServerIds.
+            If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier.
             Otherwise it can be more than one identifier.
           required: true
           explode: true
           schema:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
         - name: placeId
           in: path
           description: ID of a place.
@@ -724,6 +731,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: List of authenticated accesses in a place gets returned successfully.
@@ -739,31 +747,30 @@ paths:
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
-  "/access/organization/{organizationId}/authenticated/{userIds}":
+  "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}":
     get:
       tags:
         - access
         - organization
-      summary: Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
+      summary: Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
-        Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas) that are fully registered.
+        Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
         Both app users and web-app admininistrators can access this end-point.
       operationId: getAuthenticatedAccessListInOrganization
       parameters:
-        - name: userIds
+        - name: orgAuthServerIds
           in: path
           description: >-
-            One or more userIds.
-            If it is called by the app user, the userIds parameter can only consist in one identifier.
+            One or more orgAuthServerIds.
+            If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier.
             Otherwise it can be more than one identifier.
           required: true
           explode: true
           schema:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
         - name: organizationId
           in: path
           description: ID of an organization
@@ -771,6 +778,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: List of authenticated accesses in an organization gets returned successfully.
@@ -805,6 +813,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Organization presence list returned successfully.
@@ -838,6 +847,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Organization presence counter returned successfully.
@@ -868,6 +878,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Place presence list returned successfully.
@@ -901,6 +912,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Place presence counter returned successfully.
@@ -932,6 +944,7 @@ paths:
           schema:
             type: integer
             format: int64
+            minimum: 1
       responses:
         "200":
           description: Report of time spent in the organization per user returned successfully.
