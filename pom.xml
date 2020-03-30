@@ -16,7 +16,6 @@
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
 	<properties>
 		<java.version>1.8</java.version>
-		<openapi-generator.version>4.2.3</openapi-generator.version>
 		<swagger.core.version>2.1.1</swagger.core.version>
 		<swagger.annotation.version>1.6.0</swagger.annotation.version>
 		<lombok.version>1.18.12</lombok.version>
@@ -59,12 +58,6 @@
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-core</artifactId>
 			<version>${swagger.core.version}</version>
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
 
 		<!-- Aggiunge annotazioni extra a quelle di Swagger Core di default -->
