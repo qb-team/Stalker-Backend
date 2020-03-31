@@ -32,9 +32,4 @@ public class RedisMessageSubscriber implements MessageListener {
             e1.printStackTrace();
         }
     }
-
-public static void main(String[] args) throws InterruptedException {
-    SpringApplication.run(RedisMessageSubscriber.class, args);
-    RedisMessageSubscriber rms = new RedisMessageSubscriber();
-  }
 }

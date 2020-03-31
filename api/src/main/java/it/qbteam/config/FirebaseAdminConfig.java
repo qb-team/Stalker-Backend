@@ -17,7 +17,7 @@ public class FirebaseAdminConfig {
     @Value("${GOOGLE_APPLICATION_CREDENTIALS}")
     private String serviceAccountKeyFile;
 
-    @Value("${FIREBASE_DATABASE_URL")
+    @Value("${FIREBASE_DATABASE_URL}")
     private String databaseUrl;
 
     @Bean

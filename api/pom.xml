@@ -7,10 +7,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>it.qbteam</groupId>
-	<artifactId>stalker-api</artifactId>
+	<artifactId>stalker-backend-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Stalker api</name>
-	<description>api per Stalker</description>
+	<name>Stalker Backend - API</name>
+	<description>Stalker Backend - API</description>
+	<packaging>jar</packaging>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
 	<properties>
@@ -31,8 +32,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
 
 		<!-- Base per testare applicazioni Spring Boot con librerie come JUnit, Hamcrest e Mockito -->
 		<dependency>
@@ -73,7 +72,6 @@
 			<version>${firebase-admin.version}</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -81,7 +79,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyle.version}</version>
@@ -100,10 +98,10 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
-	<reporting>
+	<!-- <reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -123,5 +121,5 @@
 				<version>${maven-jxr-plugin.version}</version>
 			</plugin>
 		</plugins>
-	</reporting>
+	</reporting> -->
 </project>
