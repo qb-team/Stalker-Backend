@@ -7,10 +7,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>it.qbteam</groupId>
-	<artifactId>stalker-backend-api</artifactId>
+	<artifactId>stalker-backend-controller</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Stalker Backend - API</name>
-	<description>Stalker Backend - API</description>
+	<name>Stalker Backend - Controller</name>
+	<description>Stalker Backend - Controller</description>
 	<packaging>jar</packaging>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
@@ -31,6 +31,20 @@
 		<dependency>
 			<groupId>it.qbteam</groupId>
 			<artifactId>stalker-backend-model</artifactId>
+			<version>${stalker-backend.version}</version>
+		</dependency>
+
+		<!-- Repository -->
+		<dependency>
+			<groupId>it.qbteam</groupId>
+			<artifactId>stalker-backend-repository</artifactId>
+			<version>${stalker-backend.version}</version>
+		</dependency>
+
+		<!-- API -->
+		<dependency>
+			<groupId>it.qbteam</groupId>
+			<artifactId>stalker-backend-api</artifactId>
 			<version>${stalker-backend.version}</version>
 		</dependency>
 
@@ -79,54 +93,4 @@
 			<version>${firebase-admin.version}</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${checkstyle.version}</version>
-				<configuration>
-					<configLocation>${project.basedir}/../checkstyle.xml</configLocation>
-					<encoding>UTF-8</encoding>
-					<failsOnError>false</failsOnError>
-					<consoleOutput>true</consoleOutput>
-					<linkXRef>false</linkXRef>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>checkstyle</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
-		</plugins>
-	</build>
-	<!-- <reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${checkstyle.version}</version>
-				<configuration>
-					<configLocation>${project.basedir}/../checkstyle.xml</configLocation>
-					<encoding>UTF-8</encoding>
-					<failsOnError>false</failsOnError>
-					<consoleOutput>true</consoleOutput>
-					<linkXRef>false</linkXRef>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>${maven-jxr-plugin.version}</version>
-			</plugin>
-		</plugins>
-	</reporting> -->
 </project>

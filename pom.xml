@@ -17,12 +17,16 @@
 	<modules>
 		<!-- nomi delle cartelle dei moduli -->
 		<module>api</module>
+		<module>controller</module>
 		<module>model</module>
+		<module>repository</module>
 		<module>service</module>
 	</modules>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
 	<properties>
+		<stalker-backend.version>0.0.1-SNAPSHOT</stalker-backend.version>
+		<!-- separatore -->
 		<java.version>1.8</java.version>
 		<swagger.core.version>2.1.1</swagger.core.version>
 		<swagger.annotation.version>1.6.0</swagger.annotation.version>
@@ -63,11 +67,6 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!-- <plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin> -->
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
