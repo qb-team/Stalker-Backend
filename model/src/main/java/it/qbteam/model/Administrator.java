@@ -3,13 +3,21 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
-import javax.persistence.Entity;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -24,8 +32,8 @@ public class Administrator   {
   private String administratorId;
 
   @Id
-  @JsonProperty("ldapId")
-  private Integer ldapId;
+  @JsonProperty("orgAuthServerId")
+  private String orgAuthServerId;
 
   public Administrator administratorId(String administratorId) {
     this.administratorId = administratorId;
@@ -48,24 +56,24 @@ public class Administrator   {
     this.administratorId = administratorId;
   }
 
-  public Administrator ldapId(Integer ldapId) {
-    this.ldapId = ldapId;
+  public Administrator orgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
     return this;
   }
 
   /**
-   * Organization LDAP server's administrator unique identifier.
-   * @return ldapId
+   * User unique identifier from the authentication server of the organization.
+   * @return orgAuthServerId
   */
-  @ApiModelProperty(value = "Organization LDAP server's administrator unique identifier.")
+  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
 
 
-  public Integer getLdapId() {
-    return ldapId;
+  public String getOrgAuthServerId() {
+    return orgAuthServerId;
   }
 
-  public void setLdapId(Integer ldapId) {
-    this.ldapId = ldapId;
+  public void setOrgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
   }
 
 
@@ -79,12 +87,12 @@ public class Administrator   {
     }
     Administrator administrator = (Administrator) o;
     return Objects.equals(this.administratorId, administrator.administratorId) &&
-        Objects.equals(this.ldapId, administrator.ldapId);
+        Objects.equals(this.orgAuthServerId, administrator.orgAuthServerId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(administratorId, ldapId);
+    return Objects.hash(administratorId, orgAuthServerId);
   }
 
   @Override
@@ -93,7 +101,7 @@ public class Administrator   {
     sb.append("class Administrator {\n");
     
     sb.append("    administratorId: ").append(toIndentedString(administratorId)).append("\n");
-    sb.append("    ldapId: ").append(toIndentedString(ldapId)).append("\n");
+    sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

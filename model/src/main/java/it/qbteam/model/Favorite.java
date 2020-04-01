@@ -3,23 +3,28 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import it.qbteam.model.FavoriteId;
-
 import javax.persistence.Id;
-import javax.persistence.Entity;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.
+ * Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
  */
-@ApiModel(description = "Link between the user and the organization: only the organization which users sets to be their favorite can track their movements.")
+@ApiModel(description = "Link between the user and the organization: only the organization which users set to be their favorite can track their movements.")
 @Entity
 @IdClass(FavoriteId.class)
 public class Favorite   {

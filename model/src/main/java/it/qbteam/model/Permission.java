@@ -6,11 +6,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -29,45 +36,11 @@ public class Permission   {
   @JsonProperty("organizationId")
   private Long organizationId;
 
-  /**
-   * What can or cannot do an organization's administrator. Owner is the highest level of permissions while viewer is the lowest.
-   */
-  public enum PermissionEnum {
-    OWNER("owner"),
-    
-    MANAGER("manager"),
-    
-    VIEWER("viewer");
-
-    private String value;
-
-    PermissionEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static PermissionEnum fromValue(String value) {
-      for (PermissionEnum b : PermissionEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   @JsonProperty("permission")
-  private PermissionEnum permission;
+  private Integer permission;
+
+  @JsonProperty("nominatedBy")
+  private String nominatedBy;
 
   public Permission administratorId(String administratorId) {
     this.administratorId = administratorId;
@@ -78,7 +51,8 @@ public class Permission   {
    * Authentication service's administrator unique identifier.
    * @return administratorId
   */
-  @ApiModelProperty(value = "Authentication service's administrator unique identifier.")
+  @ApiModelProperty(required = true, value = "Authentication service's administrator unique identifier.")
+  @NotNull
 
 
   public String getAdministratorId() {
@@ -110,25 +84,48 @@ public class Permission   {
     this.organizationId = organizationId;
   }
 
-  public Permission permission(PermissionEnum permission) {
+  public Permission permission(Integer permission) {
     this.permission = permission;
     return this;
   }
 
   /**
-   * What can or cannot do an organization's administrator. Owner is the highest level of permissions while viewer is the lowest.
+   * What can or cannot do an organization's administrator. The permission levels are: - Owner: 3 (higher level) - Manager: 2 - Viewer: 1 (lowest level)
+   * minimum: 1
+   * maximum: 3
    * @return permission
   */
-  @ApiModelProperty(required = true, value = "What can or cannot do an organization's administrator. Owner is the highest level of permissions while viewer is the lowest.")
+  @ApiModelProperty(required = true, value = "What can or cannot do an organization's administrator. The permission levels are: - Owner: 3 (higher level) - Manager: 2 - Viewer: 1 (lowest level)")
   @NotNull
 
-
-  public PermissionEnum getPermission() {
+@Min(1) @Max(3) 
+  public Integer getPermission() {
     return permission;
   }
 
-  public void setPermission(PermissionEnum permission) {
+  public void setPermission(Integer permission) {
     this.permission = permission;
+  }
+
+  public Permission nominatedBy(String nominatedBy) {
+    this.nominatedBy = nominatedBy;
+    return this;
+  }
+
+  /**
+   * admininistratorId of the owner admininistrator who nominated the current admininistrator.
+   * @return nominatedBy
+  */
+  @ApiModelProperty(required = true, value = "admininistratorId of the owner admininistrator who nominated the current admininistrator.")
+  @NotNull
+
+
+  public String getNominatedBy() {
+    return nominatedBy;
+  }
+
+  public void setNominatedBy(String nominatedBy) {
+    this.nominatedBy = nominatedBy;
   }
 
 
@@ -143,12 +140,13 @@ public class Permission   {
     Permission permission = (Permission) o;
     return Objects.equals(this.administratorId, permission.administratorId) &&
         Objects.equals(this.organizationId, permission.organizationId) &&
-        Objects.equals(this.permission, permission.permission);
+        Objects.equals(this.permission, permission.permission) &&
+        Objects.equals(this.nominatedBy, permission.nominatedBy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(administratorId, organizationId, permission);
+    return Objects.hash(administratorId, organizationId, permission, nominatedBy);
   }
 
   @Override
@@ -159,6 +157,7 @@ public class Permission   {
     sb.append("    administratorId: ").append(toIndentedString(administratorId)).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("    permission: ").append(toIndentedString(permission)).append("\n");
+    sb.append("    nominatedBy: ").append(toIndentedString(nominatedBy)).append("\n");
     sb.append("}");
     return sb.toString();
   }

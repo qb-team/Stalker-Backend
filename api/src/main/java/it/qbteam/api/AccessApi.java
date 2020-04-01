@@ -5,8 +5,8 @@
  */
 package it.qbteam.api;
 
-import it.qbteam.model.OrganizationAuthenticatedAccess;
-import it.qbteam.model.PlaceAuthenticatedAccess;
+import it.qbteam.model.OrganizationAccess;
+import it.qbteam.model.PlaceAccess;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,129 +32,53 @@ import java.util.Optional;
 @Api(value = "access", description = "the access API")
 public interface AccessApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
-
     /**
-     * GET /access/organization/{organizationId}/authenticated : Returns all the authenticated accesses in an organization registered.
-     * Returns all the authenticated accesses in an organization registered.
+     * GET /access/organization/{organizationId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
+     * Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.
      *
+     * @param orgAuthServerIds One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier. (required)
      * @param organizationId ID of an organization (required)
-     * @return Authenticated accesses in an organization returned successfully. (status code 200)
-     *         or Accesses were not found with these organizationId. (status code 400)
+     * @return List of authenticated accesses in an organization gets returned successfully. (status code 200)
+     *         or List of authenticated accesses in an organization were not found. Nothing gets returned. (status code 204)
+     *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered.", nickname = "getAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List", tags={ "access", })
+    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "access","organization", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Authenticated accesses in an organization returned successfully.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Accesses were not found with these organizationId.") })
-    @RequestMapping(value = "/access/organization/{organizationId}/authenticated",
+        @ApiResponse(code = 200, message = "List of authenticated accesses in an organization gets returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "List of authenticated accesses in an organization were not found. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<List<OrganizationAuthenticatedAccess>> getAccessListInOrganization(@ApiParam(value = "ID of an organization",required=true) @PathVariable("organizationId") Long organizationId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "null";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<List<OrganizationAccess>> getAuthenticatedAccessListInOrganization(@ApiParam(value = "One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier.",required=true) @PathVariable("orgAuthServerIds") List<String> orgAuthServerIds,@Min(1L)@ApiParam(value = "ID of an organization",required=true) @PathVariable("organizationId") Long organizationId);
 
 
     /**
-     * GET /access/organization/{organizationId}/authenticated/{userIds} : Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
-     * Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).
+     * GET /access/place/{placeId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).
+     * Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.
      *
-     * @param userIds One or more userIds (required)
-     * @param organizationId ID of an organization (required)
-     * @return Authenticated accesses in an organization returned successfully. (status code 200)
-     *         or Accesses were not found with these organizationId and userIds. (status code 400)
+     * @param orgAuthServerIds One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier. (required)
+     * @param placeId ID of a place. (required)
+     * @return List of authenticated accesses in a place gets returned successfully. (status code 200)
+     *         or List of authenticated accesses in a place were not found. Nothing gets returned. (status code 204)
+     *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     *         or The place could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).", nickname = "getAccessListInOrganizationOfUsers", notes = "Returns all the authenticated accesses in an organization registered of one or more users (userIds are separated by commas).", response = OrganizationAuthenticatedAccess.class, responseContainer = "List", tags={ "access", })
+    @ApiOperation(value = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInPlace", notes = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "access","place", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Authenticated accesses in an organization returned successfully.", response = OrganizationAuthenticatedAccess.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Accesses were not found with these organizationId and userIds.") })
-    @RequestMapping(value = "/access/organization/{organizationId}/authenticated/{userIds}",
+        @ApiResponse(code = 200, message = "List of authenticated accesses in a place gets returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "List of authenticated accesses in a place were not found. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/access/place/{placeId}/authenticated/{orgAuthServerIds}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<List<OrganizationAuthenticatedAccess>> getAccessListInOrganizationOfUsers(@ApiParam(value = "One or more userIds",required=true) @PathVariable("userIds") List<Long> userIds,@ApiParam(value = "ID of an organization",required=true) @PathVariable("organizationId") Long organizationId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "null";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /access/place/{placeId}/authenticated : Returns all the authenticated accesses in a place registered.
-     * Returns all the authenticated accesses in a place registered.
-     *
-     * @param placeId ID of a place (required)
-     * @return Authenticated accesses in a place returned successfully. (status code 200)
-     *         or Accesses were not found with these placeId. (status code 400)
-     */
-    @ApiOperation(value = "Returns all the authenticated accesses in a place registered.", nickname = "getAccessListInPlace", notes = "Returns all the authenticated accesses in a place registered.", response = PlaceAuthenticatedAccess.class, responseContainer = "List", tags={ "access", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Authenticated accesses in a place returned successfully.", response = PlaceAuthenticatedAccess.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Accesses were not found with these placeId.") })
-    @RequestMapping(value = "/access/place/{placeId}/authenticated",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<List<PlaceAuthenticatedAccess>> getAccessListInPlace(@ApiParam(value = "ID of a place",required=true) @PathVariable("placeId") Long placeId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "null";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * GET /access/place/{placeId}/authenticated/{userIds} : Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
-     * Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).
-     *
-     * @param userIds One or more userIds (required)
-     * @param placeId ID of a place (required)
-     * @return Authenticated accesses in a place returned successfully. (status code 200)
-     *         or Accesses were not found with these placeId and userIds. (status code 400)
-     */
-    @ApiOperation(value = "Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).", nickname = "getAccessListInPlaceOfUsers", notes = "Returns all the authenticated accesses in a place registered of one or more users (userIds are separated by commas).", response = PlaceAuthenticatedAccess.class, responseContainer = "List", tags={ "access", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Authenticated accesses in a place returned successfully.", response = PlaceAuthenticatedAccess.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Accesses were not found with these placeId and userIds.") })
-    @RequestMapping(value = "/access/place/{placeId}/authenticated/{userIds}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<List<PlaceAuthenticatedAccess>> getAccessListInPlaceOfUsers(@ApiParam(value = "One or more userIds",required=true) @PathVariable("userIds") List<Long> userIds,@ApiParam(value = "ID of a place",required=true) @PathVariable("placeId") Long placeId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "null";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<List<PlaceAccess>> getAuthenticatedAccessListInPlace(@ApiParam(value = "One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier.",required=true) @PathVariable("orgAuthServerIds") List<String> orgAuthServerIds,@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);
 
 }

@@ -27,57 +27,42 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name="organization")
 public class Organization   {
-  @Id
-  @Column(name="id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
   private Long id;
 
-  @Column(name="name")
   @JsonProperty("name")
   private String name;
 
-  @Column(name="description")
   @JsonProperty("description")
   private String description;
 
-  @Column(name="image")
   @JsonProperty("image")
   private String image;
 
-  @Column(name="street")
   @JsonProperty("street")
   private String street;
 
-  @Column(name="number")
   @JsonProperty("number")
   private String number;
 
-  @Column(name="post_code")
   @JsonProperty("postCode")
   private Integer postCode;
 
-  @Column(name="city")
   @JsonProperty("city")
   private String city;
 
-  @Column(name="country")
   @JsonProperty("country")
   private String country;
 
-  @Column(name="server_ldap")
-  @JsonProperty("serverLDAP")
-  private String serverLDAP;
+  @JsonProperty("authenticationServerURL")
+  private String authenticationServerURL;
 
-  @Column(name="creation_date")
   @JsonProperty("creationDate")
   private OffsetDateTime creationDate;
 
-  @Column(name="last_change_date")
   @JsonProperty("lastChangeDate")
   private OffsetDateTime lastChangeDate;
 
-  @Column(name="tracking_area")
   @JsonProperty("trackingArea")
   private String trackingArea;
 
@@ -116,8 +101,6 @@ public class Organization   {
     }
   }
 
-  @Enumerated(EnumType.STRING)
-  @Column(name="tracking_mode")
   @JsonProperty("trackingMode")
   private TrackingModeEnum trackingMode;
 
@@ -307,24 +290,24 @@ public class Organization   {
     this.country = country;
   }
 
-  public Organization serverLDAP(String serverLDAP) {
-    this.serverLDAP = serverLDAP;
+  public Organization authenticationServerURL(String authenticationServerURL) {
+    this.authenticationServerURL = authenticationServerURL;
     return this;
   }
 
   /**
-   * URL or IP address of the LDAP server of the organization. If it's required a specific TCP port (different from LDAP's default) it must be specified. Needed only if trackingMethod is set to authenticated.
-   * @return serverLDAP
+   * URL or IP address of the authentication server of the organization. If it's required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.
+   * @return authenticationServerURL
   */
-  @ApiModelProperty(value = "URL or IP address of the LDAP server of the organization. If it's required a specific TCP port (different from LDAP's default) it must be specified. Needed only if trackingMethod is set to authenticated.")
+  @ApiModelProperty(value = "URL or IP address of the authentication server of the organization. If it's required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.")
 
 
-  public String getServerLDAP() {
-    return serverLDAP;
+  public String getAuthenticationServerURL() {
+    return authenticationServerURL;
   }
 
-  public void setServerLDAP(String serverLDAP) {
-    this.serverLDAP = serverLDAP;
+  public void setAuthenticationServerURL(String authenticationServerURL) {
+    this.authenticationServerURL = authenticationServerURL;
   }
 
   public Organization creationDate(OffsetDateTime creationDate) {
@@ -431,7 +414,7 @@ public class Organization   {
         Objects.equals(this.postCode, organization.postCode) &&
         Objects.equals(this.city, organization.city) &&
         Objects.equals(this.country, organization.country) &&
-        Objects.equals(this.serverLDAP, organization.serverLDAP) &&
+        Objects.equals(this.authenticationServerURL, organization.authenticationServerURL) &&
         Objects.equals(this.creationDate, organization.creationDate) &&
         Objects.equals(this.lastChangeDate, organization.lastChangeDate) &&
         Objects.equals(this.trackingArea, organization.trackingArea) &&
@@ -440,7 +423,7 @@ public class Organization   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, image, street, number, postCode, city, country, serverLDAP, creationDate, lastChangeDate, trackingArea, trackingMode);
+    return Objects.hash(id, name, description, image, street, number, postCode, city, country, authenticationServerURL, creationDate, lastChangeDate, trackingArea, trackingMode);
   }
 
   @Override
@@ -457,7 +440,7 @@ public class Organization   {
     sb.append("    postCode: ").append(toIndentedString(postCode)).append("\n");
     sb.append("    city: ").append(toIndentedString(city)).append("\n");
     sb.append("    country: ").append(toIndentedString(country)).append("\n");
-    sb.append("    serverLDAP: ").append(toIndentedString(serverLDAP)).append("\n");
+    sb.append("    authenticationServerURL: ").append(toIndentedString(authenticationServerURL)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
     sb.append("    lastChangeDate: ").append(toIndentedString(lastChangeDate)).append("\n");
     sb.append("    trackingArea: ").append(toIndentedString(trackingArea)).append("\n");
