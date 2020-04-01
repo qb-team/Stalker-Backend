@@ -17,7 +17,6 @@
 	<modules>
 		<!-- nomi delle cartelle dei moduli -->
 		<module>api</module>
-		<module>controller</module>
 		<module>model</module>
 		<module>repository</module>
 		<module>service</module>

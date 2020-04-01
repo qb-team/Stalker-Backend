@@ -34,6 +34,13 @@
 			<version>${stalker-backend.version}</version>
 		</dependency>
 
+		<!-- Repository -->
+		<dependency>
+			<groupId>it.qbteam</groupId>
+			<artifactId>stalker-backend-repository</artifactId>
+			<version>${stalker-backend.version}</version>
+		</dependency>
+
 		<!-- Base per creare applicazioni web, incluse quelle RESTful usando Spring MVC. Usa Tomcat container embedded -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
