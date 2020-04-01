@@ -1,9 +1,4 @@
-package it.qbteam.config;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+package it.qbteam.pubsub;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -14,15 +9,13 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import it.qbteam.model.Movement;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
-@EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {
 
 
@@ -46,20 +39,8 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
     
-
-    @Bean(name="counter")
-    RedisTemplate<String,Integer> getRedisCounterTemplate() {
-        RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
-        return redisTemplate;
-    }
-    
     @Bean(name="movement")
-    RedisTemplate<String,String> getRedisMovementTemplate() {
+    RedisTemplate<String,String> redisTemplate() {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
@@ -68,5 +49,26 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
+    
+    @Bean
+    MessageListenerAdapter messageListener() {
+        return new MessageListenerAdapter(new RedisMessageSubscriber(), "onMessage");
+    }
+
+    @Bean
+	RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
+			MessageListenerAdapter listenerAdapter, ChannelTopic topic) {
+
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
+		container.addMessageListener(listenerAdapter, topic);
+		return container;
+	}
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("pubsub:queue");
+    }
+    
+
  
 }

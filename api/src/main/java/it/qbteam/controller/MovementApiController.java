@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 @Controller
@@ -45,19 +47,21 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
-        movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
-
+       /* movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
         switch(organizationAnonymousMovement.getMovementType()) {
             case ENTRANCE:
                 // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
                 counterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
+                message = "Entrata";
                 // increment: increments the presence counter
                 counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
+                message = "Uscita ";
             break;
             case EXIT:
                 counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
             break;
-        }
+        }*/
+        movementTemplate.convertAndSend("pubsub:queue", organizationAnonymousMovement.toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
