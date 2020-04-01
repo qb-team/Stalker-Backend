@@ -5,10 +5,8 @@
  */
 package it.qbteam.api;
 
-import it.qbteam.model.OrganizationAnonymousMovement;
-import it.qbteam.model.OrganizationAuthenticatedMovement;
-import it.qbteam.model.PlaceAnonymousMovement;
-import it.qbteam.model.PlaceAuthenticatedMovement;
+import it.qbteam.model.OrganizationMovement;
+import it.qbteam.model.PlaceMovement;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,91 +32,57 @@ import java.util.Optional;
 @Api(value = "movement", description = "the movement API")
 public interface MovementApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
-
     /**
-     * POST /movement/track/organization/anonymous : Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
-     * Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
+     * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
+     * Tracks the user movement inside the trackingArea of an organization.
      *
-     * @param organizationAnonymousMovement  (required)
-     * @return Movement successfully tracked. (status code 200)
-     *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
+     * @param organizationMovement  (required)
+     * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
+     *         or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
+     *         or The user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators cannot have access. Nothing gets returned. (status code 403)
      */
-    @ApiOperation(value = "Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.", nickname = "trackAnonymousMovementInOrganization", notes = "Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.", tags={ "tracking", })
+    @ApiOperation(value = "Tracks the user movement inside the trackingArea of an organization.", nickname = "trackMovementInOrganization", notes = "Tracks the user movement inside the trackingArea of an organization.", response = OrganizationMovement.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "movement","organization", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Movement successfully tracked."),
-        @ApiResponse(code = 400, message = "Movement could not be tracked due to incorrect data sent to the system.") })
-    @RequestMapping(value = "/movement/track/organization/anonymous",
+        @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = OrganizationMovement.class),
+        @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),
+        @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
+    @RequestMapping(value = "/movement/track/organization",
+        produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAnonymousMovementInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationAnonymousMovement organizationAnonymousMovement) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /movement/track/place/anonymous : Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
-     * Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
-     *
-     * @param placeAnonymousMovement  (required)
-     * @return Movement successfully tracked. (status code 200)
-     *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
-     */
-    @ApiOperation(value = "Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.", nickname = "trackAnonymousMovementInPlace", notes = "Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.", tags={ "tracking", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Movement successfully tracked."),
-        @ApiResponse(code = 400, message = "Movement could not be tracked due to incorrect data sent to the system.") })
-    @RequestMapping(value = "/movement/track/place/anonymous",
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAnonymousMovementInPlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody PlaceAnonymousMovement placeAnonymousMovement) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<OrganizationMovement> trackMovementInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationMovement organizationMovement);
 
 
     /**
-     * POST /movement/track/organization/authenticated : Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
-     * Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
+     * POST /movement/track/place : Tracks the user movement inside the trackingArea of a place of an organization.
+     * Tracks the user movement inside the trackingArea of a place of an organization.
      *
-     * @param organizationAuthenticatedMovement  (required)
-     * @return Movement successfully tracked. (status code 200)
-     *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
+     * @param placeMovement  (required)
+     * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
+     *         or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
+     *         or The user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators cannot have access. Nothing gets returned. (status code 403)
      */
-    @ApiOperation(value = "Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.", nickname = "trackAuthenticatedMovementInOrganization", notes = "Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.", tags={ "tracking", })
+    @ApiOperation(value = "Tracks the user movement inside the trackingArea of a place of an organization.", nickname = "trackMovementInPlace", notes = "Tracks the user movement inside the trackingArea of a place of an organization.", response = PlaceMovement.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "movement","place", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Movement successfully tracked."),
-        @ApiResponse(code = 400, message = "Movement could not be tracked due to incorrect data sent to the system.") })
-    @RequestMapping(value = "/movement/track/organization/authenticated",
+        @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = PlaceMovement.class),
+        @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),
+        @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
+    @RequestMapping(value = "/movement/track/place",
+        produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAuthenticatedMovementInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationAuthenticatedMovement organizationAuthenticatedMovement) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * POST /movement/track/place/authenticated : Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-     * Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-     *
-     * @param placeAuthenticatedMovement  (required)
-     * @return Movement successfully tracked. (status code 200)
-     *         or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
-     */
-    @ApiOperation(value = "Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.", nickname = "trackAuthenticatedMovementInPlace", notes = "Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.", tags={ "tracking", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Movement successfully tracked."),
-        @ApiResponse(code = 400, message = "Movement could not be tracked due to incorrect data sent to the system.") })
-    @RequestMapping(value = "/movement/track/place/authenticated",
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    default ResponseEntity<Void> trackAuthenticatedMovementInPlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody PlaceAuthenticatedMovement placeAuthenticatedMovement) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<PlaceMovement> trackMovementInPlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody PlaceMovement placeMovement);
 
 }

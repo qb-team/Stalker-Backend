@@ -3,14 +3,23 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import org.springframework.data.redis.core.RedisHash;
 
 /**
  * Number of people currently inside a place of an organization.
@@ -18,15 +27,14 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Number of people currently inside a place of an organization.")
 @RedisHash("PlacePresenceCounter")
 public class PlacePresenceCounter   {
-  @Id
   @JsonProperty("placeId")
-  private Long id;
+  private Long placeId;
 
   @JsonProperty("counter")
   private Integer counter;
 
   public PlacePresenceCounter placeId(Long placeId) {
-    this.id = placeId;
+    this.placeId = placeId;
     return this;
   }
 
@@ -39,11 +47,11 @@ public class PlacePresenceCounter   {
 
 
   public Long getPlaceId() {
-    return id;
+    return placeId;
   }
 
   public void setPlaceId(Long placeId) {
-    this.id = placeId;
+    this.placeId = placeId;
   }
 
   public PlacePresenceCounter counter(Integer counter) {
@@ -77,13 +85,13 @@ public class PlacePresenceCounter   {
       return false;
     }
     PlacePresenceCounter placePresenceCounter = (PlacePresenceCounter) o;
-    return Objects.equals(this.id, placePresenceCounter.id) &&
+    return Objects.equals(this.placeId, placePresenceCounter.placeId) &&
         Objects.equals(this.counter, placePresenceCounter.counter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, counter);
+    return Objects.hash(placeId, counter);
   }
 
   @Override
@@ -91,7 +99,7 @@ public class PlacePresenceCounter   {
     StringBuilder sb = new StringBuilder();
     sb.append("class PlacePresenceCounter {\n");
     
-    sb.append("    placeId: ").append(toIndentedString(id)).append("\n");
+    sb.append("    placeId: ").append(toIndentedString(placeId)).append("\n");
     sb.append("    counter: ").append(toIndentedString(counter)).append("\n");
     sb.append("}");
     return sb.toString();

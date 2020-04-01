@@ -3,41 +3,32 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Generic access to an organization or a place of it.
+ * Access to an organization.
  */
-@ApiModel(description = "Generic access to an organization or a place of it.")
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "accessDiscriminator", visible = true)
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = PlaceAuthenticatedAccess.class, name = "PlaceAuthenticatedAccess"),
-  @JsonSubTypes.Type(value = OrganizationAuthenticatedAccess.class, name = "OrganizationAuthenticatedAccess"),
-  @JsonSubTypes.Type(value = PlaceAnonymousAccess.class, name = "PlaceAnonymousAccess"),
-  @JsonSubTypes.Type(value = OrganizationAnonymousAccess.class, name = "OrganizationAnonymousAccess"),
-})
+@ApiModel(description = "Access to an organization.")
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class Access   {
+public class OrganizationAccess   {
   @Id
   @JsonProperty("id")
   private Long id;
-
-  @JsonProperty("accessDiscriminator")
-  private String accessDiscriminator;
 
   @JsonProperty("entranceTimestamp")
   private OffsetDateTime entranceTimestamp;
@@ -45,7 +36,13 @@ public abstract class Access   {
   @JsonProperty("exitTimestamp")
   private OffsetDateTime exitTimestamp;
 
-  public Access id(Long id) {
+  @JsonProperty("organizationId")
+  private Long organizationId;
+
+  @JsonProperty("orgAuthServerId")
+  private String orgAuthServerId;
+
+  public OrganizationAccess id(Long id) {
     this.id = id;
     return this;
   }
@@ -66,28 +63,7 @@ public abstract class Access   {
     this.id = id;
   }
 
-  public Access accessDiscriminator(String accessDiscriminator) {
-    this.accessDiscriminator = accessDiscriminator;
-    return this;
-  }
-
-  /**
-   * Get accessDiscriminator
-   * @return accessDiscriminator
-  */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-
-  public String getAccessDiscriminator() {
-    return accessDiscriminator;
-  }
-
-  public void setAccessDiscriminator(String accessDiscriminator) {
-    this.accessDiscriminator = accessDiscriminator;
-  }
-
-  public Access entranceTimestamp(OffsetDateTime entranceTimestamp) {
+  public OrganizationAccess entranceTimestamp(OffsetDateTime entranceTimestamp) {
     this.entranceTimestamp = entranceTimestamp;
     return this;
   }
@@ -109,7 +85,7 @@ public abstract class Access   {
     this.entranceTimestamp = entranceTimestamp;
   }
 
-  public Access exitTimestamp(OffsetDateTime exitTimestamp) {
+  public OrganizationAccess exitTimestamp(OffsetDateTime exitTimestamp) {
     this.exitTimestamp = exitTimestamp;
     return this;
   }
@@ -131,6 +107,47 @@ public abstract class Access   {
     this.exitTimestamp = exitTimestamp;
   }
 
+  public OrganizationAccess organizationId(Long organizationId) {
+    this.organizationId = organizationId;
+    return this;
+  }
+
+  /**
+   * Unique identifier of the organization in which the user had access.
+   * @return organizationId
+  */
+  @ApiModelProperty(required = true, value = "Unique identifier of the organization in which the user had access.")
+  @NotNull
+
+
+  public Long getOrganizationId() {
+    return organizationId;
+  }
+
+  public void setOrganizationId(Long organizationId) {
+    this.organizationId = organizationId;
+  }
+
+  public OrganizationAccess orgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+    return this;
+  }
+
+  /**
+   * User unique identifier from the authentication server of the organization.
+   * @return orgAuthServerId
+  */
+  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
+
+
+  public String getOrgAuthServerId() {
+    return orgAuthServerId;
+  }
+
+  public void setOrgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -140,27 +157,29 @@ public abstract class Access   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Access access = (Access) o;
-    return Objects.equals(this.id, access.id) &&
-        Objects.equals(this.accessDiscriminator, access.accessDiscriminator) &&
-        Objects.equals(this.entranceTimestamp, access.entranceTimestamp) &&
-        Objects.equals(this.exitTimestamp, access.exitTimestamp);
+    OrganizationAccess organizationAccess = (OrganizationAccess) o;
+    return Objects.equals(this.id, organizationAccess.id) &&
+        Objects.equals(this.entranceTimestamp, organizationAccess.entranceTimestamp) &&
+        Objects.equals(this.exitTimestamp, organizationAccess.exitTimestamp) &&
+        Objects.equals(this.organizationId, organizationAccess.organizationId) &&
+        Objects.equals(this.orgAuthServerId, organizationAccess.orgAuthServerId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, accessDiscriminator, entranceTimestamp, exitTimestamp);
+    return Objects.hash(id, entranceTimestamp, exitTimestamp, organizationId, orgAuthServerId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Access {\n");
+    sb.append("class OrganizationAccess {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    accessDiscriminator: ").append(toIndentedString(accessDiscriminator)).append("\n");
     sb.append("    entranceTimestamp: ").append(toIndentedString(entranceTimestamp)).append("\n");
     sb.append("    exitTimestamp: ").append(toIndentedString(exitTimestamp)).append("\n");
+    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+    sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

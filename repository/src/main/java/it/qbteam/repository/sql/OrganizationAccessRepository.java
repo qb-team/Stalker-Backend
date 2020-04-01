@@ -1,10 +1,10 @@
 package it.qbteam.repository.sql;
 
-import it.qbteam.model.PlaceAuthenticatedAccess;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import it.qbteam.model.OrganizationAccess;
 @Repository
-public interface PlaceAuthenticatedAccessRepository extends CrudRepository<PlaceAuthenticatedAccess, Long> {
+public interface OrganizationAccessRepository extends CrudRepository<OrganizationAccess, Long> {
 
 }

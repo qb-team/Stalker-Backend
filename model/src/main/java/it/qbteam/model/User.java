@@ -3,13 +3,21 @@ package it.qbteam.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.OffsetDateTime;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
-import javax.persistence.Entity;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -24,8 +32,8 @@ public class User   {
   private String userId;
 
   @Id
-  @JsonProperty("ldapId")
-  private Integer ldapId;
+  @JsonProperty("orgAuthServerId")
+  private String orgAuthServerId;
 
   public User userId(String userId) {
     this.userId = userId;
@@ -48,24 +56,24 @@ public class User   {
     this.userId = userId;
   }
 
-  public User ldapId(Integer ldapId) {
-    this.ldapId = ldapId;
+  public User orgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
     return this;
   }
 
   /**
-   * Organization LDAP server's user unique identifier.
-   * @return ldapId
+   * User unique identifier from the authentication server of the organization.
+   * @return orgAuthServerId
   */
-  @ApiModelProperty(value = "Organization LDAP server's user unique identifier.")
+  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
 
 
-  public Integer getLdapId() {
-    return ldapId;
+  public String getOrgAuthServerId() {
+    return orgAuthServerId;
   }
 
-  public void setLdapId(Integer ldapId) {
-    this.ldapId = ldapId;
+  public void setOrgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
   }
 
 
@@ -79,12 +87,12 @@ public class User   {
     }
     User user = (User) o;
     return Objects.equals(this.userId, user.userId) &&
-        Objects.equals(this.ldapId, user.ldapId);
+        Objects.equals(this.orgAuthServerId, user.orgAuthServerId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, ldapId);
+    return Objects.hash(userId, orgAuthServerId);
   }
 
   @Override
@@ -93,7 +101,7 @@ public class User   {
     sb.append("class User {\n");
     
     sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
-    sb.append("    ldapId: ").append(toIndentedString(ldapId)).append("\n");
+    sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

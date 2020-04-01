@@ -1,8 +1,5 @@
 package it.qbteam.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
