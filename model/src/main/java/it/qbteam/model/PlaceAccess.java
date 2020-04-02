@@ -95,7 +95,6 @@ public class PlaceAccess   {
    * @return exitTimestamp
   */
   @ApiModelProperty(required = true, value = "Date and time of the moment in which the user left the place.")
-  @NotNull
 
   @Valid
 
