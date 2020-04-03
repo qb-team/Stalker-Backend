@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class Organization   {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
   private Long id;
 
