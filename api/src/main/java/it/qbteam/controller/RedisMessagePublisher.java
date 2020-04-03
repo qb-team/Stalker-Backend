@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 @Service
 public class RedisMessagePublisher implements MessagePublisher {
-
     @Autowired @Qualifier("movement")
     private RedisTemplate<String, String> redisTemplate;
-    @Autowired
+    
+    @Autowired @Qualifier("organizationMovement")
     private ChannelTopic topic;
 
     public RedisMessagePublisher() {
