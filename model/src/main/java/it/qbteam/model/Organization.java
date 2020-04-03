@@ -3,7 +3,10 @@ package it.qbteam.model;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,30 +31,38 @@ public class Organization   {
   @JsonProperty("id")
   private Long id;
 
+  @Column(length = 128)
   @JsonProperty("name")
   private String name;
 
+  @Column(length = 512)
   @JsonProperty("description")
   private String description;
 
+  @Column(length = 300)
   @JsonProperty("image")
   private String image;
 
+  @Column(length = 256)
   @JsonProperty("street")
   private String street;
 
+  @Column(length = 10)
   @JsonProperty("number")
   private String number;
 
   @JsonProperty("postCode")
   private Integer postCode;
 
+  @Column(length = 100)
   @JsonProperty("city")
   private String city;
 
+  @Column(length = 100)
   @JsonProperty("country")
   private String country;
 
+  @Column(length = 2048)
   @JsonProperty("authenticationServerURL")
   private String authenticationServerURL;
 
@@ -99,6 +110,7 @@ public class Organization   {
     }
   }
 
+  @Enumerated(EnumType.STRING)
   @JsonProperty("trackingMode")
   private TrackingModeEnum trackingMode;
 

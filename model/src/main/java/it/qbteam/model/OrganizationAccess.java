@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +34,7 @@ public class OrganizationAccess   {
   @JsonProperty("organizationId")
   private Long organizationId;
 
+  @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
 

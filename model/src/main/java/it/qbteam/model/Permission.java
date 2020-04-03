@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.*;
 
@@ -18,6 +19,7 @@ import javax.validation.constraints.*;
 @IdClass(PermissionId.class)
 public class Permission   {
   @Id
+  @Column(length = 256)
   @JsonProperty("administratorId")
   private String administratorId;
 
@@ -28,6 +30,7 @@ public class Permission   {
   @JsonProperty("permission")
   private Integer permission;
 
+  @Column(length = 256)
   @JsonProperty("nominatedBy")
   private String nominatedBy;
 
