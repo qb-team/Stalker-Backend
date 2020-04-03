@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -20,6 +21,7 @@ import javax.validation.constraints.*;
 @IdClass(FavoriteId.class)
 public class Favorite   {
   @Id
+  @Column(length = 256)
   @JsonProperty("userId")
   private String userId;
 

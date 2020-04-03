@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.*;
 
@@ -16,10 +17,12 @@ import javax.validation.constraints.*;
 @IdClass(AdministratorId.class)
 public class Administrator   {
   @Id
+  @Column(length = 256)
   @JsonProperty("administratorId")
   private String administratorId;
 
   @Id
+  @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
 
