@@ -20,7 +20,6 @@ import it.qbteam.controller.RedisMessagePublisher;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {
 
-
     @Value("${spring.redis.host}")
     private String redisHost;
 
@@ -32,20 +31,30 @@ public class RedisConfig {
     
     @Value("${spring.redis.password}")
     private String redisPassword;
- 
+
+    /**
+     * Generates a configuration object with the parameters to connect to the Redis server.
+     * @return RedisStandaloneConfiguration redis configuration object with the connection data
+     * @author Tommaso Azzalin
+     */
     @Bean
-    public RedisConnectionFactory connectionFactory() {
+    public RedisStandaloneConfiguration redisConfiguration() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisHost, redisPort);
         configuration.setDatabase(redisDatabase);
         configuration.setPassword(redisPassword);
-        return new LettuceConnectionFactory(configuration);
+        return configuration;
+    }
+ 
+    @Bean
+    public RedisConnectionFactory connectionFactory(final RedisStandaloneConfiguration redisConfig) {
+        return new LettuceConnectionFactory(redisConfig);
     }
     
 
-    @Bean(name="counter")
-    RedisTemplate<String,Integer> getRedisCounterTemplate() {
+    @Bean(name="presenceCounter")
+    RedisTemplate<String,Integer> presenceCounterTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory());
+        redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -53,21 +62,10 @@ public class RedisConfig {
         return redisTemplate;
     }
     
-    /*@Bean(name="movement")
-    RedisTemplate<String,String> getRedisMovementTemplate() {
-        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }*/
-    
     @Bean(name="movement")
-    RedisTemplate<String,String> getRedisMovementTemplate() {
+    RedisTemplate<String,String> movementTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory());
+        redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -76,13 +74,12 @@ public class RedisConfig {
     }
 
     @Bean
-    MessagePublisher redisPublisher() {
-        return new RedisMessagePublisher(getRedisMovementTemplate(), topic());
+    MessagePublisher organizationMovementPublisher(final RedisTemplate template) {
+        return new RedisMessagePublisher(template, new ChannelTopic("stalker-backend-movement-organization"));
     }
 
     @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("pubsub:queue");
+    MessagePublisher placeMovementPublisher(final RedisTemplate template) {
+        return new RedisMessagePublisher(template, new ChannelTopic("stalker-backend-movement-place"));
     }
- 
 }
