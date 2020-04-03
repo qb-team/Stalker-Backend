@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
 @Entity
 public class PlaceAccess   {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
   private Long id;
 
