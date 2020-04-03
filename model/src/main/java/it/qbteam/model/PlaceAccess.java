@@ -27,6 +27,7 @@ import javax.validation.constraints.*;
 @Entity
 public class PlaceAccess   {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
   private Long id;
 
