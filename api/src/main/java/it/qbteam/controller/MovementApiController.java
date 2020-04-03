@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import it.qbteam.api.MovementApi;
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
-import it.qbteam.repository.nosql.OrganizationMovementRepository;
 
 @Controller
 public class MovementApiController implements MovementApi {

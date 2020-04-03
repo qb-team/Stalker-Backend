@@ -1,5 +1,6 @@
 package it.qbteam.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -52,7 +53,7 @@ public class RedisConfig {
     
 
     @Bean(name="presenceCounter")
-    RedisTemplate<String,Integer> presenceCounterTemplate(final RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,Integer> presenceCounterTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
@@ -63,7 +64,7 @@ public class RedisConfig {
     }
     
     @Bean(name="movement")
-    RedisTemplate<String,String> movementTemplate(final RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,String> movementTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
@@ -73,13 +74,23 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    MessagePublisher organizationMovementPublisher(final RedisTemplate template) {
-        return new RedisMessagePublisher(template, new ChannelTopic("stalker-backend-movement-organization"));
+    @Bean(name="organizationMovement")
+    public ChannelTopic organizationMovementTopic() {
+        return new ChannelTopic("stalker-backend-movement-organization");
+    }
+
+    @Bean(name="placeMovement")
+    public ChannelTopic placeMovementTopic() {
+        return new ChannelTopic("stalker-backend-movement-place");
     }
 
     @Bean
-    MessagePublisher placeMovementPublisher(final RedisTemplate template) {
-        return new RedisMessagePublisher(template, new ChannelTopic("stalker-backend-movement-place"));
+    public MessagePublisher organizationMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+        return new RedisMessagePublisher(template, channel);
+    }
+
+    @Bean
+    public MessagePublisher placeMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+        return new RedisMessagePublisher(template, channel);
     }
 }
