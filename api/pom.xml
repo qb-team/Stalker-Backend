@@ -85,6 +85,15 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>${firebase-admin.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
