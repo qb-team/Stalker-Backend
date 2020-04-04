@@ -1,9 +1,6 @@
 package it.qbteam.controller;
 
-import it.qbteam.api.MovementApi;;
-import it.qbteam.model.OrganizationMovement;
-import it.qbteam.model.PlaceMovement;
-import it.qbteam.repository.nosql.OrganizationMovementRepository;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import java.util.UUID;
-
-import javax.validation.Valid;
+import it.qbteam.api.MovementApi;
+import it.qbteam.model.OrganizationMovement;
+import it.qbteam.model.PlaceMovement;
 
 @Controller
 public class MovementApiController implements MovementApi {
@@ -29,11 +26,8 @@ public class MovementApiController implements MovementApi {
     @Autowired @Qualifier("movement")
     RedisTemplate<String, String> movementTemplate;
 
-    @Autowired @Qualifier("counter")
+    @Autowired @Qualifier("presenceCounter")
     RedisTemplate<String, Integer> counterTemplate;
-
-    @Autowired
-    private OrganizationMovementRepository orgAnonRepo;
 
     /**
      * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
@@ -62,7 +56,7 @@ public class MovementApiController implements MovementApi {
                 counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
             break;
         }*/
-        movementTemplate.convertAndSend("pubsub:queue", organizationMovement.toString());
+        movementTemplate.convertAndSend("stalker-backend-movement-organization", organizationMovement.toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

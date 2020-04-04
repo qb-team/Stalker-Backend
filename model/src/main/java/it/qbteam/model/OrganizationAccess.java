@@ -2,19 +2,13 @@ package it.qbteam.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.validation.Valid;
@@ -27,6 +21,7 @@ import javax.validation.constraints.*;
 @Entity
 public class OrganizationAccess   {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
   private Long id;
 
@@ -39,6 +34,7 @@ public class OrganizationAccess   {
   @JsonProperty("organizationId")
   private Long organizationId;
 
+  @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
 
@@ -95,7 +91,6 @@ public class OrganizationAccess   {
    * @return exitTimestamp
   */
   @ApiModelProperty(required = true, value = "Date and time of the moment in which the user left the place.")
-  @NotNull
 
   @Valid
 

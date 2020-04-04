@@ -52,7 +52,7 @@ public class PresenceApiController implements PresenceApi {
         return null;
     }
 
-    @Autowired @Qualifier("counter")
+    @Autowired @Qualifier("presenceCounter")
     RedisTemplate<String, Integer> counterTemplate;
 
     /**

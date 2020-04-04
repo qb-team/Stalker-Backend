@@ -1,59 +1,68 @@
 package it.qbteam.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
-import org.openapitools.jackson.nullable.JsonNullable;
+import java.util.Objects;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
 @Entity
-@Table(name="organization")
 public class Organization   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
   private Long id;
 
+  @Column(length = 128)
   @JsonProperty("name")
   private String name;
 
+  @Column(length = 512)
   @JsonProperty("description")
   private String description;
 
+  @Column(length = 300)
   @JsonProperty("image")
   private String image;
 
+  @Column(length = 256)
   @JsonProperty("street")
   private String street;
 
+  @Column(length = 10)
   @JsonProperty("number")
   private String number;
 
   @JsonProperty("postCode")
   private Integer postCode;
 
+  @Column(length = 100)
   @JsonProperty("city")
   private String city;
 
+  @Column(length = 100)
   @JsonProperty("country")
   private String country;
 
+  @Column(length = 2048)
   @JsonProperty("authenticationServerURL")
   private String authenticationServerURL;
 
@@ -101,6 +110,7 @@ public class Organization   {
     }
   }
 
+  @Enumerated(EnumType.STRING)
   @JsonProperty("trackingMode")
   private TrackingModeEnum trackingMode;
 

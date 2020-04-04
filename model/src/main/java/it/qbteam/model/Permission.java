@@ -2,23 +2,13 @@ package it.qbteam.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -29,6 +19,7 @@ import javax.validation.constraints.*;
 @IdClass(PermissionId.class)
 public class Permission   {
   @Id
+  @Column(length = 256)
   @JsonProperty("administratorId")
   private String administratorId;
 
@@ -39,6 +30,7 @@ public class Permission   {
   @JsonProperty("permission")
   private Integer permission;
 
+  @Column(length = 256)
   @JsonProperty("nominatedBy")
   private String nominatedBy;
 
