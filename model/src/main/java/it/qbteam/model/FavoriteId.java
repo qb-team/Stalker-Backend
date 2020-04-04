@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class FavoriteId implements Serializable {
+    private static final long serialVersionUID = -2082543530941777784L;
+
     private String userId;
 
     private Long organizationId;

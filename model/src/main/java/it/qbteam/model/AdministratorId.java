@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class AdministratorId implements Serializable {
+    private static final long serialVersionUID = -1404562416872638914L;
+
     private String administratorId;
 
     private String orgAuthServerId;
