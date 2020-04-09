@@ -19,8 +19,6 @@ tags:
     description: End-points for retrieving, updating and asking for deletion of organizations.
   - name: favorite
     description: End-points for retrieving, adding and removing organizations to an user's favorite organization list.
-  - name: permission
-    description: End-points for retrieving, adding and removing organizations to an administrator's permissions.
   - name: place
     description: Place related endpoints.
   - name: movement
@@ -29,8 +27,10 @@ tags:
     description: Access related endpoints.
   - name: presence
     description: Presence related endpoints.
+  - name: report
+    description: Report related endpoints.
   - name: administrator
-    description: End-points for retrieving, adding, binding and unbinding administrators.
+    description: End-points for retrieving, adding and removing permissions, retrieving, adding, binding and unbinding administrators.
 paths:
   "/organization":
     get:
