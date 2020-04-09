@@ -127,10 +127,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Organization"
-  "/organization/favorite/{userId}":
+  "/favorite/{userId}":
     get:
       tags:
-        - organization
         - favorite
       summary: Gets the list of favorite organizations of a user.
       description: >-
@@ -163,10 +162,9 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
-  "/organization/favorite/{userId}/add/{organizationId}":
+  "/favorite/{userId}/add/{organizationId}":
     post:
       tags:
-        - organization
         - favorite
       summary: Adds a new organization to the user's favorite organization list.
       description: >-
@@ -205,10 +203,9 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/organization/favorite/{userId}/remove/{organizationId}":
+  "/favorite/{userId}/remove/{organizationId}":
     delete:
       tags:
-        - organization
         - favorite
       summary: Removes the organization from the user's favorite organization list.
       description: >-
@@ -241,11 +238,9 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.     
-  "/organization/administrator/bind":
+  "/administrator/bindadministrator":
     post:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Bind an already existent administrator to the organization.
       description: >-
@@ -271,11 +266,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/administrator/unbind":
+  "/administrator/unbindadministrator":
     post:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Unbind an administrator to the organization.
       description: >-
@@ -297,16 +290,15 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/administrator/create":
+  "/administrator/createadministrator":
     post:
       tags:
-        - organization
         - administrator
       summary: Creates and binds a new administrator to the organization.
       description: >-
         Creates and binds a new administrator to the current organization. 
         Only web-app administrators can access this end-point.
-      operationId: createNewAdministratorToOrganization
+      operationId: createNewAdministratorInOrganization
       responses:
         "201":
           description: Administrator created and binded successfully. The permission record gets returned.
@@ -328,11 +320,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AdministratorInfo"
-  "/organization/administrator/update":
-    post:
+  "/administrator/updatepermission":
+    patch:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Update the permission for an already existent administrator in the organization.
       description: >-
@@ -360,10 +350,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/{organizationId}/administrator":
+  "/administrator/organization/{organizationId}":
     get:
       tags:
-        - organization
         - administrator
       summary: Returns the list of administrators of the organization.
       description: >- 
@@ -438,14 +427,14 @@ paths:
                   type: string
                   description: Request reason for the deletion request.
   "/organization/{organizationId}/trackingArea":
-    put:
+    patch:
       tags:
         - organization
       summary: Updates the coordinates of the tracking area of an organization.
       description: >-
         Updates the coordinates of the tracking area of an organization.
         Only web-app admininistrators can access this end-point.
-      operationId: updateTrackingArea
+      operationId: updateOrganizationTrackingArea
       parameters:
         - name: organizationId
           in: path
@@ -483,11 +472,9 @@ paths:
                 trackingArea:
                   type: string
                   description: JSON representation of a tracking trackingArea.
-  "/organization/permission/{administratorId}":
+  "/administrator/permission/{administratorId}":
     get:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Gets the list of permission that an administrator has permissions to view/manage/own.
       description: >-
@@ -518,10 +505,9 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
-  "/organization/{organizationId}/place":
+  "/place/organization/{organizationId}":
     get:
       tags:
-        - organization
         - place
       summary: Returns the list of places of the organization.
       description: >- 
@@ -638,7 +624,7 @@ paths:
             minimum: 1
       responses:
         "205":
-          description: Place successfully removed from the list of favorites. Nothing gets returned.
+          description: Place successfully removed from the list of places of the organization. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -649,7 +635,6 @@ paths:
     post:
       tags:
         - movement
-        - organization
       summary: Tracks the user movement inside the trackingArea of an organization.
       description: Tracks the user movement inside the trackingArea of an organization.
       operationId: trackMovementInOrganization
@@ -678,7 +663,6 @@ paths:
     post:
       tags:
         - movement
-        - place
       summary: Tracks the user movement inside the trackingArea of a place of an organization.
       description: Tracks the user movement inside the trackingArea of a place of an organization.
       operationId: trackMovementInPlace
@@ -707,7 +691,6 @@ paths:
     get:
       tags:
         - access
-        - place
       summary: Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
         Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
@@ -754,7 +737,6 @@ paths:
     get:
       tags:
         - access
-        - organization
       summary: Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
         Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
@@ -801,7 +783,6 @@ paths:
     get:
       tags:
         - presence
-        - organization
       summary: Gets the list of people currently inside the organization's trackingArea.
       description: >-
         Gets the list of people currently inside the organization's trackingArea.
@@ -836,7 +817,6 @@ paths:
     get:
       tags:
         - presence
-        - organization
       summary: Gets the number of people currently inside the organization's trackingArea.
       description: >-
         Gets the number of people currently inside the organization's trackingArea.
@@ -866,7 +846,6 @@ paths:
     get:
       tags:
         - presence
-        - place
       summary: Gets the list of people currently inside the place's trackingArea.
       description: >-
         Gets the list of people currently inside the place's trackingArea.
@@ -901,7 +880,6 @@ paths:
     get:
       tags:
         - presence
-        - place
       summary: Gets the number of people currently inside the place's trackingArea.
       description: >-
         Gets the number of people currently inside the place's trackingArea.
@@ -930,7 +908,6 @@ paths:
   "/report/organization/{organizationId}":
     get:
       tags:
-        - organization
         - report
       summary: Gets the report of total time spent per user inside the organization.
       description: >-
@@ -1181,7 +1158,6 @@ components:
       required:
         - id
         - entranceTimestamp
-        - exitTimestamp
         - placeId
       properties:
         id:
@@ -1208,7 +1184,6 @@ components:
       required:
         - id
         - entranceTimestamp
-        - exitTimestamp
         - organizationId
       properties:
         id:
