@@ -14,8 +14,9 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import it.qbteam.controller.MessagePublisher;
-import it.qbteam.controller.RedisMessagePublisher;
+import it.qbteam.controller.MovementPublisher;
+import it.qbteam.controller.OrganizationMovementRedisPublisher;
+import it.qbteam.controller.PlaceMovementRedisPublisher;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
@@ -52,7 +53,7 @@ public class RedisConfig {
     }
     
 
-    @Bean(name="presenceCounter")
+    @Bean(name="presenceCounterTemplate")
     public RedisTemplate<String,Integer> presenceCounterTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
@@ -63,7 +64,7 @@ public class RedisConfig {
         return redisTemplate;
     }
     
-    @Bean(name="movement")
+    @Bean(name="movementTemplate")
     public RedisTemplate<String,String> movementTemplate(final RedisConnectionFactory connectionFactory) {
         RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
@@ -74,23 +75,23 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean(name="organizationMovement")
+    @Bean(name="organizationMovementTopic")
     public ChannelTopic organizationMovementTopic() {
         return new ChannelTopic("stalker-backend-movement-organization");
     }
 
-    @Bean(name="placeMovement")
+    @Bean(name="placeMovementTopic")
     public ChannelTopic placeMovementTopic() {
         return new ChannelTopic("stalker-backend-movement-place");
     }
 
     @Bean
-    public MessagePublisher organizationMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
-        return new RedisMessagePublisher(template, channel);
+    public MovementPublisher<String> organizationMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+        return new OrganizationMovementRedisPublisher(template, channel);
     }
 
     @Bean
-    public MessagePublisher placeMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
-        return new RedisMessagePublisher(template, channel);
+    public MovementPublisher<String> placeMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+        return new PlaceMovementRedisPublisher(template, channel);
     }
 }
