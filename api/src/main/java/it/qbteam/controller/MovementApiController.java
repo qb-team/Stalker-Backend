@@ -23,11 +23,11 @@ public class MovementApiController implements MovementApi {
     private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
     private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
-    @Autowired @Qualifier("movement")
+    @Autowired @Qualifier("movementTemplate")
     RedisTemplate<String, String> movementTemplate;
 
-    @Autowired @Qualifier("presenceCounter")
-    RedisTemplate<String, Integer> counterTemplate;
+    @Autowired @Qualifier("presenceCounterTemplate")
+    RedisTemplate<String, Integer> presenceCounterTemplate;
 
     /**
      * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
@@ -46,14 +46,14 @@ public class MovementApiController implements MovementApi {
         switch(organizationAnonymousMovement.getMovementType()) {
             case ENTRANCE:
                 // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
-                counterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
+                presenceCounterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
                 message = "Entrata";
                 // increment: increments the presence counter
-                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
+                presenceCounterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
                 message = "Uscita ";
             break;
             case EXIT:
-                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
+                presenceCounterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
             break;
         }*/
         movementTemplate.convertAndSend("stalker-backend-movement-organization", organizationMovement.toString());

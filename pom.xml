@@ -18,8 +18,9 @@
 		<!-- nomi delle cartelle dei moduli -->
 		<module>api</module>
 		<module>model</module>
+		<module>configuration</module>
 		<module>repository</module>
-		<module>service</module>
+		<module>movement-tracker</module>
 	</modules>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->

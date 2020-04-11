@@ -14,9 +14,14 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import it.qbteam.controller.MovementPublisher;
-import it.qbteam.controller.OrganizationMovementRedisPublisher;
-import it.qbteam.controller.PlaceMovementRedisPublisher;
+import it.qbteam.movementtracker.publisher.MovementPublisher;
+import it.qbteam.movementtracker.publisher.OrganizationMovementRedisPublisher;
+import it.qbteam.movementtracker.publisher.PlaceMovementRedisPublisher;
+import it.qbteam.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
+import it.qbteam.movementtracker.subscriber.PlaceMovementRedisSubscriber;
+
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
@@ -86,12 +91,51 @@ public class RedisConfig {
     }
 
     @Bean
-    public MovementPublisher<String> organizationMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+    public MovementPublisher<String> organizationMovementPublisher(@Qualifier("movementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
         return new OrganizationMovementRedisPublisher(template, channel);
     }
 
     @Bean
-    public MovementPublisher<String> placeMovementPublisher(@Qualifier("movement") final RedisTemplate<String, String> template, @Qualifier("organizationMovement") final ChannelTopic channel) {
+    public MovementPublisher<String> placeMovementPublisher(@Qualifier("movementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
         return new PlaceMovementRedisPublisher(template, channel);
+    }
+    
+    @Bean(name="organizationMovementSubscriber")
+    public MessageListenerAdapter organizationMovementSubscriber() {
+        return new MessageListenerAdapter(new OrganizationMovementRedisSubscriber(), "onMessage");
+    }
+
+    @Bean(name="placeMovementSubscriber")
+    public MessageListenerAdapter placeMovementSubscriber() {
+        return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(), "onMessage");
+    }
+
+    @Bean
+	public RedisMessageListenerContainer organizationMovementSubscriberContainer(
+        final RedisConnectionFactory connectionFactory,
+        @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
+        @Qualifier("organizationMovementTopic") final ChannelTopic topic
+    ) {
+        return createContainer(connectionFactory, listenerAdapter, topic);
+    }
+    
+    @Bean
+	public RedisMessageListenerContainer placeMovementSubscriberContainer(
+        final RedisConnectionFactory connectionFactory,
+        @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
+        @Qualifier("placeMovementTopic") final ChannelTopic topic
+    ) {
+		return createContainer(connectionFactory, listenerAdapter, topic);
+    }
+    
+    private RedisMessageListenerContainer createContainer(
+        final RedisConnectionFactory connectionFactory,
+        final MessageListenerAdapter listenerAdapter,
+        final ChannelTopic topic
+    ) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory);
+		container.addMessageListener(listenerAdapter, topic);
+		return container;
     }
 }
