@@ -1,11 +1,10 @@
-package it.qbteam.pubsub;
+package it.qbteam.service;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import java.util.List;
