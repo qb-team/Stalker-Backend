@@ -20,7 +20,7 @@ import java.util.List;
 @Controller
 public class PresenceApiController implements PresenceApi {
     private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
-    private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
+    // private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
     /**
      * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.

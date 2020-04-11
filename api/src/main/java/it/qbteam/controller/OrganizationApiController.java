@@ -7,15 +7,15 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
-import com.google.firebase.FirebaseApp;
+// import com.google.firebase.FirebaseApp;
 
 import it.qbteam.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+// import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.request.NativeWebRequest;
+// import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.api.OrganizationApi;
 import it.qbteam.repository.sql.OrganizationRepository;
@@ -25,18 +25,18 @@ public class OrganizationApiController implements OrganizationApi {
     @Autowired
     private OrganizationRepository orgRepo;
 
-    @Autowired
-    private FirebaseApp firebaseApp;
+    // @Autowired
+    // private FirebaseApp firebaseApp;
 
-    private boolean checkCompatibility(NativeWebRequest nwRequest, String mediaType) {
-        boolean compatible = false;
-        for (MediaType m : MediaType.parseMediaTypes(nwRequest.getHeader("Accept"))) {
-            System.out.println("Checking compatibility...");
-            compatible = m.isCompatibleWith(MediaType.valueOf(mediaType));
-        }
-        System.out.println("Compatible: " + compatible);
-        return compatible;
-    }
+    // private boolean checkCompatibility(NativeWebRequest nwRequest, String mediaType) {
+    //     boolean compatible = false;
+    //     for (MediaType m : MediaType.parseMediaTypes(nwRequest.getHeader("Accept"))) {
+    //         System.out.println("Checking compatibility...");
+    //         compatible = m.isCompatibleWith(MediaType.valueOf(mediaType));
+    //     }
+    //     System.out.println("Compatible: " + compatible);
+    //     return compatible;
+    // }
 
     /**
      * GET /organization/{organizationId} : Gets the data of a single organization.
@@ -72,7 +72,6 @@ public class OrganizationApiController implements OrganizationApi {
         //     System.out.println("EMAIL: " + token.getEmail());
 
         // } catch (FirebaseAuthException e) {
-        //     // TODO Auto-generated catch block
         //     e.printStackTrace();
         // }
         List<Organization> orgList = new ArrayList<Organization>();
