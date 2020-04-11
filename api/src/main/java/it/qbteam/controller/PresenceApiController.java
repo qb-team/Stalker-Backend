@@ -52,8 +52,8 @@ public class PresenceApiController implements PresenceApi {
         return null;
     }
 
-    @Autowired @Qualifier("presenceCounter")
-    RedisTemplate<String, Integer> counterTemplate;
+    @Autowired @Qualifier("presenceCounterTemplate")
+    RedisTemplate<String, Integer> presenceCounterTemplate;
 
     /**
      * GET /presence/{organizationId} : Gets the number of presences in an organization given its organizationId.
@@ -65,7 +65,7 @@ public class PresenceApiController implements PresenceApi {
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
-        Integer counter = (Integer) counterTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId.toString());
+        Integer counter = (Integer) presenceCounterTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId.toString());
         return new ResponseEntity<OrganizationPresenceCounter>(new OrganizationPresenceCounter().counter(counter).organizationId(organizationId), HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-package it.qbteam.service;
+package it.qbteam.movementtracker.subscriber;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,9 +11,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-@Service
-public class RedisMessageSubscriber implements MessageListener {
-
+public class OrganizationMovementRedisSubscriber extends OrganizationMovementSubscriber {
     public static List<String> messageList = new ArrayList<String>();
     public int countere = 0;
 

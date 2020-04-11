@@ -1,4 +1,4 @@
-package it.qbteam.controller;
+package it.qbteam.movementtracker.publisher;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

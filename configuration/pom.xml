@@ -7,10 +7,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>it.qbteam</groupId>
-	<artifactId>stalker-backend-api</artifactId>
+	<artifactId>stalker-backend-configuration</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Stalker Backend - API</name>
-	<description>Stalker Backend - API</description>
+	<name>Stalker Backend - Configuration</name>
+	<description>Stalker Backend - Configuration</description>
 	<packaging>jar</packaging>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
@@ -31,27 +31,21 @@
 		<dependency>
 			<groupId>it.qbteam</groupId>
 			<artifactId>stalker-backend-model</artifactId>
-			<version>${stalker-backend.version}</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Repository -->
+		<!-- Movement Tracker -->
 		<dependency>
 			<groupId>it.qbteam</groupId>
-			<artifactId>stalker-backend-repository</artifactId>
-			<version>${stalker-backend.version}</version>
+			<artifactId>stalker-backend-movement-tracker</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Configuration -->
+		<!-- Plugin per connettersi a Firebase Admin SDK -->
 		<dependency>
-			<groupId>it.qbteam</groupId>
-			<artifactId>stalker-backend-configuration</artifactId>
-			<version>${stalker-backend.version}</version>
-		</dependency>
-
-		<!-- Base per creare applicazioni web, incluse quelle RESTful usando Spring MVC. Usa Tomcat container embedded -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase-admin.version}</version>
 		</dependency>
 
 		<!-- Base per testare applicazioni Spring Boot con librerie come JUnit, Hamcrest e Mockito -->
@@ -73,42 +67,10 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- Plugin per connettersi a database MySQL -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 		<!-- Plugin per connetersi a redis con lettuce  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-
-		<!-- Plugin per connettersi a Firebase Admin SDK -->
-		<dependency>
-			<groupId>com.google.firebase</groupId>
-			<artifactId>firebase-admin</artifactId>
-			<version>${firebase-admin.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>
