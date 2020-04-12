@@ -92,7 +92,7 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>${firebase-admin.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -31,14 +31,14 @@
 		<dependency>
 			<groupId>it.qbteam</groupId>
 			<artifactId>stalker-backend-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${stalker-backend.version}</version>
 		</dependency>
 
 		<!-- Movement Tracker -->
 		<dependency>
 			<groupId>it.qbteam</groupId>
 			<artifactId>stalker-backend-movement-tracker</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${stalker-backend.version}</version>
 		</dependency>
 
 		<!-- Plugin per connettersi a Firebase Admin SDK -->
