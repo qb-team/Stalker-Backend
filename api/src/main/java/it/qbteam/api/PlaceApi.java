@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Validated
 @Api(value = "place", description = "the place API")
@@ -51,7 +52,7 @@ public interface PlaceApi {
      * Deletes a place of an organization. Only web-app admininistrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
-     * @return Place successfully removed from the list of favorites. Nothing gets returned. (status code 205)
+     * @return Place successfully removed from the list of places of the organization. Nothing gets returned. (status code 205)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
@@ -60,13 +61,37 @@ public interface PlaceApi {
         @Authorization(value = "bearerAuth")
     }, tags={ "place", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 205, message = "Place successfully removed from the list of favorites. Nothing gets returned."),
+        @ApiResponse(code = 205, message = "Place successfully removed from the list of places of the organization. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/place/{placeId}",
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deletePlace(@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);
+
+
+    /**
+     * GET /place/organization/{organizationId} : Returns the list of places of the organization.
+     * Returns the list of places of the organization. Both app users and web-app admininistrators can access this end-point.
+     *
+     * @param organizationId ID of an organization. (required)
+     * @return Place list of organization returned successfully. (status code 200)
+     *         or Place list of organization is empty. Nothing gets returned. (status code 204)
+     *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Returns the list of places of the organization.", nickname = "getPlaceListOfOrganization", notes = "Returns the list of places of the organization. Both app users and web-app admininistrators can access this end-point.", response = Place.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "place", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Place list of organization returned successfully.", response = Place.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "Place list of organization is empty. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/place/organization/{organizationId}",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<List<Place>> getPlaceListOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
 
 
     /**

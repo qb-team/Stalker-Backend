@@ -34,7 +34,7 @@ public interface PresenceApi {
      */
     @ApiOperation(value = "Gets the number of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceCounter", notes = "Gets the number of people currently inside the organization's trackingArea. Only web-app admininistrators can access this end-point.", response = OrganizationPresenceCounter.class, authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "presence","organization", })
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization presence counter returned successfully.", response = OrganizationPresenceCounter.class),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
@@ -57,7 +57,7 @@ public interface PresenceApi {
      */
     @ApiOperation(value = "Gets the list of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceList", notes = "Gets the list of people currently inside the organization's trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "presence","organization", })
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization presence list returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "There is currently nobody inside the organization's trackingArea. Nothing gets returned."),
@@ -80,7 +80,7 @@ public interface PresenceApi {
      */
     @ApiOperation(value = "Gets the number of people currently inside the place's trackingArea.", nickname = "getPlacePresenceCounter", notes = "Gets the number of people currently inside the place's trackingArea. Only web-app admininistrators can access this end-point.", response = PlacePresenceCounter.class, authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "presence","place", })
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place presence counter returned successfully.", response = PlacePresenceCounter.class),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
@@ -103,7 +103,7 @@ public interface PresenceApi {
      */
     @ApiOperation(value = "Gets the list of people currently inside the place's trackingArea.", nickname = "getPlacePresenceList", notes = "Gets the list of people currently inside the place's trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "presence","place", })
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place presence list returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "There is currently nobody inside the place's trackingArea. Nothing gets returned."),

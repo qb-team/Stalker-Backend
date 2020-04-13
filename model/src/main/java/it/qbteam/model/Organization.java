@@ -248,7 +248,7 @@ public class Organization   {
    * @return postCode
   */
   @ApiModelProperty(value = "The postcode where the organization is located.")
-
+  @NotNull
 
   public Integer getPostCode() {
     return postCode;
@@ -352,7 +352,7 @@ public class Organization   {
    * @return lastChangeDate
   */
   @ApiModelProperty(value = "When the organization parameters were last changed.")
-
+  @NotNull
   @Valid
 
   public OffsetDateTime getLastChangeDate() {

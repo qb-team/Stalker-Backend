@@ -115,7 +115,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -165,7 +165,8 @@ paths:
         - favorite
       summary: Adds a new organization to the user's favorite organization list.
       description: >-
-        Adds a new organization to the user's favorite organization list. 
+        Adds a new organization to the user's favorite organization list.
+        If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker's account.
         Only app users can access this end-point.
       operationId: addFavoriteOrganization
       parameters:
@@ -197,7 +198,7 @@ paths:
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
-          description: Administrators cannot have access. Nothing gets returned.
+          description: Users who did not bind their account with their organization's account and administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/favorite/{userId}/remove/{organizationId}":
@@ -246,7 +247,7 @@ paths:
       operationId: bindAdministratorToOrganization
       responses:
         "201":
-          description: Administrator binded successfully. The permission record gets returned.
+          description: Administrator bound successfully. The permission record gets returned.
           content:
             application/json:
               schema:
@@ -274,7 +275,7 @@ paths:
       operationId: unbindAdministratorFromOrganization
       responses:
         "204":
-          description: Administrator unbinded successfully. Nothing gets returned.
+          description: Administrator unbound successfully. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -298,7 +299,7 @@ paths:
       operationId: createNewAdministratorInOrganization
       responses:
         "201":
-          description: Administrator created and binded successfully. The permission record gets returned.
+          description: Administrator created and bound successfully. The permission record gets returned.
           content:
             application/json:
               schema:
@@ -390,7 +391,7 @@ paths:
       description: >-
         Sends a deletion request to the system. 
         The request will be examined by Stalker administrators.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: requestDeletionOfOrganization
       parameters:
         - name: organizationId
@@ -409,7 +410,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
+          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -430,7 +431,7 @@ paths:
       summary: Updates the coordinates of the tracking area of an organization.
       description: >-
         Updates the coordinates of the tracking area of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updateOrganizationTrackingArea
       parameters:
         - name: organizationId
@@ -628,6 +629,34 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
+  "/user/binduser":
+    post:
+      tags:
+        - user
+      summary: Bind an already existent user to its organization account.
+      description: >-
+        Bind an already existent user to the organization.
+        Only app users can access this end-point.
+      operationId: bindUserToOrganizationAccount
+      responses:
+        "201":
+          description: User bound successfully. The user record gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have access. Nothing gets returned.
+        "404":
+          description: The organization or the administrator could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
   "/movement/track/organization":
     post:
       tags:
@@ -958,11 +987,11 @@ components:
         - name
         - street
         - number
-        - postcode
+        - postCode
         - city
         - country
         - creationDate
-        - modifyDate
+        - lastChangeDate
         - trackingArea
         - trackingMode
       properties:
@@ -1043,17 +1072,23 @@ components:
         trackingArea:
           type: string
           description: >-
-            rea subjected to movement tracking of people.
+            Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
     User:
       type: object
       required:
         - userId
+        - organizationId
+        - orgAuthServerId
       properties:
         userId:
           type: string
           description: Authentication service's user unique identifier.
+        organizationId:
+          type: integer
+          format: int64
+          description: Unique identifier of the organization the orgAuthServerId is of.
         orgAuthServerId:
           type: string
           description: User unique identifier from the authentication server of the organization.
@@ -1061,6 +1096,7 @@ components:
       type: object
       required:
         - administratorId
+        - orgAuthServerId
       properties:
         administratorId:
           type: string

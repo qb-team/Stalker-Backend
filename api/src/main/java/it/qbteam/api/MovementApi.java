@@ -33,7 +33,7 @@ public interface MovementApi {
      */
     @ApiOperation(value = "Tracks the user movement inside the trackingArea of an organization.", nickname = "trackMovementInOrganization", notes = "Tracks the user movement inside the trackingArea of an organization.", response = OrganizationMovement.class, authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "movement","organization", })
+    }, tags={ "movement", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = OrganizationMovement.class),
         @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),
@@ -60,7 +60,7 @@ public interface MovementApi {
      */
     @ApiOperation(value = "Tracks the user movement inside the trackingArea of a place of an organization.", nickname = "trackMovementInPlace", notes = "Tracks the user movement inside the trackingArea of a place of an organization.", response = PlaceMovement.class, authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "movement","place", })
+    }, tags={ "movement", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = PlaceMovement.class),
         @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),

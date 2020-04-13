@@ -22,6 +22,10 @@ public class User   {
   private String userId;
 
   @Id
+  @JsonProperty("organizationId")
+  private Long organizationId;
+
+  @Id
   @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
@@ -47,6 +51,27 @@ public class User   {
     this.userId = userId;
   }
 
+  public User organizationId(Long organizationId) {
+    this.organizationId = organizationId;
+    return this;
+  }
+
+  /**
+   * Unique identifier of the organization the orgAuthServerId is of.
+   * @return organizationId
+  */
+  @ApiModelProperty(required = true, value = "Unique identifier of the organization the orgAuthServerId is of.")
+  @NotNull
+
+
+  public Long getOrganizationId() {
+    return organizationId;
+  }
+
+  public void setOrganizationId(Long organizationId) {
+    this.organizationId = organizationId;
+  }
+
   public User orgAuthServerId(String orgAuthServerId) {
     this.orgAuthServerId = orgAuthServerId;
     return this;
@@ -57,7 +82,7 @@ public class User   {
    * @return orgAuthServerId
   */
   @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
-
+  @NotNull
 
   public String getOrgAuthServerId() {
     return orgAuthServerId;

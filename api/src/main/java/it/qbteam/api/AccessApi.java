@@ -34,7 +34,7 @@ public interface AccessApi {
      */
     @ApiOperation(value = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "access","organization", })
+    }, tags={ "access", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "List of authenticated accesses in an organization gets returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of authenticated accesses in an organization were not found. Nothing gets returned."),
@@ -59,7 +59,7 @@ public interface AccessApi {
      */
     @ApiOperation(value = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInPlace", notes = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "access","place", })
+    }, tags={ "access", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "List of authenticated accesses in a place gets returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of authenticated accesses in a place were not found. Nothing gets returned."),

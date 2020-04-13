@@ -57,7 +57,7 @@ public class Administrator   {
    * @return orgAuthServerId
   */
   @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
-
+  @NotNull
 
   public String getOrgAuthServerId() {
     return orgAuthServerId;

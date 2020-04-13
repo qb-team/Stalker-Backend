@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 public class PlaceApiController implements PlaceApi {
     /**
@@ -52,6 +53,21 @@ public class PlaceApiController implements PlaceApi {
      */
     @Override
     public ResponseEntity<Place> updatePlace(@Min(1L) Long placeId, @Valid Place place) {
+        return null;
+    }
+
+    /**
+     * GET /place/organization/{organizationId} : Returns the list of places of the organization.
+     * Returns the list of places of the organization. Both app users and web-app admininistrators can access this end-point.
+     *
+     * @param organizationId ID of an organization. (required)
+     * @return Place list of organization returned successfully. (status code 200)
+     * or Place list of organization is empty. Nothing gets returned. (status code 204)
+     * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     * or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @Override
+    public ResponseEntity<List<Place>> getPlaceListOfOrganization(@Min(1L) Long organizationId) {
         return null;
     }
 }

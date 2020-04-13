@@ -33,7 +33,7 @@ public interface ReportApi {
      */
     @ApiOperation(value = "Gets the report of total time spent per user inside the organization.", nickname = "getTimePerUserReport", notes = "Gets the report of total time spent by each user inside the organization. Only web-app admininistrators can access this end-point.", response = TimePerUserReport.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
-    }, tags={ "organization","report", })
+    }, tags={ "report", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Report of time spent in the organization per user returned successfully.", response = TimePerUserReport.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "Report is empty. Nothing gets returned."),
