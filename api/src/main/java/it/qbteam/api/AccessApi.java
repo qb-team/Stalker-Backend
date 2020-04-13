@@ -39,6 +39,7 @@ public interface AccessApi {
         @ApiResponse(code = 200, message = "List of authenticated accesses in an organization gets returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of authenticated accesses in an organization were not found. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users can only retrieve their accesses. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}",
         produces = { "application/json" }, 
@@ -64,6 +65,7 @@ public interface AccessApi {
         @ApiResponse(code = 200, message = "List of authenticated accesses in a place gets returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of authenticated accesses in a place were not found. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users can only retrieve their accesses. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/access/place/{placeId}/authenticated/{orgAuthServerIds}",
         produces = { "application/json" }, 

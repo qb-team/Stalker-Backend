@@ -38,6 +38,7 @@ public interface PresenceApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization presence counter returned successfully.", response = OrganizationPresenceCounter.class),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/presence/organization/{organizationId}/counter",
         produces = { "application/json" }, 
@@ -62,6 +63,7 @@ public interface PresenceApi {
         @ApiResponse(code = 200, message = "Organization presence list returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "There is currently nobody inside the organization's trackingArea. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/presence/organization/{organizationId}",
         produces = { "application/json" }, 
@@ -84,6 +86,7 @@ public interface PresenceApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place presence counter returned successfully.", response = PlacePresenceCounter.class),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/presence/place/{placeId}/counter",
         produces = { "application/json" }, 
@@ -108,6 +111,7 @@ public interface PresenceApi {
         @ApiResponse(code = 200, message = "Place presence list returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "There is currently nobody inside the place's trackingArea. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/presence/place/{placeId}",
         produces = { "application/json" }, 

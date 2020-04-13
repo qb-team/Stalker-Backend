@@ -21,6 +21,7 @@ public class AccessApiController implements AccessApi {
      * @return List of authenticated accesses in an organization gets returned successfully. (status code 200)
      * or List of authenticated accesses in an organization were not found. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     * or Users can only retrieve their accesses. Nothing gets returned. (status code 403)
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
@@ -37,6 +38,7 @@ public class AccessApiController implements AccessApi {
      * @return List of authenticated accesses in a place gets returned successfully. (status code 200)
      * or List of authenticated accesses in a place were not found. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     * or Users can only retrieve their accesses. Nothing gets returned. (status code 403)
      * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
