@@ -1,8 +1,5 @@
 
 
-ALTER TABLE `Administrator`
-  ADD PRIMARY KEY (`administratorId`,`orgAuthServerId`);
-
 ALTER TABLE `Favorite`
   ADD PRIMARY KEY (`userId`,`organizationId`),
   ADD KEY `organizationId` (`organizationId`);
@@ -25,9 +22,6 @@ ALTER TABLE `Place`
 ALTER TABLE `PlaceAccess`
   ADD PRIMARY KEY (`id`),
   ADD KEY `placeId` (`placeId`);
-
-ALTER TABLE `User`
-  ADD PRIMARY KEY (`userId`,`organizationId`);
 
 
 ALTER TABLE `Organization`
@@ -57,6 +51,3 @@ ALTER TABLE `Place`
 
 ALTER TABLE `PlaceAccess`
   ADD CONSTRAINT `PlaceAccess_ibfk_1` FOREIGN KEY (`placeId`) REFERENCES `Place` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `User`
-  ADD CONSTRAINT `User_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

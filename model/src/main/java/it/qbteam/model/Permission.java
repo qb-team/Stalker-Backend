@@ -23,6 +23,7 @@ public class Permission   {
   @JsonProperty("administratorId")
   private String administratorId;
 
+  @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
 

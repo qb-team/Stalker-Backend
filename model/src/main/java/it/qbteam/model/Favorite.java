@@ -30,6 +30,7 @@ public class Favorite {
   @JsonProperty("organizationId")
   private Long organizationId;
 
+  @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
 
