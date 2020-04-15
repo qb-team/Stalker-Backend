@@ -15,20 +15,6 @@ import it.qbteam.model.PlaceMovement;
 
 @Controller
 public class MovementApiController implements MovementApi {
-    // private static final String ANONYMOUS_MOVEMENT_ORGANIZATION = "ANONYMOUS_MOVEMENT_ORGANIZATION";
-    // private static final String AUTHENTICATED_MOVEMENT_ORGANIZATION = "AUTHENTICATED_MOVEMENT_ORGANIZATION";
-    // private static final String ANONYMOUS_MOVEMENT_PLACE = "ANONYMOUS_MOVEMENT_PLACE";
-    // private static final String AUTHENTICATED_MOVEMENT_PLACE = "AUTHENTICATED_MOVEMENT_PLACE";
-
-    // private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
-    // private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
-
-    @Autowired @Qualifier("movementTemplate")
-    RedisTemplate<String, String> movementTemplate;
-
-    @Autowired @Qualifier("presenceCounterTemplate")
-    RedisTemplate<String, Integer> presenceCounterTemplate;
-
     /**
      * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
      * Tracks the user movement inside the trackingArea of an organization.
@@ -42,22 +28,7 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<OrganizationMovement> trackMovementInOrganization(@Valid OrganizationMovement organizationMovement) {
-               /* movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
-        switch(organizationAnonymousMovement.getMovementType()) {
-            case ENTRANCE:
-                // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
-                presenceCounterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
-                message = "Entrata";
-                // increment: increments the presence counter
-                presenceCounterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
-                message = "Uscita ";
-            break;
-            case EXIT:
-                presenceCounterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
-            break;
-        }*/
-        movementTemplate.convertAndSend("stalker-backend-movement-organization", organizationMovement.toString());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return null;
     }
 
     /**

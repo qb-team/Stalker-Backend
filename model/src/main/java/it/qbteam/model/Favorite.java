@@ -14,12 +14,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
+ * Link between the user and the organization: only the organization which users
+ * set to be their favorite can track their movements.
  */
 @ApiModel(description = "Link between the user and the organization: only the organization which users set to be their favorite can track their movements.")
 @Entity
 @IdClass(FavoriteId.class)
-public class Favorite   {
+public class Favorite {
   @Id
   @Column(length = 256)
   @JsonProperty("userId")
@@ -28,6 +29,9 @@ public class Favorite   {
   @Id
   @JsonProperty("organizationId")
   private Long organizationId;
+
+  @JsonProperty("orgAuthServerId")
+  private String orgAuthServerId;
 
   @JsonProperty("creationDate")
   private OffsetDateTime creationDate;
@@ -39,11 +43,11 @@ public class Favorite   {
 
   /**
    * Authentication service's user unique identifier.
+   * 
    * @return userId
-  */
+   */
   @ApiModelProperty(required = true, value = "Authentication service's user unique identifier.")
   @NotNull
-
 
   public String getUserId() {
     return userId;
@@ -60,11 +64,11 @@ public class Favorite   {
 
   /**
    * Unique identifier of the organization the user sets as favorite.
+   * 
    * @return organizationId
-  */
+   */
   @ApiModelProperty(required = true, value = "Unique identifier of the organization the user sets as favorite.")
   @NotNull
-
 
   public Long getOrganizationId() {
     return organizationId;
@@ -74,6 +78,26 @@ public class Favorite   {
     this.organizationId = organizationId;
   }
 
+  public Favorite orgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+    return this;
+  }
+
+  /**
+   * User unique identifier from the authentication server of the organization.
+   * 
+   * @return orgAuthServerId
+   */
+  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
+
+  public String getOrgAuthServerId() {
+    return orgAuthServerId;
+  }
+
+  public void setOrgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+  }
+
   public Favorite creationDate(OffsetDateTime creationDate) {
     this.creationDate = creationDate;
     return this;
@@ -81,8 +105,9 @@ public class Favorite   {
 
   /**
    * When the favorite was added by the user.
+   * 
    * @return creationDate
-  */
+   */
   @ApiModelProperty(required = true, value = "When the favorite was added by the user.")
   @NotNull
 
@@ -96,7 +121,6 @@ public class Favorite   {
     this.creationDate = creationDate;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -106,23 +130,24 @@ public class Favorite   {
       return false;
     }
     Favorite favorite = (Favorite) o;
-    return Objects.equals(this.userId, favorite.userId) &&
-        Objects.equals(this.organizationId, favorite.organizationId) &&
-        Objects.equals(this.creationDate, favorite.creationDate);
+    return Objects.equals(this.userId, favorite.userId) && Objects.equals(this.organizationId, favorite.organizationId)
+        && Objects.equals(this.orgAuthServerId, favorite.orgAuthServerId)
+        && Objects.equals(this.creationDate, favorite.creationDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, organizationId, creationDate);
+    return Objects.hash(userId, organizationId, orgAuthServerId, creationDate);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Favorite {\n");
-    
+
     sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+    sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -139,4 +164,3 @@ public class Favorite   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -418,7 +418,6 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
               required:
                 - requestReason
               properties:
@@ -465,7 +464,6 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
               required:
                 - trackingArea
               properties:
@@ -633,34 +631,6 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/user/binduser":
-    post:
-      tags:
-        - user
-      summary: Bind an already existent user to its organization account.
-      description: >-
-        Bind an already existent user to the organization.
-        Only app users can access this end-point.
-      operationId: bindUserToOrganizationAccount
-      responses:
-        "201":
-          description: User bound successfully. The user record gets returned.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "401":
-          description: The user is not authenticated. Nothing gets returned.
-        "403":
-          description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: The organization or the administrator could not be found. Nothing gets returned.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
   "/movement/track/organization":
     post:
       tags:
@@ -1091,35 +1061,40 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-    User:
-      type: object
-      required:
-        - userId
-        - organizationId
-        - orgAuthServerId
-      properties:
-        userId:
-          type: string
-          description: Authentication service's user unique identifier.
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization the orgAuthServerId is of.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
-    Administrator:
-      type: object
-      required:
-        - administratorId
-        - orgAuthServerId
-      properties:
-        administratorId:
-          type: string
-          description: Authentication service's administrator unique identifier.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
+    # User:
+    #   type: object
+    #   required:
+    #     - userId
+    #     - organizationId
+    #     - orgAuthServerId
+    #   properties:
+    #     userId:
+    #       type: string
+    #       description: Authentication service's user unique identifier.
+    #     organizationId:
+    #       type: integer
+    #       format: int64
+    #       description: Unique identifier of the organization the orgAuthServerId is of.
+    #     orgAuthServerId:
+    #       type: string
+    #       description: User unique identifier from the authentication server of the organization.
+    # Administrator:
+    #   type: object
+    #   required:
+    #     - administratorId
+    #     - organizationId
+    #     - orgAuthServerId
+    #   properties:
+    #     administratorId:
+    #       type: string
+    #       description: Authentication service's administrator unique identifier.
+    #     organizationId:
+    #       type: integer
+    #       format: int64
+    #       description: Unique identifier of the organization the orgAuthServerId is of.
+    #     orgAuthServerId:
+    #       type: string
+    #       description: User unique identifier from the authentication server of the organization.
     AdministratorInfo:
       type: object
       required:
@@ -1130,27 +1105,8 @@ components:
           type: string
           format: email
           description: Mail of the administrator.
-        admininistrator:
-          $ref: "#/components/schemas/Administrator"
         permission:
           $ref: "#/components/schemas/Permission"
-    UserInfo:
-      type: object
-      required:
-        - name
-        - surname
-        - mail
-      properties:
-        name:
-          type: string
-          description: Name of the user (if available in the authentication server of the organization).
-        surname:
-          type: string
-          description: Surname of the user (if available in the authentication server of the organization).
-        mail:
-          type: string
-          format: email
-          description: Mail address of the user.
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
@@ -1158,7 +1114,6 @@ components:
         - administratorId
         - organizationId
         - permission
-        - nominatedBy
       properties:
         administratorId:
           type: string
@@ -1167,6 +1122,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the administrator is part of.
+        orgAuthServerId:
+          type: string
+          description: Administrator unique identifier from the authentication server of the organization.
         permission:
           type: integer
           format: int32
@@ -1197,6 +1155,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the user sets as favorite.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
         creationDate:
           type: string
           format: date-time
