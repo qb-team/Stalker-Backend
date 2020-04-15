@@ -1,37 +1,32 @@
-// package it.qbteam.controller;
+/*package it.qbteam.controller;
 
-// import org.junit.Before;
-// import org.junit.Test;
-// import org.junit.runner.RunWith;
-// import org.mockito.InjectMocks;
-// import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.MockMvcBuilder;
-// import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-// import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-// import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-// import static org.junit.Assert.*;
+import it.qbteam.service.MovementService;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// @RunWith(SpringJUnit4ClassRunner.class)
-// public class MovementApiControllerTest {
+@WebMvcTest(MovementApiController.class)
+public class MovementApiControllerTest {
 
-//     private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-//     @InjectMocks
-//     private MovementApiController movementApiController;
+    @MockBean
+    private MovementService service;
 
-//     @Before
-//     public void setUp() throws Exception {
-//         mockMvc= MockMvcBuilders.standaloneSetup(movementApiController).build();
-//     }
-
-//     @Test
-//     public void testMovement() throws Exception {
-//         mockMvc.perform(
-//                 MockMvcRequestBuilders.post("/movement/track/organization")
-//         )
-//                 .andExpect(MockMvcResultMatchers.status().isOk())
-//                 .andExpect(MockMvcResultMatchers.content().string("prova"));
-//     }
-// }
+    @Test
+    public void greetingShouldReturnMessageFromService() throws Exception {
+        this.mockMvc.perform(post("/movement/track/organization")).andDo(print()).andExpect(status().isOk());
+    }
+}
+*/
