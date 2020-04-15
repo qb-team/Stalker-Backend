@@ -30,6 +30,7 @@ public class PresenceApiController implements PresenceApi {
      * @return Organization presence list returned successfully. (status code 200)
      * or There is currently nobody inside the organization&#39;s trackingArea. Nothing gets returned. (status code 204)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     * or Users cannot access this end-point. Nothing gets returned. (status code 403)
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
@@ -45,6 +46,7 @@ public class PresenceApiController implements PresenceApi {
      * @return Place presence list returned successfully. (status code 200)
      * or There is currently nobody inside the place&#39;s trackingArea. Nothing gets returned. (status code 204)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     * or Users cannot access this end-point. Nothing gets returned. (status code 403)
      * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
@@ -62,6 +64,7 @@ public class PresenceApiController implements PresenceApi {
      * @param organizationId ID of an organization. (required)
      * @return Organization presence counter returned successfully. (status code 200)
      * or Organization presence counter not found. (status code 400)
+     * or Users cannot access this end-point. Nothing gets returned. (status code 403)
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
@@ -76,6 +79,7 @@ public class PresenceApiController implements PresenceApi {
      * @param placeId ID of a place. (required)
      * @return Place presence counter returned successfully. (status code 200)
      * or Place presence counter not found. (status code 400)
+     * or Users cannot access this end-point. Nothing gets returned. (status code 403)
      */
     @Override
     public ResponseEntity<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {

@@ -418,6 +418,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
+              type: object
               required:
                 - requestReason
               properties:
@@ -464,6 +465,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
+              type: object
               required:
                 - trackingArea
               properties:
@@ -534,6 +536,8 @@ paths:
           description: Place list of organization is empty. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators who do not manage the organization cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/place":
@@ -757,6 +761,8 @@ paths:
           description: List of authenticated accesses in a place were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Users can only retrieve their accesses. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}":
@@ -803,6 +809,8 @@ paths:
           description: List of authenticated accesses in an organization were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Users can only retrieve their accesses. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}":
@@ -837,6 +845,8 @@ paths:
           description: There is currently nobody inside the organization's trackingArea. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}/counter":
@@ -866,6 +876,8 @@ paths:
                 $ref: "#/components/schemas/OrganizationPresenceCounter"
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/place/{placeId}":
@@ -900,6 +912,8 @@ paths:
           description: There is currently nobody inside the place's trackingArea. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/presence/place/{placeId}/counter":
@@ -929,6 +943,8 @@ paths:
                 $ref: "#/components/schemas/PlacePresenceCounter"
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/report/organization/{organizationId}":

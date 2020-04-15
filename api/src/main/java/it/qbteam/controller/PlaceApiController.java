@@ -64,6 +64,7 @@ public class PlaceApiController implements PlaceApi {
      * @return Place list of organization returned successfully. (status code 200)
      * or Place list of organization is empty. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     * or Administrators who do not manage the organization cannot access this end-point. Nothing gets returned. (status code 403)
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
