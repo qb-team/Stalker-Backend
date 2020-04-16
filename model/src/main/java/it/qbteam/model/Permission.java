@@ -23,6 +23,10 @@ public class Permission   {
   @JsonProperty("administratorId")
   private String administratorId;
 
+  @Column(length = 256)
+  @JsonProperty("orgAuthServerId")
+  private String orgAuthServerId;
+
   @Id
   @JsonProperty("organizationId")
   private Long organizationId;
@@ -76,6 +80,26 @@ public class Permission   {
     this.organizationId = organizationId;
   }
 
+  public Permission orgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+    return this;
+  }
+
+  /**
+   * Administrator unique identifier from the authentication server of the organization.
+   * @return orgAuthServerId
+  */
+  @ApiModelProperty(value = "Administrator unique identifier from the authentication server of the organization.")
+
+
+  public String getOrgAuthServerId() {
+    return orgAuthServerId;
+  }
+
+  public void setOrgAuthServerId(String orgAuthServerId) {
+    this.orgAuthServerId = orgAuthServerId;
+  }
+
   public Permission permission(Integer permission) {
     this.permission = permission;
     return this;
@@ -105,10 +129,10 @@ public class Permission   {
   }
 
   /**
-   * admininistratorId of the owner admininistrator who nominated the current admininistrator.
+   * administratorId of the owner administrator who nominated the current administrator.
    * @return nominatedBy
   */
-  @ApiModelProperty(required = true, value = "admininistratorId of the owner admininistrator who nominated the current admininistrator.")
+  @ApiModelProperty(required = true, value = "administratorId of the owner administrator who nominated the current administrator.")
   @NotNull
 
 
@@ -132,13 +156,14 @@ public class Permission   {
     Permission permission = (Permission) o;
     return Objects.equals(this.administratorId, permission.administratorId) &&
         Objects.equals(this.organizationId, permission.organizationId) &&
+        Objects.equals(this.orgAuthServerId, permission.orgAuthServerId) &&
         Objects.equals(this.permission, permission.permission) &&
         Objects.equals(this.nominatedBy, permission.nominatedBy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(administratorId, organizationId, permission, nominatedBy);
+    return Objects.hash(administratorId, organizationId, orgAuthServerId, permission, nominatedBy);
   }
 
   @Override
@@ -148,6 +173,7 @@ public class Permission   {
     
     sb.append("    administratorId: ").append(toIndentedString(administratorId)).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+    sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("    permission: ").append(toIndentedString(permission)).append("\n");
     sb.append("    nominatedBy: ").append(toIndentedString(nominatedBy)).append("\n");
     sb.append("}");

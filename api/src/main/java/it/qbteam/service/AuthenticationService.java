@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import it.qbteam.model.User;
-
 /**
  * Authentication Service
  * 
@@ -68,10 +66,10 @@ public interface AuthenticationService {
     public Boolean createUser(String email, String password);
 
     /**
-     * Returns the user account related to the email address.
+     * Returns the userId related to the email address.
      * 
      * @param email e-mail address of the user to be returned
-     * @return User if the user account was found, and null if it was not.
+     * @return userId if the user account was found, and null if it was not.
      */
-    public Optional<User> getUserByEmail(String email);
+    public Optional<String> getUserByEmail(String email);
 }

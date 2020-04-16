@@ -25,14 +25,14 @@ public interface PresenceApi {
 
     /**
      * GET /presence/organization/{organizationId}/counter : Gets the number of people currently inside the organization&#39;s trackingArea.
-     * Gets the number of people currently inside the organization&#39;s trackingArea. Only web-app admininistrators can access this end-point.
+     * Gets the number of people currently inside the organization&#39;s trackingArea. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization presence counter returned successfully. (status code 200)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the number of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceCounter", notes = "Gets the number of people currently inside the organization's trackingArea. Only web-app admininistrators can access this end-point.", response = OrganizationPresenceCounter.class, authorizations = {
+    @ApiOperation(value = "Gets the number of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceCounter", notes = "Gets the number of people currently inside the organization's trackingArea. Only web-app administrators can access this end-point.", response = OrganizationPresenceCounter.class, authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "presence", })
     @ApiResponses(value = { 
@@ -48,7 +48,7 @@ public interface PresenceApi {
 
     /**
      * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.
-     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization presence list returned successfully. (status code 200)
@@ -56,7 +56,7 @@ public interface PresenceApi {
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the list of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceList", notes = "Gets the list of people currently inside the organization's trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Gets the list of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceList", notes = "Gets the list of people currently inside the organization's trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "presence", })
     @ApiResponses(value = { 
@@ -73,14 +73,14 @@ public interface PresenceApi {
 
     /**
      * GET /presence/place/{placeId}/counter : Gets the number of people currently inside the place&#39;s trackingArea.
-     * Gets the number of people currently inside the place&#39;s trackingArea. Only web-app admininistrators can access this end-point.
+     * Gets the number of people currently inside the place&#39;s trackingArea. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place presence counter returned successfully. (status code 200)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or The place could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the number of people currently inside the place's trackingArea.", nickname = "getPlacePresenceCounter", notes = "Gets the number of people currently inside the place's trackingArea. Only web-app admininistrators can access this end-point.", response = PlacePresenceCounter.class, authorizations = {
+    @ApiOperation(value = "Gets the number of people currently inside the place's trackingArea.", nickname = "getPlacePresenceCounter", notes = "Gets the number of people currently inside the place's trackingArea. Only web-app administrators can access this end-point.", response = PlacePresenceCounter.class, authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "presence", })
     @ApiResponses(value = { 
@@ -96,7 +96,7 @@ public interface PresenceApi {
 
     /**
      * GET /presence/place/{placeId} : Gets the list of people currently inside the place&#39;s trackingArea.
-     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place presence list returned successfully. (status code 200)
@@ -104,7 +104,7 @@ public interface PresenceApi {
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or The place could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the list of people currently inside the place's trackingArea.", nickname = "getPlacePresenceList", notes = "Gets the list of people currently inside the place's trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Gets the list of people currently inside the place's trackingArea.", nickname = "getPlacePresenceList", notes = "Gets the list of people currently inside the place's trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "presence", })
     @ApiResponses(value = { 

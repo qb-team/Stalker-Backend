@@ -23,7 +23,7 @@ public interface AccessApi {
 
     /**
      * GET /access/organization/{organizationId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
-     * Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.
+     * Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.
      *
      * @param orgAuthServerIds One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier. (required)
      * @param organizationId ID of an organization (required)
@@ -32,7 +32,7 @@ public interface AccessApi {
      *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInOrganization", notes = "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "access", })
     @ApiResponses(value = { 
@@ -49,7 +49,7 @@ public interface AccessApi {
 
     /**
      * GET /access/place/{placeId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).
-     * Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.
+     * Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.
      *
      * @param orgAuthServerIds One or more orgAuthServerIds. If it is called by the app user, the orgAuthServerIds parameter can only consist in one identifier. Otherwise it can be more than one identifier. (required)
      * @param placeId ID of a place. (required)
@@ -58,7 +58,7 @@ public interface AccessApi {
      *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      *         or The place could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInPlace", notes = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app admininistrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).", nickname = "getAuthenticatedAccessListInPlace", notes = "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "access", })
     @ApiResponses(value = { 

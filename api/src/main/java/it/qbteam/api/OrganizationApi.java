@@ -25,14 +25,14 @@ public interface OrganizationApi {
 
     /**
      * GET /organization/{organizationId} : Gets the available data for a single organization.
-     * Gets the data available for a single organization.  Both app users and web-app admininistrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
+     * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization returned successfully. (status code 200)
      *         or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the available data for a single organization.", nickname = "getOrganization", notes = "Gets the data available for a single organization.  Both app users and web-app admininistrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.", response = Organization.class, authorizations = {
+    @ApiOperation(value = "Gets the available data for a single organization.", nickname = "getOrganization", notes = "Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.", response = Organization.class, authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "organization", })
     @ApiResponses(value = { 
@@ -72,7 +72,7 @@ public interface OrganizationApi {
 
     /**
      * POST /organization/{organizationId}/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
-     * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app admininistrators can access this end-point.
+     * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
      * @param requestReason Request reason for the deletion request. (required)
@@ -81,7 +81,7 @@ public interface OrganizationApi {
      *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Sends a deletion request to the system. The request will be examined by Stalker administrators.", nickname = "requestDeletionOfOrganization", notes = "Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app admininistrators can access this end-point.", authorizations = {
+    @ApiOperation(value = "Sends a deletion request to the system. The request will be examined by Stalker administrators.", nickname = "requestDeletionOfOrganization", notes = "Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "organization", })
     @ApiResponses(value = { 
@@ -125,7 +125,7 @@ public interface OrganizationApi {
 
     /**
      * PATCH /organization/{organizationId}/trackingArea : Updates the coordinates of the tracking area of an organization.
-     * Updates the coordinates of the tracking area of an organization. Only web-app admininistrators can access this end-point.
+     * Updates the coordinates of the tracking area of an organization. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. The administrator must have at least manager permission to the organization. (required)
      * @param trackingArea JSON representation of a tracking trackingArea. (required)
@@ -135,7 +135,7 @@ public interface OrganizationApi {
      *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Updates the coordinates of the tracking area of an organization.", nickname = "updateOrganizationTrackingArea", notes = "Updates the coordinates of the tracking area of an organization. Only web-app admininistrators can access this end-point.", response = Organization.class, authorizations = {
+    @ApiOperation(value = "Updates the coordinates of the tracking area of an organization.", nickname = "updateOrganizationTrackingArea", notes = "Updates the coordinates of the tracking area of an organization. Only web-app administrators can access this end-point.", response = Organization.class, authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "organization", })
     @ApiResponses(value = { 

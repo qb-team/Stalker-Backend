@@ -8,8 +8,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.api.PresenceApi;
+import it.qbteam.service.AuthenticationService;
 
 import it.qbteam.model.OrganizationPresenceCounter;
 import it.qbteam.model.PlacePresenceCounter;
@@ -18,13 +20,19 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @Controller
-public class PresenceApiController implements PresenceApi {
+public class PresenceApiController extends StalkerBaseController implements PresenceApi {
+
+    @Autowired
+    public PresenceApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+
     private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
     // private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
 
     /**
      * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.
-     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization presence list returned successfully. (status code 200)
@@ -40,7 +48,7 @@ public class PresenceApiController implements PresenceApi {
 
     /**
      * GET /presence/place/{placeId} : Gets the list of people currently inside the place&#39;s trackingArea.
-     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place presence list returned successfully. (status code 200)

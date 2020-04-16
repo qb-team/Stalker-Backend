@@ -3,18 +3,26 @@ package it.qbteam.controller;
 import it.qbteam.api.AdministratorApi;
 import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
+import it.qbteam.service.AuthenticationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
-@Controller
-public class AdministratorApiController implements AdministratorApi {
+public class AdministratorApiController extends StalkerBaseController implements AdministratorApi {
+
+    @Autowired
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+    
     /**
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
-     * Bind an already existent administrator to the organization. Only web-app admininistrators can access this end-point.
+     * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.
      *
      * @param permission (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
@@ -45,7 +53,7 @@ public class AdministratorApiController implements AdministratorApi {
 
     /**
      * GET /administrator/organization/{organizationId} : Returns the list of administrators of the organization.
-     * Returns the list of administrators of the organization. Only web-app admininistrators can access this end-point.
+     * Returns the list of administrators of the organization. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
      * @return Administrators&#39; information returned successfully. (status code 200)
@@ -60,7 +68,7 @@ public class AdministratorApiController implements AdministratorApi {
 
     /**
      * GET /administrator/permission/{administratorId} : Gets the list of permission that an administrator has permissions to view/manage/own.
-     * Gets the list of organizations that an administrator has permissions to view/manage/own. Only web-app admininistrators can access this end-point.
+     * Gets the list of organizations that an administrator has permissions to view/manage/own. Only web-app administrators can access this end-point.
      *
      * @param administratorId ID of the administrator. It must be the same of the administratorId of the authenticated administrator. (required)
      * @return List of permissions returned successfully. (status code 200)
@@ -76,10 +84,10 @@ public class AdministratorApiController implements AdministratorApi {
 
     /**
      * POST /administrator/unbindadministrator : Unbind an administrator to the organization.
-     * Unbind an administrator to the organization. Only web-app admininistrators can access this end-point.
+     * Unbind an administrator to the organization. Only web-app administrators can access this end-point.
      *
      * @param permission (required)
-     * @return Administrator unbinded successfully. Nothing gets returned. (status code 204)
+     * @return Administrator unbound successfully. Nothing gets returned. (status code 204)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      * or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
@@ -91,7 +99,7 @@ public class AdministratorApiController implements AdministratorApi {
 
     /**
      * PATCH /administrator/updatepermission : Update the permission for an already existent administrator in the organization.
-     * Update the permission for an already existent administrator in the organization. Only web-app admininistrators can access this end-point.
+     * Update the permission for an already existent administrator in the organization. Only web-app administrators can access this end-point.
      *
      * @param permission (required)
      * @return Administrator&#39;s permissions updated successfully. The permission record gets returned. (status code 201)

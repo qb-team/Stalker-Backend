@@ -62,7 +62,7 @@ paths:
       summary: Gets the available data for a single organization.
       description: >-
         Gets the data available for a single organization. 
-        Both app users and web-app admininistrators can access this end-point but, 
+        Both app users and web-app administrators can access this end-point but, 
         app users can request information for all the organizations while web-app 
         administrators can only for the organizations they have access to.
       operationId: getOrganization
@@ -243,7 +243,7 @@ paths:
       summary: Bind an already existent administrator to the organization.
       description: >-
         Bind an already existent administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: bindAdministratorToOrganization
       responses:
         "201":
@@ -271,7 +271,7 @@ paths:
       summary: Unbind an administrator to the organization.
       description: >-
         Unbind an administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: unbindAdministratorFromOrganization
       responses:
         "204":
@@ -325,7 +325,7 @@ paths:
       summary: Update the permission for an already existent administrator in the organization.
       description: >-
         Update the permission for an already existent administrator in the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updateAdministratorPermission
       responses:
         "201":
@@ -355,7 +355,7 @@ paths:
       summary: Returns the list of administrators of the organization.
       description: >-
         Returns the list of administrators of the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getAdministratorListOfOrganization
       parameters:
         - name: organizationId
@@ -418,7 +418,6 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
               required:
                 - requestReason
               properties:
@@ -465,7 +464,6 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
               required:
                 - trackingArea
               properties:
@@ -479,7 +477,7 @@ paths:
       summary: Gets the list of permission that an administrator has permissions to view/manage/own.
       description: >-
         Gets the list of organizations that an administrator has permissions to view/manage/own.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPermissionList
       parameters:
         - name: administratorId
@@ -512,7 +510,7 @@ paths:
       summary: Returns the list of places of the organization.
       description: >-
         Returns the list of places of the organization.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getPlaceListOfOrganization
       parameters:
         - name: organizationId
@@ -547,7 +545,7 @@ paths:
       summary: Creates a new place for an organization.
       description: >-
         Creates a new place for an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: createNewPlace
       responses:
         "201":
@@ -575,7 +573,7 @@ paths:
       summary: Updates one or more properties of a place of an organization.
       description: >-
         Updates one or more properties of a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updatePlace
       parameters:
         - name: placeId
@@ -613,7 +611,7 @@ paths:
       summary: Deletes a place of an organization.
       description: >-
         Deletes a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: deletePlace
       parameters:
         - name: placeId
@@ -633,34 +631,6 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/user/binduser":
-    post:
-      tags:
-        - user
-      summary: Bind an already existent user to its organization account.
-      description: >-
-        Bind an already existent user to the organization.
-        Only app users can access this end-point.
-      operationId: bindUserToOrganizationAccount
-      responses:
-        "201":
-          description: User bound successfully. The user record gets returned.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "401":
-          description: The user is not authenticated. Nothing gets returned.
-        "403":
-          description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: The organization or the administrator could not be found. Nothing gets returned.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
   "/movement/track/organization":
     post:
       tags:
@@ -725,7 +695,7 @@ paths:
       description: >-
         Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInPlace
       parameters:
         - name: orgAuthServerIds
@@ -773,7 +743,7 @@ paths:
       description: >-
         Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInOrganization
       parameters:
         - name: orgAuthServerIds
@@ -821,7 +791,7 @@ paths:
       description: >-
         Gets the list of people currently inside the organization's trackingArea.
         The organization is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceList
       parameters:
         - name: organizationId
@@ -856,7 +826,7 @@ paths:
       summary: Gets the number of people currently inside the organization's trackingArea.
       description: >-
         Gets the number of people currently inside the organization's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceCounter
       parameters:
         - name: organizationId
@@ -888,7 +858,7 @@ paths:
       description: >-
         Gets the list of people currently inside the place's trackingArea.
         The place is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceList
       parameters:
         - name: placeId
@@ -923,7 +893,7 @@ paths:
       summary: Gets the number of people currently inside the place's trackingArea.
       description: >-
         Gets the number of people currently inside the place's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceCounter
       parameters:
         - name: placeId
@@ -954,14 +924,14 @@ paths:
       summary: Gets the report of total time spent per user inside the organization.
       description: >-
         Gets the report of total time spent by each user inside the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getTimePerUserReport
       parameters:
         - name: organizationId
           in: path
           description: >-
             ID of the organization.
-            The viewer admininistrator must have permissions for this organization.
+            The viewer administrator must have permissions for this organization.
           required: true
           schema:
             type: integer
@@ -996,6 +966,7 @@ components:
   schemas:
     Organization:
       type: object
+      additionalProperties: false
       description: >-
         Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
       required:
@@ -1069,6 +1040,7 @@ components:
     Place:
       type: object
       description: Area of an organization subjected to tracking.
+      additionalProperties: false
       required:
         - id
         - organizationId
@@ -1091,35 +1063,6 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-    User:
-      type: object
-      required:
-        - userId
-        - organizationId
-        - orgAuthServerId
-      properties:
-        userId:
-          type: string
-          description: Authentication service's user unique identifier.
-        organizationId:
-          type: integer
-          format: int64
-          description: Unique identifier of the organization the orgAuthServerId is of.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
-    Administrator:
-      type: object
-      required:
-        - administratorId
-        - orgAuthServerId
-      properties:
-        administratorId:
-          type: string
-          description: Authentication service's administrator unique identifier.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
     AdministratorInfo:
       type: object
       required:
@@ -1130,35 +1073,16 @@ components:
           type: string
           format: email
           description: Mail of the administrator.
-        admininistrator:
-          $ref: "#/components/schemas/Administrator"
         permission:
           $ref: "#/components/schemas/Permission"
-    UserInfo:
-      type: object
-      required:
-        - name
-        - surname
-        - mail
-      properties:
-        name:
-          type: string
-          description: Name of the user (if available in the authentication server of the organization).
-        surname:
-          type: string
-          description: Surname of the user (if available in the authentication server of the organization).
-        mail:
-          type: string
-          format: email
-          description: Mail address of the user.
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
+      additionalProperties: false
       required:
         - administratorId
         - organizationId
         - permission
-        - nominatedBy
       properties:
         administratorId:
           type: string
@@ -1167,6 +1091,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the administrator is part of.
+        orgAuthServerId:
+          type: string
+          description: Administrator unique identifier from the authentication server of the organization.
         permission:
           type: integer
           format: int32
@@ -1180,11 +1107,12 @@ components:
             - Viewer: 1 (lowest level)
         nominatedBy:
           type: string
-          description: admininistratorId of the owner admininistrator who nominated the current admininistrator.
+          description: administratorId of the owner administrator who nominated the current administrator.
     Favorite:
       type: object
       description: >-
         Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
+      additionalProperties: false
       required:
         - userId
         - organizationId
@@ -1197,6 +1125,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the user sets as favorite.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
         creationDate:
           type: string
           format: date-time
@@ -1204,6 +1135,7 @@ components:
     PlaceAccess:
       type: object
       description: Access to a place of an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
@@ -1233,6 +1165,7 @@ components:
     OrganizationAccess:
       type: object
       description: Access to an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
@@ -1262,6 +1195,7 @@ components:
     OrganizationPresenceCounter:
       type: object
       description: Number of people currently inside the organization's trackingArea.
+      additionalProperties: false
       required:
         - organizationId
         - counter
@@ -1277,6 +1211,7 @@ components:
     PlacePresenceCounter:
       type: object
       description: Number of people currently inside a place of an organization.
+      additionalProperties: false
       required:
         - placeId
         - counter
@@ -1292,6 +1227,7 @@ components:
     PlaceMovement:
       type: object
       description: Movement in a place of an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1324,6 +1260,7 @@ components:
     OrganizationMovement:
       type: object
       description: Movement in an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1356,6 +1293,7 @@ components:
     TimePerUserReport:
       type: object
       description: Represents a row in the report generated for an user by the viewer administrator.
+      additionalProperties: false
       required:
         - organizationId
         - orgAuthServerId

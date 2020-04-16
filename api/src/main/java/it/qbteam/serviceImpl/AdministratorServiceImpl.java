@@ -2,7 +2,6 @@ package it.qbteam.serviceImpl;
 
 import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
-import it.qbteam.repository.sql.AdministratorRepository;
 import it.qbteam.repository.sql.PermissionRepository;
 import it.qbteam.service.AdministratorService;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.Optional;
 public class AdministratorServiceImpl implements AdministratorService {
 
     private PermissionRepository permissionRepo;
-    private AdministratorRepository administratorRepo;
+
 
     @Override
     public Optional<Permission> bindAdministratorToOrganization(Permission permission) {

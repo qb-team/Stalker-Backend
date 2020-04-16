@@ -11,12 +11,9 @@ import javax.validation.constraints.*;
  * AdministratorInfo
  */
 
-public class AdministratorInfo   {
+public class AdministratorInfo {
   @JsonProperty("mail")
   private String mail;
-
-  @JsonProperty("admininistrator")
-  private Administrator admininistrator;
 
   @JsonProperty("permission")
   private Permission permission;
@@ -28,39 +25,19 @@ public class AdministratorInfo   {
 
   /**
    * Mail of the administrator.
+   * 
    * @return mail
-  */
+   */
   @ApiModelProperty(required = true, value = "Mail of the administrator.")
   @NotNull
 
-@javax.validation.constraints.Email
+  @javax.validation.constraints.Email
   public String getMail() {
     return mail;
   }
 
   public void setMail(String mail) {
     this.mail = mail;
-  }
-
-  public AdministratorInfo admininistrator(Administrator admininistrator) {
-    this.admininistrator = admininistrator;
-    return this;
-  }
-
-  /**
-   * Get admininistrator
-   * @return admininistrator
-  */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public Administrator getAdmininistrator() {
-    return admininistrator;
-  }
-
-  public void setAdmininistrator(Administrator admininistrator) {
-    this.admininistrator = admininistrator;
   }
 
   public AdministratorInfo permission(Permission permission) {
@@ -70,8 +47,9 @@ public class AdministratorInfo   {
 
   /**
    * Get permission
+   * 
    * @return permission
-  */
+   */
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -85,7 +63,6 @@ public class AdministratorInfo   {
     this.permission = permission;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -95,23 +72,21 @@ public class AdministratorInfo   {
       return false;
     }
     AdministratorInfo administratorInfo = (AdministratorInfo) o;
-    return Objects.equals(this.mail, administratorInfo.mail) &&
-        Objects.equals(this.admininistrator, administratorInfo.admininistrator) &&
-        Objects.equals(this.permission, administratorInfo.permission);
+    return Objects.equals(this.mail, administratorInfo.mail)
+        && Objects.equals(this.permission, administratorInfo.permission);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mail, admininistrator, permission);
+    return Objects.hash(mail, permission);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AdministratorInfo {\n");
-    
+
     sb.append("    mail: ").append(toIndentedString(mail)).append("\n");
-    sb.append("    admininistrator: ").append(toIndentedString(admininistrator)).append("\n");
     sb.append("    permission: ").append(toIndentedString(permission)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -128,4 +103,3 @@ public class AdministratorInfo   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-
