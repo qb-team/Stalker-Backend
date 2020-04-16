@@ -3,14 +3,24 @@ package it.qbteam.controller;
 import it.qbteam.api.FavoriteApi;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
+import it.qbteam.service.AuthenticationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.constraints.Min;
 import java.util.List;
 
 @Controller
-public class FavoriteApiController implements FavoriteApi {
+public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
+
+    @Autowired
+    public FavoriteApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+    
     /**
      * POST /favorite/{userId}/add/{organizationId} : Adds a new organization to the user&#39;s favorite organization list.
      * Adds a new organization to the user&#39;s favorite organization list. If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker&#39;s account. Only app users can access this end-point.

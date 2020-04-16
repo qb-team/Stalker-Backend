@@ -2,13 +2,22 @@ package it.qbteam.controller;
 
 import it.qbteam.api.PlaceApi;
 import it.qbteam.model.Place;
+import it.qbteam.service.AuthenticationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
-public class PlaceApiController implements PlaceApi {
+public class PlaceApiController extends StalkerBaseController implements PlaceApi {
+    
+    @Autowired
+    public PlaceApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
     /**
      * POST /place : Creates a new place for an organization.
      * Creates a new place for an organization. Only web-app administrators can access this end-point.

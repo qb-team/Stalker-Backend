@@ -3,15 +3,26 @@ package it.qbteam.controller;
 import it.qbteam.api.AccessApi;
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
+import it.qbteam.service.AuthenticationService;
+
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
+import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.constraints.Min;
 import java.util.List;
 
 @Controller
-public class AccessApiController implements AccessApi {
+public class AccessApiController extends StalkerBaseController implements AccessApi {
+
+    @Autowired
+    public AccessApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+
     /**
      * GET /access/organization/{organizationId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
      * Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.

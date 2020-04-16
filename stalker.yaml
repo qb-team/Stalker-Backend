@@ -966,6 +966,7 @@ components:
   schemas:
     Organization:
       type: object
+      additionalProperties: false
       description: >-
         Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
       required:
@@ -1039,6 +1040,7 @@ components:
     Place:
       type: object
       description: Area of an organization subjected to tracking.
+      additionalProperties: false
       required:
         - id
         - organizationId
@@ -1061,40 +1063,6 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-    # User:
-    #   type: object
-    #   required:
-    #     - userId
-    #     - organizationId
-    #     - orgAuthServerId
-    #   properties:
-    #     userId:
-    #       type: string
-    #       description: Authentication service's user unique identifier.
-    #     organizationId:
-    #       type: integer
-    #       format: int64
-    #       description: Unique identifier of the organization the orgAuthServerId is of.
-    #     orgAuthServerId:
-    #       type: string
-    #       description: User unique identifier from the authentication server of the organization.
-    # Administrator:
-    #   type: object
-    #   required:
-    #     - administratorId
-    #     - organizationId
-    #     - orgAuthServerId
-    #   properties:
-    #     administratorId:
-    #       type: string
-    #       description: Authentication service's administrator unique identifier.
-    #     organizationId:
-    #       type: integer
-    #       format: int64
-    #       description: Unique identifier of the organization the orgAuthServerId is of.
-    #     orgAuthServerId:
-    #       type: string
-    #       description: User unique identifier from the authentication server of the organization.
     AdministratorInfo:
       type: object
       required:
@@ -1110,6 +1078,7 @@ components:
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
+      additionalProperties: false
       required:
         - administratorId
         - organizationId
@@ -1143,6 +1112,7 @@ components:
       type: object
       description: >-
         Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
+      additionalProperties: false
       required:
         - userId
         - organizationId
@@ -1165,6 +1135,7 @@ components:
     PlaceAccess:
       type: object
       description: Access to a place of an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
@@ -1194,6 +1165,7 @@ components:
     OrganizationAccess:
       type: object
       description: Access to an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
@@ -1223,6 +1195,7 @@ components:
     OrganizationPresenceCounter:
       type: object
       description: Number of people currently inside the organization's trackingArea.
+      additionalProperties: false
       required:
         - organizationId
         - counter
@@ -1238,6 +1211,7 @@ components:
     PlacePresenceCounter:
       type: object
       description: Number of people currently inside a place of an organization.
+      additionalProperties: false
       required:
         - placeId
         - counter
@@ -1253,6 +1227,7 @@ components:
     PlaceMovement:
       type: object
       description: Movement in a place of an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1285,6 +1260,7 @@ components:
     OrganizationMovement:
       type: object
       description: Movement in an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1317,6 +1293,7 @@ components:
     TimePerUserReport:
       type: object
       description: Represents a row in the report generated for an user by the viewer administrator.
+      additionalProperties: false
       required:
         - organizationId
         - orgAuthServerId

@@ -8,13 +8,21 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.api.MovementApi;
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
+import it.qbteam.service.AuthenticationService;
 
 @Controller
-public class MovementApiController implements MovementApi {
+public class MovementApiController extends StalkerBaseController implements MovementApi {
+    
+    @Autowired
+    public MovementApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+    
     /**
      * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
      * Tracks the user movement inside the trackingArea of an organization.

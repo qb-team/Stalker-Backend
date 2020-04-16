@@ -3,13 +3,23 @@ package it.qbteam.controller;
 import it.qbteam.api.AdministratorApi;
 import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
+import it.qbteam.service.AuthenticationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
-public class AdministratorApiController implements AdministratorApi {
+public class AdministratorApiController extends StalkerBaseController implements AdministratorApi {
+
+    @Autowired
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+    
     /**
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
      * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.

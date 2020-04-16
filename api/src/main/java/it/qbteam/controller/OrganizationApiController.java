@@ -21,11 +21,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.api.OrganizationApi;
-import it.qbteam.repository.sql.OrganizationRepository;
+import it.qbteam.service.AuthenticationService;
 
 @Controller
-public class OrganizationApiController implements OrganizationApi {
-
+public class OrganizationApiController extends StalkerBaseController implements OrganizationApi {
+    
+    @Autowired
+    public OrganizationApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
+    }
+    
     /**
      * GET /organization/{organizationId} : Gets the available data for a single organization.
      * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
