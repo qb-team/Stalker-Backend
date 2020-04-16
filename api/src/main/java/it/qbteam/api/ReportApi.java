@@ -22,16 +22,16 @@ public interface ReportApi {
 
     /**
      * GET /report/organization/{organizationId} : Gets the report of total time spent per user inside the organization.
-     * Gets the report of total time spent by each user inside the organization. Only web-app admininistrators can access this end-point.
+     * Gets the report of total time spent by each user inside the organization. Only web-app administrators can access this end-point.
      *
-     * @param organizationId ID of the organization. The viewer admininistrator must have permissions for this organization. (required)
+     * @param organizationId ID of the organization. The viewer administrator must have permissions for this organization. (required)
      * @return Report of time spent in the organization per user returned successfully. (status code 200)
      *         or Report is empty. Nothing gets returned. (status code 204)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the report of total time spent per user inside the organization.", nickname = "getTimePerUserReport", notes = "Gets the report of total time spent by each user inside the organization. Only web-app admininistrators can access this end-point.", response = TimePerUserReport.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Gets the report of total time spent per user inside the organization.", nickname = "getTimePerUserReport", notes = "Gets the report of total time spent by each user inside the organization. Only web-app administrators can access this end-point.", response = TimePerUserReport.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "report", })
     @ApiResponses(value = { 
@@ -43,6 +43,6 @@ public interface ReportApi {
     @RequestMapping(value = "/report/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<TimePerUserReport>> getTimePerUserReport(@Min(1L)@ApiParam(value = "ID of the organization. The viewer admininistrator must have permissions for this organization.",required=true) @PathVariable("organizationId") Long organizationId);
+    ResponseEntity<List<TimePerUserReport>> getTimePerUserReport(@Min(1L)@ApiParam(value = "ID of the organization. The viewer administrator must have permissions for this organization.",required=true) @PathVariable("organizationId") Long organizationId);
 
 }

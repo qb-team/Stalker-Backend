@@ -24,7 +24,7 @@ public class PresenceApiController implements PresenceApi {
 
     /**
      * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.
-     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization presence list returned successfully. (status code 200)
@@ -40,7 +40,7 @@ public class PresenceApiController implements PresenceApi {
 
     /**
      * GET /presence/place/{placeId} : Gets the list of people currently inside the place&#39;s trackingArea.
-     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app admininistrators can access this end-point.
+     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place presence list returned successfully. (status code 200)

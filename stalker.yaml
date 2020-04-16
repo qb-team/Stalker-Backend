@@ -62,7 +62,7 @@ paths:
       summary: Gets the available data for a single organization.
       description: >-
         Gets the data available for a single organization. 
-        Both app users and web-app admininistrators can access this end-point but, 
+        Both app users and web-app administrators can access this end-point but, 
         app users can request information for all the organizations while web-app 
         administrators can only for the organizations they have access to.
       operationId: getOrganization
@@ -243,7 +243,7 @@ paths:
       summary: Bind an already existent administrator to the organization.
       description: >-
         Bind an already existent administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: bindAdministratorToOrganization
       responses:
         "201":
@@ -271,7 +271,7 @@ paths:
       summary: Unbind an administrator to the organization.
       description: >-
         Unbind an administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: unbindAdministratorFromOrganization
       responses:
         "204":
@@ -325,7 +325,7 @@ paths:
       summary: Update the permission for an already existent administrator in the organization.
       description: >-
         Update the permission for an already existent administrator in the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updateAdministratorPermission
       responses:
         "201":
@@ -355,7 +355,7 @@ paths:
       summary: Returns the list of administrators of the organization.
       description: >-
         Returns the list of administrators of the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getAdministratorListOfOrganization
       parameters:
         - name: organizationId
@@ -477,7 +477,7 @@ paths:
       summary: Gets the list of permission that an administrator has permissions to view/manage/own.
       description: >-
         Gets the list of organizations that an administrator has permissions to view/manage/own.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPermissionList
       parameters:
         - name: administratorId
@@ -510,7 +510,7 @@ paths:
       summary: Returns the list of places of the organization.
       description: >-
         Returns the list of places of the organization.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getPlaceListOfOrganization
       parameters:
         - name: organizationId
@@ -545,7 +545,7 @@ paths:
       summary: Creates a new place for an organization.
       description: >-
         Creates a new place for an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: createNewPlace
       responses:
         "201":
@@ -573,7 +573,7 @@ paths:
       summary: Updates one or more properties of a place of an organization.
       description: >-
         Updates one or more properties of a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updatePlace
       parameters:
         - name: placeId
@@ -611,7 +611,7 @@ paths:
       summary: Deletes a place of an organization.
       description: >-
         Deletes a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: deletePlace
       parameters:
         - name: placeId
@@ -695,7 +695,7 @@ paths:
       description: >-
         Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInPlace
       parameters:
         - name: orgAuthServerIds
@@ -743,7 +743,7 @@ paths:
       description: >-
         Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInOrganization
       parameters:
         - name: orgAuthServerIds
@@ -791,7 +791,7 @@ paths:
       description: >-
         Gets the list of people currently inside the organization's trackingArea.
         The organization is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceList
       parameters:
         - name: organizationId
@@ -826,7 +826,7 @@ paths:
       summary: Gets the number of people currently inside the organization's trackingArea.
       description: >-
         Gets the number of people currently inside the organization's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceCounter
       parameters:
         - name: organizationId
@@ -858,7 +858,7 @@ paths:
       description: >-
         Gets the list of people currently inside the place's trackingArea.
         The place is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceList
       parameters:
         - name: placeId
@@ -893,7 +893,7 @@ paths:
       summary: Gets the number of people currently inside the place's trackingArea.
       description: >-
         Gets the number of people currently inside the place's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceCounter
       parameters:
         - name: placeId
@@ -924,14 +924,14 @@ paths:
       summary: Gets the report of total time spent per user inside the organization.
       description: >-
         Gets the report of total time spent by each user inside the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getTimePerUserReport
       parameters:
         - name: organizationId
           in: path
           description: >-
             ID of the organization.
-            The viewer admininistrator must have permissions for this organization.
+            The viewer administrator must have permissions for this organization.
           required: true
           schema:
             type: integer
@@ -1138,7 +1138,7 @@ components:
             - Viewer: 1 (lowest level)
         nominatedBy:
           type: string
-          description: admininistratorId of the owner admininistrator who nominated the current admininistrator.
+          description: administratorId of the owner administrator who nominated the current administrator.
     Favorite:
       type: object
       description: >-

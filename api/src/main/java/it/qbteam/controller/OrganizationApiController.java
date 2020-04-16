@@ -28,7 +28,7 @@ public class OrganizationApiController implements OrganizationApi {
 
     /**
      * GET /organization/{organizationId} : Gets the available data for a single organization.
-     * Gets the data available for a single organization.  Both app users and web-app admininistrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
+     * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization returned successfully. (status code 200)
@@ -57,7 +57,7 @@ public class OrganizationApiController implements OrganizationApi {
 
     /**
      * POST /organization/{organizationId}/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
-     * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app admininistrators can access this end-point.
+     * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
      * @param requestReason  Request reason for the deletion request. (required)
@@ -90,7 +90,7 @@ public class OrganizationApiController implements OrganizationApi {
 
     /**
      * PATCH /organization/{organizationId}/trackingArea : Updates the coordinates of the tracking area of an organization.
-     * Updates the coordinates of the tracking area of an organization. Only web-app admininistrators can access this end-point.
+     * Updates the coordinates of the tracking area of an organization. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. The administrator must have at least manager permission to the organization. (required)
      * @param trackingArea   JSON representation of a tracking trackingArea. (required)

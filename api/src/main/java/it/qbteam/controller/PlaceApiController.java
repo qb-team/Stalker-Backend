@@ -11,7 +11,7 @@ import java.util.List;
 public class PlaceApiController implements PlaceApi {
     /**
      * POST /place : Creates a new place for an organization.
-     * Creates a new place for an organization. Only web-app admininistrators can access this end-point.
+     * Creates a new place for an organization. Only web-app administrators can access this end-point.
      *
      * @param place (required)
      * @return The new place of the organization was created. The place gets returned. (status code 201)
@@ -26,7 +26,7 @@ public class PlaceApiController implements PlaceApi {
 
     /**
      * DELETE /place/{placeId} : Deletes a place of an organization.
-     * Deletes a place of an organization. Only web-app admininistrators can access this end-point.
+     * Deletes a place of an organization. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place successfully removed from the list of favorites. Nothing gets returned. (status code 205)
@@ -41,7 +41,7 @@ public class PlaceApiController implements PlaceApi {
 
     /**
      * PUT /place/{placeId} : Updates one or more properties of a place of an organization.
-     * Updates one or more properties of a place of an organization. Only web-app admininistrators can access this end-point.
+     * Updates one or more properties of a place of an organization. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @param place   (required)
@@ -58,7 +58,7 @@ public class PlaceApiController implements PlaceApi {
 
     /**
      * GET /place/organization/{organizationId} : Returns the list of places of the organization.
-     * Returns the list of places of the organization. Both app users and web-app admininistrators can access this end-point.
+     * Returns the list of places of the organization. Both app users and web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Place list of organization returned successfully. (status code 200)

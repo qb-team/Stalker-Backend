@@ -129,10 +129,10 @@ public class Permission   {
   }
 
   /**
-   * admininistratorId of the owner admininistrator who nominated the current admininistrator.
+   * administratorId of the owner administrator who nominated the current administrator.
    * @return nominatedBy
   */
-  @ApiModelProperty(required = true, value = "admininistratorId of the owner admininistrator who nominated the current admininistrator.")
+  @ApiModelProperty(required = true, value = "administratorId of the owner administrator who nominated the current administrator.")
   @NotNull
 
 
