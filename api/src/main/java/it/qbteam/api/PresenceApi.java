@@ -5,94 +5,117 @@
  */
 package it.qbteam.api;
 
+import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.OrganizationPresenceCounter;
+import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.PlacePresenceCounter;
 import io.swagger.annotations.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Validated
 @Api(value = "presence", description = "the presence API")
 public interface PresenceApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
-
     /**
-     * GET /presence/organization/{organizationId} : Gets the number of presences in an organization given its organizationId.
-     * Gets the number of presences in an organization given its organizationId.
+     * GET /presence/organization/{organizationId}/counter : Gets the number of people currently inside the organization&#39;s trackingArea.
+     * Gets the number of people currently inside the organization&#39;s trackingArea. Only web-app administrators can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization presence counter returned successfully. (status code 200)
-     *         or Organization presence counter not found. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the number of presences in an organization given its organizationId.", nickname = "getOrganizationPresenceCounterById", notes = "Gets the number of presences in an organization given its organizationId.", response = OrganizationPresenceCounter.class, tags={ "presence", })
+    @ApiOperation(value = "Gets the number of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceCounter", notes = "Gets the number of people currently inside the organization's trackingArea. Only web-app administrators can access this end-point.", response = OrganizationPresenceCounter.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization presence counter returned successfully.", response = OrganizationPresenceCounter.class),
-        @ApiResponse(code = 400, message = "Organization presence counter not found.") })
-    @RequestMapping(value = "/presence/organization/{organizationId}",
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/presence/organization/{organizationId}/counter",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounterById(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"organizationId\" : 0, \"counter\" : 6 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounter(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
 
 
     /**
-     * GET /presence/place/{placeId} : Gets the number of presences in a place given its placeId.
-     * Gets the number of presences in a place given its placeId.
+     * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.
+     * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
+     *
+     * @param organizationId ID of an organization. (required)
+     * @return Organization presence list returned successfully. (status code 200)
+     *         or There is currently nobody inside the organization&#39;s trackingArea. Nothing gets returned. (status code 204)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Gets the list of people currently inside the organization's trackingArea.", nickname = "getOrganizationPresenceList", notes = "Gets the list of people currently inside the organization's trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "presence", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Organization presence list returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "There is currently nobody inside the organization's trackingArea. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/presence/organization/{organizationId}",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<List<OrganizationAccess>> getOrganizationPresenceList(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
+
+
+    /**
+     * GET /presence/place/{placeId}/counter : Gets the number of people currently inside the place&#39;s trackingArea.
+     * Gets the number of people currently inside the place&#39;s trackingArea. Only web-app administrators can access this end-point.
      *
      * @param placeId ID of a place. (required)
      * @return Place presence counter returned successfully. (status code 200)
-     *         or Place presence counter not found. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or The place could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the number of presences in a place given its placeId.", nickname = "getPlacePresenceCounterById", notes = "Gets the number of presences in a place given its placeId.", response = PlacePresenceCounter.class, tags={ "presence", })
+    @ApiOperation(value = "Gets the number of people currently inside the place's trackingArea.", nickname = "getPlacePresenceCounter", notes = "Gets the number of people currently inside the place's trackingArea. Only web-app administrators can access this end-point.", response = PlacePresenceCounter.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "presence", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place presence counter returned successfully.", response = PlacePresenceCounter.class),
-        @ApiResponse(code = 400, message = "Place presence counter not found.") })
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/presence/place/{placeId}/counter",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<PlacePresenceCounter> getPlacePresenceCounter(@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);
+
+
+    /**
+     * GET /presence/place/{placeId} : Gets the list of people currently inside the place&#39;s trackingArea.
+     * Gets the list of people currently inside the place&#39;s trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
+     *
+     * @param placeId ID of a place. (required)
+     * @return Place presence list returned successfully. (status code 200)
+     *         or There is currently nobody inside the place&#39;s trackingArea. Nothing gets returned. (status code 204)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or The place could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Gets the list of people currently inside the place's trackingArea.", nickname = "getPlacePresenceList", notes = "Gets the list of people currently inside the place's trackingArea. The place is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "presence", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Place presence list returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "There is currently nobody inside the place's trackingArea. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users cannot access this end-point. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/presence/place/{placeId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<PlacePresenceCounter> getPlacePresenceCounterById(@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"placeId\" : 0, \"counter\" : 6 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<List<PlaceAccess>> getPlacePresenceList(@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);
 
 }

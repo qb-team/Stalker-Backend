@@ -1,11 +1,11 @@
 package it.qbteam.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 public class PermissionId implements Serializable {
+    private static final long serialVersionUID = -4860856100121562186L;
+
     private String administratorId;
 
     private Long organizationId;

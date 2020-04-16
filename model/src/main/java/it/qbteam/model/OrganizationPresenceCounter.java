@@ -2,15 +2,11 @@ package it.qbteam.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.Id;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
+import org.springframework.data.redis.core.RedisHash;
 
 /**
  * Number of people currently inside the organization&#39;s trackingArea.
@@ -18,15 +14,14 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Number of people currently inside the organization's trackingArea.")
 @RedisHash("OrganizationPresenceCounter")
 public class OrganizationPresenceCounter   {
-  @Id
   @JsonProperty("organizationId")
-  private Long id;
+  private Long organizationId;
 
   @JsonProperty("counter")
   private Integer counter;
 
   public OrganizationPresenceCounter organizationId(Long organizationId) {
-    this.id = organizationId;
+    this.organizationId = organizationId;
     return this;
   }
 
@@ -39,11 +34,11 @@ public class OrganizationPresenceCounter   {
 
 
   public Long getOrganizationId() {
-    return id;
+    return organizationId;
   }
 
   public void setOrganizationId(Long organizationId) {
-    this.id = organizationId;
+    this.organizationId = organizationId;
   }
 
   public OrganizationPresenceCounter counter(Integer counter) {
@@ -77,13 +72,13 @@ public class OrganizationPresenceCounter   {
       return false;
     }
     OrganizationPresenceCounter organizationPresenceCounter = (OrganizationPresenceCounter) o;
-    return Objects.equals(this.id, organizationPresenceCounter.id) &&
+    return Objects.equals(this.organizationId, organizationPresenceCounter.organizationId) &&
         Objects.equals(this.counter, organizationPresenceCounter.counter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, counter);
+    return Objects.hash(organizationId, counter);
   }
 
   @Override
@@ -91,7 +86,7 @@ public class OrganizationPresenceCounter   {
     StringBuilder sb = new StringBuilder();
     sb.append("class OrganizationPresenceCounter {\n");
     
-    sb.append("    organizationId: ").append(toIndentedString(id)).append("\n");
+    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("    counter: ").append(toIndentedString(counter)).append("\n");
     sb.append("}");
     return sb.toString();

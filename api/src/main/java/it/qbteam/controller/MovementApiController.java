@@ -1,11 +1,6 @@
 package it.qbteam.controller;
 
-import it.qbteam.api.MovementApi;
-import it.qbteam.model.OrganizationAnonymousMovement;
-import it.qbteam.model.OrganizationAuthenticatedMovement;
-import it.qbteam.model.PlaceAnonymousMovement;
-import it.qbteam.model.PlaceAuthenticatedMovement;
-import it.qbteam.repository.nosql.OrganizationAnonymousMovementRepository;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,94 +8,50 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.NativeWebRequest;
 
-import java.util.UUID;
-
-import javax.validation.Valid;
+import it.qbteam.api.MovementApi;
+import it.qbteam.model.OrganizationMovement;
+import it.qbteam.model.PlaceMovement;
+import it.qbteam.service.AuthenticationService;
 
 @Controller
-public class MovementApiController implements MovementApi {
-    private static final String ANONYMOUS_MOVEMENT_ORGANIZATION = "ANONYMOUS_MOVEMENT_ORGANIZATION";
-    private static final String AUTHENTICATED_MOVEMENT_ORGANIZATION = "AUTHENTICATED_MOVEMENT_ORGANIZATION";
-    private static final String ANONYMOUS_MOVEMENT_PLACE = "ANONYMOUS_MOVEMENT_PLACE";
-    private static final String AUTHENTICATED_MOVEMENT_PLACE = "AUTHENTICATED_MOVEMENT_PLACE";
-
-    private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
-    private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
-
-    @Autowired @Qualifier("movement")
-    RedisTemplate<String, String> movementTemplate;
-
-    @Autowired @Qualifier("counter")
-    RedisTemplate<String, Integer> counterTemplate;
+public class MovementApiController extends StalkerBaseController implements MovementApi {
     
     @Autowired
-    private OrganizationAnonymousMovementRepository orgAnonRepo;
-
-    /**
-     * POST /movement/track/organization/anonymous : Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
-     * Tracks the user movement inside the trackingArea of an organization with the anonymous trackingMode.
-     *
-     * @param organizationAnonymousMovement (required)
-     * @return Movement successfully tracked. (status code 200)
-     * or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
-     */
-    @Override
-    public ResponseEntity<Void> trackAnonymousMovementInOrganization(@Valid OrganizationAnonymousMovement organizationAnonymousMovement) {
-       /* movementTemplate.opsForHash().put(ANONYMOUS_MOVEMENT_ORGANIZATION, organizationAnonymousMovement.getId().toString(), organizationAnonymousMovement.getMovementType().toString());
-        switch(organizationAnonymousMovement.getMovementType()) {
-            case ENTRANCE:
-                // putIfAbsent: adds the new object only if it does not exist, then it initializes it with 0
-                counterTemplate.opsForHash().putIfAbsent(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 0);
-                message = "Entrata";
-                // increment: increments the presence counter
-                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), 1);
-                message = "Uscita ";
-            break;
-            case EXIT:
-                counterTemplate.opsForHash().increment(ORGANIZATION_PRESENCE_KEY, organizationAnonymousMovement.getOrganizationId().toString(), -1);
-            break;
-        }*/
-        movementTemplate.convertAndSend("pubsub:queue", organizationAnonymousMovement.toString());
-        return new ResponseEntity<>(HttpStatus.OK);
+    public MovementApiController(NativeWebRequest request, AuthenticationService service) {
+        super(request, service);
     }
-
+    
     /**
-     * POST /movement/track/place/anonymous : Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
-     * Tracks the user movement inside the trackingArea of a place of an organization with the anonymous trackingMode.
+     * POST /movement/track/organization : Tracks the user movement inside the trackingArea of an organization.
+     * Tracks the user movement inside the trackingArea of an organization.
      *
-     * @param placeAnonymousMovement (required)
-     * @return Movement successfully tracked. (status code 200)
-     * or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
+     * @param organizationMovement (required)
+     * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
+     * or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
+     * or The user is not authenticated. Nothing gets returned. (status code 401)
+     * or Administrators cannot have access. Nothing gets returned. (status code 403)
      */
     @Override
-    public ResponseEntity<Void> trackAnonymousMovementInPlace(@Valid PlaceAnonymousMovement placeAnonymousMovement) {
+    public ResponseEntity<OrganizationMovement> trackMovementInOrganization(@Valid OrganizationMovement organizationMovement) {
         return null;
     }
 
     /**
-     * POST /movement/track/organization/authenticated : Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
-     * Tracks the user movement inside the trackingArea of an organization with the authenticated trackingMode.
+     * POST /movement/track/place : Tracks the user movement inside the trackingArea of a place of an organization.
+     * Tracks the user movement inside the trackingArea of a place of an organization.
      *
-     * @param organizationAuthenticatedMovement (required)
-     * @return Movement successfully tracked. (status code 200)
-     * or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
+     * @param placeMovement (required)
+     * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
+     * or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
+     * or The user is not authenticated. Nothing gets returned. (status code 401)
+     * or Administrators cannot have access. Nothing gets returned. (status code 403)
      */
     @Override
-    public ResponseEntity<Void> trackAuthenticatedMovementInOrganization(@Valid OrganizationAuthenticatedMovement organizationAuthenticatedMovement) {
-        return null;
-    }
-
-    /**
-     * POST /movement/track/place/authenticated : Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-     * Tracks the user movement inside the trackingArea of a place of an organization with the authenticated trackingMode.
-     *
-     * @param placeAuthenticatedMovement (required)
-     * @return Movement successfully tracked. (status code 200)
-     * or Movement could not be tracked due to incorrect data sent to the system. (status code 400)
-     */
-    @Override
-    public ResponseEntity<Void> trackAuthenticatedMovementInPlace(@Valid PlaceAuthenticatedMovement placeAuthenticatedMovement) {
+    public ResponseEntity<PlaceMovement> trackMovementInPlace(@Valid PlaceMovement placeMovement) {
         return null;
     }
 }

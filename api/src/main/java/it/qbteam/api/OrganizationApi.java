@@ -7,122 +7,147 @@ package it.qbteam.api;
 
 import it.qbteam.model.Organization;
 import io.swagger.annotations.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Validated
 @Api(value = "organization", description = "the organization API")
 public interface OrganizationApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
-
     /**
-     * GET /organization/{organizationId} : Gets the data of a single organization.
-     * Gets the data of a single organization.
+     * GET /organization/{organizationId} : Gets the available data for a single organization.
+     * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
      *
      * @param organizationId ID of an organization. (required)
      * @return Organization returned successfully. (status code 200)
-     *         or Organization not found. (status code 400)
+     *         or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Gets the data of a single organization.", nickname = "getOrganizationById", notes = "Gets the data of a single organization.", response = Organization.class, tags={ "organization", })
+    @ApiOperation(value = "Gets the available data for a single organization.", nickname = "getOrganization", notes = "Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.", response = Organization.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "organization", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Organization returned successfully.", response = Organization.class),
-        @ApiResponse(code = 400, message = "Organization not found.") })
+        @ApiResponse(code = 401, message = "The user or the administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<Organization> getOrganizationById(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<Organization> getOrganization(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
 
 
     /**
      * GET /organization : Returns the list of all organizations.
-     * Returns the list of all organizations.
+     * Returns the list of all organizations available in the system. The list can be empty. Only app users can access this end-point.
      *
-     * @return Organizations returned successfully. (status code 200)
+     * @return List of all organizations is non-empty and gets returned successfully. (status code 200)
+     *         or List of all organizations is empty. Nothing gets returned. (status code 204)
+     *         or The user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators cannot have access. Nothing gets returned. (status code 403)
+     *         or List of all organizations could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns the list of all organizations.", nickname = "getOrganizationList", notes = "Returns the list of all organizations.", response = Organization.class, responseContainer = "List", tags={ "organization", })
+    @ApiOperation(value = "Returns the list of all organizations.", nickname = "getOrganizationList", notes = "Returns the list of all organizations available in the system. The list can be empty. Only app users can access this end-point.", response = Organization.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "organization", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Organizations returned successfully.", response = Organization.class, responseContainer = "List") })
+        @ApiResponse(code = 200, message = "List of all organizations is non-empty and gets returned successfully.", response = Organization.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "List of all organizations is empty. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "List of all organizations could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/organization",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<List<Organization>> getOrganizationList() {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    ResponseEntity<List<Organization>> getOrganizationList();
 
 
     /**
-     * PUT /organization/{organizationId} : Updates one or more properties of a single organization.
-     * Updates one or more properties of a single organization.
+     * POST /organization/{organizationId}/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
+     * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.
+     *
+     * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
+     * @param requestReason Request reason for the deletion request. (required)
+     * @return Request sent successfully. Nothing gets returned. (status code 204)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Sends a deletion request to the system. The request will be examined by Stalker administrators.", nickname = "requestDeletionOfOrganization", notes = "Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.", authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "organization", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "Request sent successfully. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users and administrators who do not own the organization cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/organization/{organizationId}/requestdeletion",
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.POST)
+    ResponseEntity<Void> requestDeletionOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least owner permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "Request reason for the deletion request.", required=true) @RequestParam(value="requestReason", required=true)  String requestReason);
+
+
+    /**
+     * PUT /organization/{organizationId} : Updates one or more properties of an organization.
+     * Updates one or more properties of an organization.  Only web-app administrators (if they have the correct access rights) can access this end-point.
      *
      * @param organizationId ID of an organization. (required)
      * @param organization  (required)
-     * @return Organization updated successfully. (status code 200)
-     *         or Invalid organizationId supplied. (status code 400)
-     *         or Organization not found. (status code 405)
+     * @return Organization updated successfully. The updated organization gets returned. (status code 200)
+     *         or The inserted data has some issues. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Updates one or more properties of a single organization.", nickname = "updateOrganization", notes = "Updates one or more properties of a single organization.", response = Organization.class, tags={ "organization", })
+    @ApiOperation(value = "Updates one or more properties of an organization.", nickname = "updateOrganization", notes = "Updates one or more properties of an organization.  Only web-app administrators (if they have the correct access rights) can access this end-point.", response = Organization.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "organization", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Organization updated successfully.", response = Organization.class),
-        @ApiResponse(code = 400, message = "Invalid organizationId supplied."),
-        @ApiResponse(code = 405, message = "Organization not found.") })
+        @ApiResponse(code = 200, message = "Organization updated successfully. The updated organization gets returned.", response = Organization.class),
+        @ApiResponse(code = 400, message = "The inserted data has some issues. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users and administrators who do not own the organization cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/organization/{organizationId}",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    default ResponseEntity<Organization> updateOrganization(@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Organization organization) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"image\" : \"image\", \"country\" : \"country\", \"city\" : \"city\", \"lastChangeDate\" : \"2000-01-23T04:56:07.000+00:00\", \"trackingMode\" : \"authenticated\", \"description\" : \"description\", \"trackingArea\" : \"trackingArea\", \"serverLDAP\" : \"serverLDAP\", \"creationDate\" : \"2000-01-23T04:56:07.000+00:00\", \"number\" : \"number\", \"street\" : \"street\", \"name\" : \"name\", \"postCode\" : 6, \"id\" : 0 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    ResponseEntity<Organization> updateOrganization(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Organization organization);
 
-    }
+
+    /**
+     * PATCH /organization/{organizationId}/trackingArea : Updates the coordinates of the tracking area of an organization.
+     * Updates the coordinates of the tracking area of an organization. Only web-app administrators can access this end-point.
+     *
+     * @param organizationId ID of an organization. The administrator must have at least manager permission to the organization. (required)
+     * @param trackingArea JSON representation of a tracking trackingArea. (required)
+     * @return The tracking area of the organization was updated successfully. The organization gets returned. (status code 200)
+     *         or The new tracking area does not respect the area constraints for the organization. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Updates the coordinates of the tracking area of an organization.", nickname = "updateOrganizationTrackingArea", notes = "Updates the coordinates of the tracking area of an organization. Only web-app administrators can access this end-point.", response = Organization.class, authorizations = {
+        @Authorization(value = "bearerAuth")
+    }, tags={ "organization", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "The tracking area of the organization was updated successfully. The organization gets returned.", response = Organization.class),
+        @ApiResponse(code = 400, message = "The new tracking area does not respect the area constraints for the organization. Nothing gets returned."),
+        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users or administrator with viewer permission cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/organization/{organizationId}/trackingArea",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.PATCH)
+    ResponseEntity<Organization> updateOrganizationTrackingArea(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least manager permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "JSON representation of a tracking trackingArea.", required=true) @RequestParam(value="trackingArea", required=true)  String trackingArea);
 
 }

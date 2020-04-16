@@ -2,14 +2,14 @@ package it.qbteam.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.validation.Valid;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.*;
 
 /**
@@ -19,9 +19,11 @@ import javax.validation.constraints.*;
 @Entity
 public class Place   {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("id")
   private Long id;
 
+  @Column(length = 128)
   @JsonProperty("name")
   private String name;
 
@@ -99,10 +101,10 @@ public class Place   {
   }
 
   /**
-   * rea subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.
+   * rea subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.     
    * @return trackingArea
   */
-  @ApiModelProperty(required = true, value = "rea subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.")
+  @ApiModelProperty(required = true, value = "rea subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.     ")
   @NotNull
 
 

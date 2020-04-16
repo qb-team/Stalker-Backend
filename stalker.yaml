@@ -16,8 +16,6 @@ tags:
     description: End-points for retrieving, updating and asking for deletion of organizations.
   - name: favorite
     description: End-points for retrieving, adding and removing organizations to an user's favorite organization list.
-  - name: permission
-    description: End-points for retrieving, adding and removing organizations to an administrator's permissions.
   - name: place
     description: Place related endpoints.
   - name: movement
@@ -26,8 +24,10 @@ tags:
     description: Access related endpoints.
   - name: presence
     description: Presence related endpoints.
+  - name: report
+    description: Report related endpoints.
   - name: administrator
-    description: End-points for retrieving, adding, binding and unbinding administrators.
+    description: End-points for retrieving, adding and removing permissions, retrieving, adding, binding and unbinding administrators.
 paths:
   "/organization":
     get:
@@ -62,7 +62,7 @@ paths:
       summary: Gets the available data for a single organization.
       description: >-
         Gets the data available for a single organization. 
-        Both app users and web-app admininistrators can access this end-point but, 
+        Both app users and web-app administrators can access this end-point but, 
         app users can request information for all the organizations while web-app 
         administrators can only for the organizations they have access to.
       operationId: getOrganization
@@ -115,7 +115,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users cannot have access. Nothing gets returned.
+          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -124,10 +124,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Organization"
-  "/organization/favorite/{userId}":
+  "/favorite/{userId}":
     get:
       tags:
-        - organization
         - favorite
       summary: Gets the list of favorite organizations of a user.
       description: >-
@@ -160,14 +159,14 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
-  "/organization/favorite/{userId}/add/{organizationId}":
+  "/favorite/{userId}/add/{organizationId}":
     post:
       tags:
-        - organization
         - favorite
       summary: Adds a new organization to the user's favorite organization list.
       description: >-
-        Adds a new organization to the user's favorite organization list. 
+        Adds a new organization to the user's favorite organization list.
+        If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker's account.
         Only app users can access this end-point.
       operationId: addFavoriteOrganization
       parameters:
@@ -199,13 +198,12 @@ paths:
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
-          description: Administrators cannot have access. Nothing gets returned.
+          description: Users who did not bind their account with their organization's account and administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/organization/favorite/{userId}/remove/{organizationId}":
+  "/favorite/{userId}/remove/{organizationId}":
     delete:
       tags:
-        - organization
         - favorite
       summary: Removes the organization from the user's favorite organization list.
       description: >-
@@ -237,21 +235,19 @@ paths:
         "403":
           description: Administrators cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.     
-  "/organization/administrator/bind":
+          description: The organization could not be found. Nothing gets returned.
+  "/administrator/bindadministrator":
     post:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Bind an already existent administrator to the organization.
       description: >-
         Bind an already existent administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: bindAdministratorToOrganization
       responses:
         "201":
-          description: Administrator binded successfully. The permission record gets returned.
+          description: Administrator bound successfully. The permission record gets returned.
           content:
             application/json:
               schema:
@@ -268,20 +264,18 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/administrator/unbind":
+  "/administrator/unbindadministrator":
     post:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Unbind an administrator to the organization.
       description: >-
         Unbind an administrator to the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: unbindAdministratorFromOrganization
       responses:
         "204":
-          description: Administrator unbinded successfully. Nothing gets returned.
+          description: Administrator unbound successfully. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -294,19 +288,18 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/administrator/create":
+  "/administrator/createadministrator":
     post:
       tags:
-        - organization
         - administrator
       summary: Creates and binds a new administrator to the organization.
       description: >-
         Creates and binds a new administrator to the current organization. 
         Only web-app administrators can access this end-point.
-      operationId: createNewAdministratorToOrganization
+      operationId: createNewAdministratorInOrganization
       responses:
         "201":
-          description: Administrator created and binded successfully. The permission record gets returned.
+          description: Administrator created and bound successfully. The permission record gets returned.
           content:
             application/json:
               schema:
@@ -325,16 +318,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AdministratorInfo"
-  "/organization/administrator/update":
-    post:
+  "/administrator/updatepermission":
+    patch:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Update the permission for an already existent administrator in the organization.
       description: >-
         Update the permission for an already existent administrator in the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updateAdministratorPermission
       responses:
         "201":
@@ -357,15 +348,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Permission"
-  "/organization/{organizationId}/administrator":
+  "/administrator/organization/{organizationId}":
     get:
       tags:
-        - organization
         - administrator
       summary: Returns the list of administrators of the organization.
-      description: >- 
+      description: >-
         Returns the list of administrators of the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getAdministratorListOfOrganization
       parameters:
         - name: organizationId
@@ -401,7 +391,7 @@ paths:
       description: >-
         Sends a deletion request to the system. 
         The request will be examined by Stalker administrators.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: requestDeletionOfOrganization
       parameters:
         - name: organizationId
@@ -420,7 +410,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
+          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
       requestBody:
@@ -435,14 +425,14 @@ paths:
                   type: string
                   description: Request reason for the deletion request.
   "/organization/{organizationId}/trackingArea":
-    put:
+    patch:
       tags:
         - organization
       summary: Updates the coordinates of the tracking area of an organization.
       description: >-
         Updates the coordinates of the tracking area of an organization.
-        Only web-app admininistrators can access this end-point.
-      operationId: updateTrackingArea
+        Only web-app administrators can access this end-point.
+      operationId: updateOrganizationTrackingArea
       parameters:
         - name: organizationId
           in: path
@@ -480,16 +470,14 @@ paths:
                 trackingArea:
                   type: string
                   description: JSON representation of a tracking trackingArea.
-  "/organization/permission/{administratorId}":
+  "/administrator/permission/{administratorId}":
     get:
       tags:
-        - organization
-        - permission
         - administrator
       summary: Gets the list of permission that an administrator has permissions to view/manage/own.
       description: >-
         Gets the list of organizations that an administrator has permissions to view/manage/own.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPermissionList
       parameters:
         - name: administratorId
@@ -515,15 +503,14 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
-  "/organization/{organizationId}/place":
+  "/place/organization/{organizationId}":
     get:
       tags:
-        - organization
         - place
       summary: Returns the list of places of the organization.
-      description: >- 
+      description: >-
         Returns the list of places of the organization.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getPlaceListOfOrganization
       parameters:
         - name: organizationId
@@ -547,6 +534,8 @@ paths:
           description: Place list of organization is empty. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators who do not manage the organization cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/place":
@@ -556,7 +545,7 @@ paths:
       summary: Creates a new place for an organization.
       description: >-
         Creates a new place for an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: createNewPlace
       responses:
         "201":
@@ -584,7 +573,7 @@ paths:
       summary: Updates one or more properties of a place of an organization.
       description: >-
         Updates one or more properties of a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: updatePlace
       parameters:
         - name: placeId
@@ -603,7 +592,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Place"
         "400":
-          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned. 
+          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -622,7 +611,7 @@ paths:
       summary: Deletes a place of an organization.
       description: >-
         Deletes a place of an organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: deletePlace
       parameters:
         - name: placeId
@@ -635,18 +624,17 @@ paths:
             minimum: 1
       responses:
         "205":
-          description: Place successfully removed from the list of favorites. Nothing gets returned.
+          description: Place successfully removed from the list of places of the organization. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.  
+          description: The organization could not be found. Nothing gets returned.
   "/movement/track/organization":
     post:
       tags:
         - movement
-        - organization
       summary: Tracks the user movement inside the trackingArea of an organization.
       description: Tracks the user movement inside the trackingArea of an organization.
       operationId: trackMovementInOrganization
@@ -675,7 +663,6 @@ paths:
     post:
       tags:
         - movement
-        - place
       summary: Tracks the user movement inside the trackingArea of a place of an organization.
       description: Tracks the user movement inside the trackingArea of a place of an organization.
       operationId: trackMovementInPlace
@@ -704,12 +691,11 @@ paths:
     get:
       tags:
         - access
-        - place
       summary: Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
         Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInPlace
       parameters:
         - name: orgAuthServerIds
@@ -745,18 +731,19 @@ paths:
           description: List of authenticated accesses in a place were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Users can only retrieve their accesses. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}":
     get:
       tags:
         - access
-        - organization
       summary: Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
       description: >-
         Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered.
         Fully registered means that there are both the entrance and the exit timestamp.
-        Both app users and web-app admininistrators can access this end-point.
+        Both app users and web-app administrators can access this end-point.
       operationId: getAuthenticatedAccessListInOrganization
       parameters:
         - name: orgAuthServerIds
@@ -792,18 +779,19 @@ paths:
           description: List of authenticated accesses in an organization were not found. Nothing gets returned.
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
+        "403":
+          description: Users can only retrieve their accesses. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}":
     get:
       tags:
         - presence
-        - organization
       summary: Gets the list of people currently inside the organization's trackingArea.
       description: >-
         Gets the list of people currently inside the organization's trackingArea.
         The organization is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceList
       parameters:
         - name: organizationId
@@ -827,17 +815,18 @@ paths:
           description: There is currently nobody inside the organization's trackingArea. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}/counter":
     get:
       tags:
         - presence
-        - organization
       summary: Gets the number of people currently inside the organization's trackingArea.
       description: >-
         Gets the number of people currently inside the organization's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getOrganizationPresenceCounter
       parameters:
         - name: organizationId
@@ -857,18 +846,19 @@ paths:
                 $ref: "#/components/schemas/OrganizationPresenceCounter"
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/place/{placeId}":
     get:
       tags:
         - presence
-        - place
       summary: Gets the list of people currently inside the place's trackingArea.
       description: >-
         Gets the list of people currently inside the place's trackingArea.
         The place is required to track people with trackingMode: authenticated.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceList
       parameters:
         - name: placeId
@@ -892,17 +882,18 @@ paths:
           description: There is currently nobody inside the place's trackingArea. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/presence/place/{placeId}/counter":
     get:
       tags:
         - presence
-        - place
       summary: Gets the number of people currently inside the place's trackingArea.
       description: >-
         Gets the number of people currently inside the place's trackingArea.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getPlacePresenceCounter
       parameters:
         - name: placeId
@@ -922,24 +913,25 @@ paths:
                 $ref: "#/components/schemas/PlacePresenceCounter"
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
   "/report/organization/{organizationId}":
     get:
       tags:
-        - organization
         - report
       summary: Gets the report of total time spent per user inside the organization.
       description: >-
         Gets the report of total time spent by each user inside the organization.
-        Only web-app admininistrators can access this end-point.
+        Only web-app administrators can access this end-point.
       operationId: getTimePerUserReport
       parameters:
         - name: organizationId
           in: path
           description: >-
             ID of the organization.
-            The viewer admininistrator must have permissions for this organization.
+            The viewer administrator must have permissions for this organization.
           required: true
           schema:
             type: integer
@@ -963,7 +955,7 @@ paths:
         "404":
           description: The organization could not be found. Nothing gets returned.
 components:
-  securitySchemes: 
+  securitySchemes:
     bearerAuth:
       description: >-
         Authentication schema to send the token generated by the authentication service.
@@ -974,6 +966,7 @@ components:
   schemas:
     Organization:
       type: object
+      additionalProperties: false
       description: >-
         Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.
       required:
@@ -981,11 +974,11 @@ components:
         - name
         - street
         - number
-        - postcode
+        - postCode
         - city
         - country
         - creationDate
-        - modifyDate
+        - lastChangeDate
         - trackingArea
         - trackingMode
       properties:
@@ -1047,6 +1040,7 @@ components:
     Place:
       type: object
       description: Area of an organization subjected to tracking.
+      additionalProperties: false
       required:
         - id
         - organizationId
@@ -1066,31 +1060,9 @@ components:
         trackingArea:
           type: string
           description: >-
-            rea subjected to movement tracking of people.
+            Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
-            The string is expressed in JSON format.     
-    User:
-      type: object
-      required:
-        - userId
-      properties:
-        userId:
-          type: string
-          description: Authentication service's user unique identifier.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
-    Administrator:
-      type: object
-      required:
-        - administratorId
-      properties:
-        administratorId:
-          type: string
-          description: Authentication service's administrator unique identifier.
-        orgAuthServerId:
-          type: string
-          description: User unique identifier from the authentication server of the organization.
+            The string is expressed in JSON format.
     AdministratorInfo:
       type: object
       required:
@@ -1101,35 +1073,16 @@ components:
           type: string
           format: email
           description: Mail of the administrator.
-        admininistrator:
-          $ref: "#/components/schemas/Administrator"
         permission:
           $ref: "#/components/schemas/Permission"
-    UserInfo:
-      type: object
-      required:
-        - name
-        - surname
-        - mail
-      properties:
-        name:
-          type: string
-          description: Name of the user (if available in the authentication server of the organization).
-        surname:
-          type: string
-          description: Surname of the user (if available in the authentication server of the organization).
-        mail:
-          type: string
-          format: email
-          description: Mail address of the user.
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
+      additionalProperties: false
       required:
         - administratorId
         - organizationId
         - permission
-        - nominatedBy
       properties:
         administratorId:
           type: string
@@ -1138,6 +1091,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the administrator is part of.
+        orgAuthServerId:
+          type: string
+          description: Administrator unique identifier from the authentication server of the organization.
         permission:
           type: integer
           format: int32
@@ -1151,11 +1107,12 @@ components:
             - Viewer: 1 (lowest level)
         nominatedBy:
           type: string
-          description: admininistratorId of the owner admininistrator who nominated the current admininistrator.
+          description: administratorId of the owner administrator who nominated the current administrator.
     Favorite:
       type: object
       description: >-
         Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
+      additionalProperties: false
       required:
         - userId
         - organizationId
@@ -1168,6 +1125,9 @@ components:
           type: integer
           format: int64
           description: Unique identifier of the organization the user sets as favorite.
+        orgAuthServerId:
+          type: string
+          description: User unique identifier from the authentication server of the organization.
         creationDate:
           type: string
           format: date-time
@@ -1175,10 +1135,10 @@ components:
     PlaceAccess:
       type: object
       description: Access to a place of an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
-        - exitTimestamp
         - placeId
       properties:
         id:
@@ -1192,6 +1152,9 @@ components:
           type: string
           format: date-time
           description: Date and time of the moment in which the user left the place.
+        exitToken:
+          type: string
+          description: Token generated by the server required for registering the user exit movement.
         placeId:
           type: integer
           format: int64
@@ -1202,10 +1165,10 @@ components:
     OrganizationAccess:
       type: object
       description: Access to an organization.
+      additionalProperties: false
       required:
         - id
         - entranceTimestamp
-        - exitTimestamp
         - organizationId
       properties:
         id:
@@ -1219,6 +1182,9 @@ components:
           type: string
           format: date-time
           description: Date and time of the moment in which the user left the place.
+        exitToken:
+          type: string
+          description: Token generated by the server required for registering the user exit movement.
         organizationId:
           type: integer
           format: int64
@@ -1229,6 +1195,7 @@ components:
     OrganizationPresenceCounter:
       type: object
       description: Number of people currently inside the organization's trackingArea.
+      additionalProperties: false
       required:
         - organizationId
         - counter
@@ -1244,6 +1211,7 @@ components:
     PlacePresenceCounter:
       type: object
       description: Number of people currently inside a place of an organization.
+      additionalProperties: false
       required:
         - placeId
         - counter
@@ -1254,11 +1222,12 @@ components:
           description: Unique identifier of the place.
         counter:
           type: integer
-          format: int32     
+          format: int32
           description: Number of people currently inside a place of an organization.
     PlaceMovement:
       type: object
       description: Movement in a place of an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1291,6 +1260,7 @@ components:
     OrganizationMovement:
       type: object
       description: Movement in an organization.
+      additionalProperties: false
       required:
         - timestamp
         - movementType
@@ -1323,6 +1293,7 @@ components:
     TimePerUserReport:
       type: object
       description: Represents a row in the report generated for an user by the viewer administrator.
+      additionalProperties: false
       required:
         - organizationId
         - orgAuthServerId
