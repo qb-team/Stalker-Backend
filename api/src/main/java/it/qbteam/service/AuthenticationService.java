@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import it.qbteam.exception.AuthenticationException;
+
 /**
  * Authentication Service
  * 
@@ -26,7 +28,7 @@ public interface AuthenticationService {
     public static final String ADMIN = "stalker_permission_admin";
 
     /**
-     * Checks whether the access token is still valid or not.
+     * Checks whether the access token is (still) valid or not.
      * 
      * @param accessToken access token returned by the authentication service in the
      *                    client application
@@ -47,13 +49,13 @@ public interface AuthenticationService {
      *         authentication service, otherwise {@code false}. It returns
      *         {@code false} even if {@code accessToken} was not valid
      */
-    public Boolean setClaims(String accessToken, Map<String, Object> claims);
+    public Boolean setClaims(String accessToken, Map<String, Object> claims) throws AuthenticationException;
 
     /**
      * @param accessToken
      * @return Map<String, Object>
      */
-    public Map<String, Object> getClaims(String accessToken);
+    public Map<String, Object> getClaims(String accessToken) throws AuthenticationException;
 
     /**
      * Creates a new user on the system with the given email and password.
@@ -63,7 +65,7 @@ public interface AuthenticationService {
      * @param password temporary password of the user to be created
      * @return Boolean {@code true} if the user account got created, {@code false} if it was not
      */
-    public Boolean createUser(String email, String password);
+    public Boolean createUser(String email, String password) throws AuthenticationException;
 
     /**
      * Returns the userId related to the email address.
@@ -71,5 +73,5 @@ public interface AuthenticationService {
      * @param email e-mail address of the user to be returned
      * @return userId if the user account was found, and null if it was not.
      */
-    public Optional<String> getUserByEmail(String email);
+    public Optional<String> getUserByEmail(String email) throws AuthenticationException;
 }
