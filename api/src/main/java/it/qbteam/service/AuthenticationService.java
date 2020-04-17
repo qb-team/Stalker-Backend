@@ -10,8 +10,7 @@ import it.qbteam.exception.AuthenticationException;
 /**
  * Authentication Service
  * 
- * This service lets the client communicate to the authentication service
- * implemented in the backend.
+ * This service lets the client communicate to the authentication provider.
  * 
  * @author Tommaso Azzalin
  */
@@ -28,50 +27,45 @@ public interface AuthenticationService {
     public static final String ADMIN = "stalker_permission_admin";
 
     /**
-     * Checks whether the access token is (still) valid or not.
-     * 
-     * @param accessToken access token returned by the authentication service in the
-     *                    client application
-     * @return Boolean {@code true} if {@code accessToken} is valid, otherwise
-     *         {@code false}
-     */
-    public Boolean checkToken(String accessToken);
-
-    /**
-     * Given a map of ({@code String},{@code Object}) pairs in which {@code String}
+     * Given a map of ({@code String},{@code Boolean}) pairs in which {@code String}
      * keys are considered to be only {@code USER} or {@code ADMIN} sets the claims
      * of the user/admin owner of the {@code accessToken}.
      * 
-     * @param accessToken access token returned by the authentication service in the
+     * @param accessToken access token returned by the authentication provider in the
      *                    client application
      * @param claims      claims to set to the user requested by the client
      * @return Boolean {@code true} if {@code Permission} data got stored in the
      *         authentication service, otherwise {@code false}. It returns
      *         {@code false} even if {@code accessToken} was not valid
      */
-    public Boolean setClaims(String accessToken, Map<String, Object> claims) throws AuthenticationException;
+    public Boolean setClaims(String accessToken, Map<String, Boolean> claims) throws AuthenticationException;
 
     /**
-     * @param accessToken
-     * @return Map<String, Object>
+     * Returns the claims of the user.
+     * 
+     * @param accessToken access token returned by the authentication provider in the
+     *                    client application
+     * @return Map<String, Boolean> claims of the user requested by the client
      */
-    public Map<String, Object> getClaims(String accessToken) throws AuthenticationException;
+    public Map<String, Boolean> getClaims(String accessToken) throws AuthenticationException;
 
     /**
      * Creates a new user on the system with the given email and password.
      * Depending on the implementation, it then sends a validation e-mail to the given address.
      * 
+     * @param accessToken access token returned by the authentication provider in the
+     *                    client application
      * @param email e-mail address of the user to be created
-     * @param password temporary password of the user to be created
+     * @param password password of the user to be created
      * @return Boolean {@code true} if the user account got created, {@code false} if it was not
      */
-    public Boolean createUser(String email, String password) throws AuthenticationException;
+    public Boolean createUser(String accessToken, String email, String password) throws AuthenticationException;
 
     /**
      * Returns the userId related to the email address.
      * 
-     * @param email e-mail address of the user to be returned
+     * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
-    public Optional<String> getUserByEmail(String email) throws AuthenticationException;
+    public Optional<String> getUserIdByEmail(String accessToken, String email) throws AuthenticationException;
 }
