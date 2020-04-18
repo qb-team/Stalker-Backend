@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -27,8 +26,8 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     FirebaseAuth firebaseAdaptee;
 
     @Autowired
-    public FirebaseAuthAdapter(FirebaseApp firebaseApp) {
-        this.firebaseAdaptee = FirebaseAuth.getInstance(firebaseApp);
+    public FirebaseAuthAdapter(FirebaseAuth firebaseAuth) {
+        this.firebaseAdaptee = firebaseAuth;
     }
 
     /**
@@ -39,7 +38,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
      * @return Boolean {@code true} if {@code accessToken} is valid, otherwise
      *         {@code false}
      */
-    private Boolean checkToken(String accessToken) {
+    public Boolean checkToken(String accessToken) {
         if (accessToken == null || accessToken.isEmpty())
             return false;
 
