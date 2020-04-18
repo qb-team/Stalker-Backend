@@ -5,8 +5,8 @@
 #
 # Clean old generated files
 #
-rm -r generated-sources/android/*
-touch generated-sources/android/.gitkeep
+rm -r generated-sources/java/*
+touch generated-sources/java/.gitkeep
 rm -r generated-sources/spring/*
 touch generated-sources/spring/.gitkeep
 rm -r generated-sources/typescript/*
@@ -25,9 +25,9 @@ openapi-generator validate \
 #
 openapi-generator generate \
 --input-spec stalker.yaml \
---generator-name android \
---config openapi-config/android.json \
---output generated-sources/android
+--generator-name java \
+--config openapi-config/java.json \
+--output generated-sources/java
 
 #
 # Generate Stalker-Backend source code
