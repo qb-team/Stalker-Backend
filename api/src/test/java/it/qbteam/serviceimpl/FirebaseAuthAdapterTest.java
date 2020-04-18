@@ -15,8 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import it.qbteam.serviceImpl.FirebaseAuthAdapter;
-
 @RunWith(SpringRunner.class)
 public class FirebaseAuthAdapterTest {
     @MockBean
@@ -29,7 +27,6 @@ public class FirebaseAuthAdapterTest {
     static public class AuthenticationServiceConfiguration {
         @Bean
         FirebaseAuthAdapter authenticationService(FirebaseAuth firebaseAuth) {
-
             return new FirebaseAuthAdapter(firebaseAuth);
         }
     }

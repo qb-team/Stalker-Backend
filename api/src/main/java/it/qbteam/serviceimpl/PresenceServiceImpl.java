@@ -1,6 +1,5 @@
-package it.qbteam.serviceImpl;
+package it.qbteam.serviceimpl;
 
-import it.qbteam.api.PresenceApi;
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.OrganizationPresenceCounter;
 import it.qbteam.model.PlaceAccess;

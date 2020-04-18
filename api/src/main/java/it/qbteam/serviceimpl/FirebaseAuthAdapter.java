@@ -1,4 +1,4 @@
-package it.qbteam.serviceImpl;
+package it.qbteam.serviceimpl;
 
 import java.util.HashMap;
 import java.util.Iterator;
