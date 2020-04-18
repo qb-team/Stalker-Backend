@@ -34,6 +34,7 @@
 		<jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<junit.version>4.13</junit.version>
+		<surefire.version>3.0.0-M4</surefire.version>
 	</properties>
 
 	<dependencies>
@@ -77,6 +78,11 @@
 	<build>
 		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
