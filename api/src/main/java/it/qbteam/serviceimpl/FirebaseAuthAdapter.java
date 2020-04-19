@@ -38,7 +38,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
      * @return Boolean {@code true} if {@code accessToken} is valid, otherwise
      *         {@code false}
      */
-    public Boolean checkToken(String accessToken) {
+    private Boolean checkToken(String accessToken) {
         if (accessToken == null || accessToken.isEmpty())
             return false;
 
