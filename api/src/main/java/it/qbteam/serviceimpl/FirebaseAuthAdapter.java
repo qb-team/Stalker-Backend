@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +24,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     /**
      * Access point to Firebase Admin SDK: Authentication
      */
-    FirebaseAuth firebaseAdaptee;
+    private FirebaseAuth firebaseAdaptee;
 
     @Autowired
     public FirebaseAuthAdapter(FirebaseAuth firebaseAuth) {
@@ -57,7 +58,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @param email       e-mail address of the user to be created
+     * @param email       e-mail address of the user to be created (must be valid)
      * @param password    password of the user to be created
      * @return Boolean {@code true} if the user account got created, {@code false}
      *         if it was not
@@ -66,13 +67,15 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     public Boolean createUser(String accessToken, String email, String password) throws AuthenticationException {
         if (!checkToken(accessToken))
             throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
-
-        final UserRecord.CreateRequest request = new UserRecord.CreateRequest().setEmail(email).setPassword(password);
+        
+        if(email == null || email.isEmpty() || password.length() < 6)
+            return false;
 
         try {
-            firebaseAdaptee.createUser(request);
+            final CreateRequest request = new UserRecord.CreateRequest().setEmail(email).setPassword(password);
+            firebaseAdaptee.createUser(request); // corrisponde a firebaseAuth nel test
             return true;
-        } catch (FirebaseAuthException exception) {
+        } catch (FirebaseAuthException | IllegalArgumentException exception) {
             return false;
         }
     }
@@ -89,6 +92,8 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         if (!checkToken(accessToken))
             throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
 
+        // getFirebaseUser could return Optional.empty() by its definition but it's impossibile by how this method works.
+        // Internally, checkToken and getFirebaseUser call the same method FirebaseAuth#verifyIdToken
         final FirebaseToken userData = getFirebaseUser(accessToken).get();
 
         final Map<String, Boolean> m = new HashMap<>();
@@ -109,10 +114,13 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         if (!checkToken(accessToken))
             throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
 
+        if(email == null || email.isEmpty())
+            return Optional.empty();
+        
         try {
             final UserRecord userRecord = firebaseAdaptee.getUserByEmail(email);
             return Optional.of(userRecord.getUid());
-        } catch (FirebaseAuthException exception) {
+        } catch (FirebaseAuthException | IllegalArgumentException exception) {
             return Optional.empty();
         }
     }
@@ -138,14 +146,16 @@ public class FirebaseAuthAdapter implements AuthenticationService {
 
         try {
             if (checkClaimsValidity(claims)) {
-                final Map<String, Object> m = userData.getClaims();
+                final Map<String, Object> m = new HashMap<>();
+
+                m.forEach(m::put);
 
                 firebaseAdaptee.setCustomUserClaims(userData.getUid(), m);
                 return true;
             } else {
                 return false;
             }
-        } catch (FirebaseAuthException exc) {
+        } catch (FirebaseAuthException | IllegalArgumentException exc) {
             return false;
         }
     }
@@ -175,7 +185,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         Iterator<Entry<String, Boolean>> entryIterator = claims.entrySet().iterator();
         Boolean invalidEntryExists = false;
 
-        while (!invalidEntryExists || entryIterator.hasNext()) {
+        while (!invalidEntryExists && entryIterator.hasNext()) {
             final Entry<String, Boolean> e = entryIterator.next();
             final String key = e.getKey();
             if (!key.equals(ADMIN) && !key.equals(USER)) {
