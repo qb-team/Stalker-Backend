@@ -1,4 +1,4 @@
-package it.qbteam.serviceImpl;
+package it.qbteam.serviceimpl;
 
 import it.qbteam.movementtracker.publisher.MovementPublisher;
 import it.qbteam.model.OrganizationMovement;
