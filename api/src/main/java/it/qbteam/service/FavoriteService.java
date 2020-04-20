@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public interface FavoriteService {
 
-    Optional<Favorite> addFavoriteOrganization(String userId, Long organizationId);
+    Optional<Favorite> addFavoriteOrganization(String userId, Long organizationId, String orgAuth);
     Optional<List<Organization>> getFavoriteOrganizationList(String userId);
     void removeFavoriteOrganization(String userId, Long organizationId);
 }

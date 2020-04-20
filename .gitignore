@@ -190,8 +190,8 @@ containers/redis-container/data/*
 firebase*.json
 
 ### OpenAPI Generator ###
-generated-sources/android/*
-!generated-sources/android/.gitkeep
+generated-sources/java/*
+!generated-sources/java/.gitkeep
 generated-sources/spring/*
 !generated-sources/spring/.gitkeep
 generated-sources/typescript/*
