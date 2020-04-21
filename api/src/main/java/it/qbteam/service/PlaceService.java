@@ -1,12 +1,10 @@
 package it.qbteam.service;
 
 import it.qbteam.model.Place;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public interface PlaceService {
     Optional<Place> createNewPlace(Place place);
     void deletePlace(Place placeId );
