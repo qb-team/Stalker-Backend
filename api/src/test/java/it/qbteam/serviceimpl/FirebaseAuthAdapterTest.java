@@ -1,7 +1,5 @@
 package it.qbteam.serviceimpl;
 
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -224,10 +222,7 @@ public class FirebaseAuthAdapterTest {
 
     @Test
     public void testSetClaimsMapNotSetExceptionThrown() throws AuthenticationException, FirebaseAuthException {
-
-        // FirebaseToken userData = Mockito.mock(FirebaseToken.class);
-        // Mockito.when(userData.getUid()).thenReturn("uid");
-        doThrow(FirebaseAuthException.class).when(firebaseAuth).setCustomUserClaims(anyString(), anyMap());
+        doThrow(FirebaseAuthException.class).when(firebaseAuth).setCustomUserClaims(null, new HashMap<>());
         
         Assert.assertEquals(false, authenticationService.setClaims(randomToken, new HashMap<>()));
     }
