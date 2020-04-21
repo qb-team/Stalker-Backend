@@ -1,4 +1,4 @@
-package it.qbteam.serviceImpl;
+package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Organization;
 import it.qbteam.repository.sql.OrganizationRepository;
