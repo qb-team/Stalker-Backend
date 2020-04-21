@@ -5,10 +5,12 @@ import it.qbteam.model.PlaceAccess;
 import it.qbteam.repository.sql.OrganizationAccessRepository;
 import it.qbteam.repository.sql.PlaceAccessRepository;
 import it.qbteam.service.AccessService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccessServiceImpl implements AccessService {
@@ -16,13 +18,31 @@ public class AccessServiceImpl implements AccessService {
     private OrganizationAccessRepository organizationAccessRepo;
     private PlaceAccessRepository placeAccessRepo;
 
-    @Override
-    public Optional<List<OrganizationAccess>> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId) {
-        return Optional.empty();
+    @Autowired
+    AccessServiceImpl(OrganizationAccessRepository organizationAccessRepository, PlaceAccessRepository placeAccessRepository) {
+        this.organizationAccessRepo = organizationAccessRepository;
+        this.placeAccessRepo = placeAccessRepository;
     }
 
     @Override
-    public Optional<List<PlaceAccess>> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId) {
-        return Optional.empty();
+    public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId) {
+        List<OrganizationAccess> accessList = new LinkedList<>();
+
+        orgAuthServerIds.forEach((orgAuthServerId) -> {
+            organizationAccessRepo.findByOrgAuthServerIdAndOrganizationId(orgAuthServerId, organizationId).forEach(accessList::add);
+        });
+
+        return accessList;
+    }
+
+    @Override
+    public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId) {
+        List<PlaceAccess> placeList = new LinkedList<>();
+
+        orgAuthServerIds.forEach((orgAuthServerId) -> {
+            placeAccessRepo.findByOrgAuthServerIdAndPlaceId(orgAuthServerId, placeId).forEach(placeList::add);
+        });
+
+        return placeList;
     }
 }
