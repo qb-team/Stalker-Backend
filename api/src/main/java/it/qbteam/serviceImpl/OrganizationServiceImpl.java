@@ -6,6 +6,9 @@ import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +62,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         prova.setStreet(organization.getStreet());
         prova.setTrackingArea(organization.getTrackingArea());
         prova.setTrackingMode(organization.getTrackingMode());
+        prova.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
+        organizationRepo.save(prova);
         return Optional.of(prova);
     }
 
@@ -68,7 +73,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization prova = null;
         if(original.isPresent()){prova = original.get();}
         prova.setTrackingArea(trackingArea);
+        organizationRepo.save(prova);
         return Optional.of(prova);
-
     }
 }
