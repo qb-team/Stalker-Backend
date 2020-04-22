@@ -4,7 +4,7 @@ import com.google.firebase.database.util.GAuthToken;
 import it.qbteam.model.Organization;
 import it.qbteam.repository.sql.OrganizationRepository;
 import it.qbteam.service.OrganizationService;
-import it.qbteam.serviceImpl.OrganizationServiceImpl;
+import it.qbteam.serviceimpl.OrganizationServiceImpl;
 import org.aspectj.weaver.ast.Or;
 import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.junit.Before;

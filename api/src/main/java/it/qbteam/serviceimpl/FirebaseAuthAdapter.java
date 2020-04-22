@@ -13,10 +13,12 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.service.AuthenticationService;
 
+@Service
 public class FirebaseAuthAdapter implements AuthenticationService {
 
     private static final String INVALID_TOKEN_EXCEPTION_MESSAGE = "Token is not valid or expired.";
