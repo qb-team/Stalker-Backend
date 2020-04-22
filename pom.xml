@@ -12,21 +12,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Stalker Backend</name>
 	<description>Backend per Stalker</description>
-	<packaging>pom</packaging>
-
-	<modules>
-		<!-- nomi delle cartelle dei moduli -->
-		<module>api</module>
-		<module>model</module>
-		<module>configuration</module>
-		<module>repository</module>
-		<module>movement-tracker</module>
-	</modules>
+	<packaging>jar</packaging>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
 	<properties>
-		<stalker-backend.version>0.0.1-SNAPSHOT</stalker-backend.version>
-		<!-- separatore -->
 		<java.version>1.8</java.version>
 		<swagger.core.version>2.1.1</swagger.core.version>
 		<swagger.annotation.version>1.6.0</swagger.annotation.version>
@@ -35,9 +24,66 @@
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<junit.version>4.13</junit.version>
 		<surefire.version>3.0.0-M4</surefire.version>
+		<openapi-generator.version>4.2.3</openapi-generator.version>
+		<checkstyle.version>3.1.1</checkstyle.version>
+		<firebase-admin.version>6.12.2</firebase-admin.version>
+		<maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
+		<validation-api.version>2.0.1.Final</validation-api.version>
 	</properties>
 
 	<dependencies>
+		<!-- Base per creare applicazioni web, incluse quelle RESTful usando Spring MVC. Usa Tomcat container embedded -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Base per testare applicazioni Spring Boot con librerie come JUnit, Hamcrest e Mockito -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Plugin per memorizzare i dati in database -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Plugin per connettersi a database MySQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Plugin per connetersi a redis con lettuce  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!-- Plugin per connettersi a Firebase Admin SDK -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase-admin.version}</version>
+		</dependency>
+
+		<!-- Bean Validation API support -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${validation-api.version}</version>
+		</dependency>
+
 		<!-- Generatore automatico di risorse, come ad esempio getter, setter, metodi equals, hashCode e toString, ecc. -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -76,19 +122,24 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyle.version}</version>
 				<configuration>
-					<configLocation>${project.basedir}/../checkstyle.xml</configLocation>
+					<configLocation>${project.basedir}/checkstyle.xml</configLocation>
 					<encoding>UTF-8</encoding>
 					<failsOnError>false</failsOnError>
 					<consoleOutput>true</consoleOutput>
@@ -121,7 +172,7 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyle.version}</version>
 				<configuration>
-					<configLocation>${project.basedir}/../checkstyle.xml</configLocation> <!-- il punto perché lo vogliono i moduli figli -->
+					<configLocation>${project.basedir}/checkstyle.xml</configLocation>
 					<encoding>UTF-8</encoding>
 					<failsOnError>false</failsOnError>
 					<consoleOutput>true</consoleOutput>
