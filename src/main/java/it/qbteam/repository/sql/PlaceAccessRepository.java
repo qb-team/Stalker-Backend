@@ -10,5 +10,8 @@ import it.qbteam.model.PlaceAccess;
 @Repository
 public interface PlaceAccessRepository extends CrudRepository<PlaceAccess, Long> {
     @Query("from PlaceAccess where orgAuthServerId=:serverId and placeId=:plId")
-    public Iterable<PlaceAccess> findByOrgAuthServerIdAndPlaceId(@Param("serverId") String orgAuthServerId, @Param("") Long placeId);
+    public Iterable<PlaceAccess> findByOrgAuthServerIdAndPlaceId(@Param("serverId") String orgAuthServerId, @Param("plId") Long placeId);
+    
+    @Query("from PlaceAccess where exitToken=:token and placeId=:plId")
+    public Iterable<PlaceAccess> findByExitTokenAndPlaceId(@Param("token") String exitToken, @Param("plId") Long placeId);
 }

@@ -6,7 +6,11 @@ import it.qbteam.model.PlaceAccess;
 import java.util.List;
 
 public interface AccessService {
-    List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId);
+    public List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId);
 
-    List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId);
+    public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId);
+
+    public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId);
+
+    public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId);
 }

@@ -25,6 +25,32 @@ public class AccessServiceImpl implements AccessService {
     }
 
     @Override
+    public List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId) {
+        List<OrganizationAccess> accessList = new LinkedList<>();
+        
+        if(exitTokens != null) {
+            exitTokens.forEach((exitToken) -> {
+                organizationAccessRepo.findByExitTokenAndOrganizationId(exitToken, organizationId).forEach(accessList::add);
+            });
+        }
+
+        return accessList;  
+    }
+
+    @Override
+    public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId) {
+        List<PlaceAccess> placeList = new LinkedList<>();
+        
+        if(exitTokens != null) {
+            exitTokens.forEach((exitToken) -> {
+                placeAccessRepo.findByExitTokenAndPlaceId(exitToken, placeId).forEach(placeList::add);
+            });    
+        }
+        
+        return placeList;
+    }
+
+    @Override
     public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId) {
         List<OrganizationAccess> accessList = new LinkedList<>();
         
