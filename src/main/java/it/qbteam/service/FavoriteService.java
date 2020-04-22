@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface FavoriteService {
 
     Optional<Favorite> addFavoriteOrganization(Favorite favorite);
-    Optional<List<Organization>> getFavoriteOrganizationList(String userId);
+    List<Organization> getFavoriteOrganizationList(String userId);
     void removeFavoriteOrganization(Favorite favorite);
 }

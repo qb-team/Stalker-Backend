@@ -72,7 +72,7 @@ public class OrganizationServiceImplTest {
     }
     @Test
     public void testGetOrganizationReturnEmptyOptional() {
-        Optional expectedReturn = Optional.empty();
+        Optional<Organization> expectedReturn = Optional.empty();
 
         Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -82,9 +82,9 @@ public class OrganizationServiceImplTest {
     @Test
     public void testGetOrganizationReturnAnOrganizationNotNull() {
         Optional expectedReturn = Optional.of(new Organization());
-        Optional optionalreturnObject = Optional.of(new Organization());
+        Optional optionalReturnObject = Optional.of(new Organization());
 
-        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(optionalreturnObject);
+        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(optionalReturnObject);
 
         assertEquals(expectedReturn, organizationService.getOrganization(anyLong()));
     }
@@ -124,7 +124,7 @@ public class OrganizationServiceImplTest {
         assertEquals(null, returnedObject.getId());
     }
     @Test
-    public void testUpdateOrganizationWithInvalidImput() {
+    public void testUpdateOrganizationWithInvalidInput() {
         Organization orgWithChanges = new Organization();
         orgWithChanges.setName(new String(new char[129]).replace('\0', 'a'));
         orgWithChanges.setDescription(new String(new char[513]).replace('\0', 'a'));

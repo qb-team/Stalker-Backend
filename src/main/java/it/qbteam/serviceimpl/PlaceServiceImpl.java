@@ -15,17 +15,19 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> createNewPlace(Place place) {
-        return Optional.empty();
+
+        return Optional.of(placeRepo.save(place));
     }
 
     @Override
     public void deletePlace(Place placeId) {
-
+        placeRepo.delete(placeId);
     }
 
     @Override
     public Optional<Place> updatePlace(Long placeId, Place place) {
-        return Optional.empty();
+        placeRepo.deleteById(placeId);
+        return Optional.of(placeRepo.save(place));
     }
 
     @Override

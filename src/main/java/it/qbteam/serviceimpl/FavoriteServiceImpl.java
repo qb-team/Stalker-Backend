@@ -8,9 +8,8 @@ import it.qbteam.repository.sql.OrganizationRepository;
 import it.qbteam.service.FavoriteService;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -20,22 +19,23 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Optional<Favorite> addFavoriteOrganization(Favorite favorite) {
-        OffsetDateTime currentTime= OffsetDateTime.now();
-        Favorite entityToBeAdded= new Favorite();
-        entityToBeAdded.setCreationDate(currentTime);
-        entityToBeAdded.setOrganizationId(favorite.getOrganizationId());
-        entityToBeAdded.setOrgAuthServerId(favorite.getOrgAuthServerId());
-        entityToBeAdded.setUserId(favorite.getUserId());
-        favoriteRepo.save(entityToBeAdded);
-        return Optional.of(entityToBeAdded);
+        return Optional.of(favoriteRepo.save(favorite));
     }
 
     @Override
-    public Optional<List<Organization>> getFavoriteOrganizationList(String userId) {
+    public List<Organization> getFavoriteOrganizationList(String userId) {
 
-        FavoriteId identificator= new FavoriteId(userId, null);
-        // da fare
-        return Optional.empty();
+        Iterable<Favorite> iterableListOfFavorite = favoriteRepo.findAllFavoriteOfOneUserId(userId);
+        List<Favorite> listOfFavorite = new ArrayList<>();
+        iterableListOfFavorite.forEach(listOfFavorite::add);
+        List<Long> organizationIdList = new ArrayList<>();
+        for (int i = 0; i < listOfFavorite.size(); i++) {
+            Favorite item = listOfFavorite.get(i);
+            organizationIdList.add(item.getOrganizationId());
+        }
+        List<Organization> returnList = new ArrayList<>();
+        organizationRepo.findAllById(organizationIdList).forEach(returnList::add);
+        return returnList;
     }
 
     @Override
