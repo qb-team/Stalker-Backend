@@ -19,13 +19,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     private OrganizationRepository organizationRepo;
 
     @Override
-    public Optional<Favorite> addFavoriteOrganization(String userId, Long organizationId, String orgAuthId) {
+    public Optional<Favorite> addFavoriteOrganization(Favorite favorite) {
         OffsetDateTime currentTime= OffsetDateTime.now();
         Favorite entityToBeAdded= new Favorite();
         entityToBeAdded.setCreationDate(currentTime);
-        entityToBeAdded.setOrganizationId(organizationId);
-        entityToBeAdded.setOrgAuthServerId(orgAuthId);
-        entityToBeAdded.setUserId(userId);
+        entityToBeAdded.setOrganizationId(favorite.getOrganizationId());
+        entityToBeAdded.setOrgAuthServerId(favorite.getOrgAuthServerId());
+        entityToBeAdded.setUserId(favorite.getUserId());
         favoriteRepo.save(entityToBeAdded);
         return Optional.of(entityToBeAdded);
     }
@@ -39,8 +39,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void removeFavoriteOrganization(String userId, Long organizationId) {
-        FavoriteId identificator= new FavoriteId(userId, organizationId);
+    public void removeFavoriteOrganization(Favorite favorite) {
+        FavoriteId identificator= new FavoriteId(favorite.getUserId(), favorite.getOrganizationId());
         favoriteRepo.deleteById(identificator);
     }
 }

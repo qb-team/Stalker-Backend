@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
@@ -22,11 +23,10 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
     }
     
     /**
-     * POST /favorite/{userId}/add/{organizationId} : Adds a new organization to the user&#39;s favorite organization list.
+     * POST /favorite/addfavorite : Adds a new organization to the user&#39;s favorite organization list.
      * Adds a new organization to the user&#39;s favorite organization list. If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker&#39;s account. Only app users can access this end-point.
      *
-     * @param userId         ID of the user. It must be the same of the userId of the authenticated user. (required)
-     * @param organizationId ID of an organization. (required)
+     * @param favorite (required)
      * @return Organization successfully added to the list of favorite.  The favorite record just added (including the organization) gets returned. (status code 201)
      * or The user already added the organization to the list of favorite organizations. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
@@ -34,7 +34,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Favorite> addFavoriteOrganization(String userId, @Min(1L) Long organizationId) {
+    public ResponseEntity<Favorite> addFavoriteOrganization(@Valid Favorite favorite) {
         return null;
     }
 
@@ -55,12 +55,12 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         return null;
     }
 
+
     /**
-     * DELETE /favorite/{userId}/remove/{organizationId} : Removes the organization from the user&#39;s favorite organization list.
+     * POST /favorite/removefavorite : Removes the organization from the user&#39;s favorite organization list.
      * Removes the organization from the user&#39;s favorite organization list. Only app users can access this end-point.
      *
-     * @param userId         ID of the user. It must be the same of the userId of the authenticated user. (required)
-     * @param organizationId ID of an organization. (required)
+     * @param favorite (required)
      * @return Organization successfully removed from the list of favorites. (status code 205)
      * or The organization is not part of the list of favorite organizations. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
@@ -68,7 +68,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Void> removeFavoriteOrganization(String userId, @Min(1L) Long organizationId) {
+    public ResponseEntity<Void> removeFavoriteOrganization(@Valid Favorite favorite) {
         return null;
     }
 }

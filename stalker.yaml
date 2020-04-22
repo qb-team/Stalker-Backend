@@ -17,15 +17,15 @@ tags:
   - name: favorite
     description: End-points for retrieving, adding and removing organizations to an user's favorite organization list.
   - name: place
-    description: Place related endpoints.
+    description: End-points for retrieving, adding, updating and deleting of places.
   - name: movement
-    description: Movement related endpoints.
+    description: End-points for tracking entrace and exit movements to organizations and places.
   - name: access
-    description: Access related endpoints.
+    description: End-points for retrieving accesses to organizations and places.
   - name: presence
-    description: Presence related endpoints.
+    description: End-points for retrieving current presence lists and counters of organizations and places.
   - name: report
-    description: Report related endpoints.
+    description: End-points for retrieving reports of organizations and places.
   - name: administrator
     description: End-points for retrieving, adding and removing permissions, retrieving, adding, binding and unbinding administrators.
 paths:
@@ -159,7 +159,7 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: List of organizations could not be found. Nothing gets returned.
-  "/favorite/{userId}/add/{organizationId}":
+  "/favorite/addfavorite":
     post:
       tags:
         - favorite
@@ -169,21 +169,6 @@ paths:
         If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker's account.
         Only app users can access this end-point.
       operationId: addFavoriteOrganization
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user. It must be the same of the userId of the authenticated user.
-          required: true
-          schema:
-            type: string
-        - name: organizationId
-          in: path
-          description: ID of an organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
       responses:
         "201":
           description: >-
@@ -201,8 +186,14 @@ paths:
           description: Users who did not bind their account with their organization's account and administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/favorite/{userId}/remove/{organizationId}":
-    delete:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Favorite"
+  "/favorite/removefavorite":
+    post:
       tags:
         - favorite
       summary: Removes the organization from the user's favorite organization list.
@@ -210,21 +201,6 @@ paths:
         Removes the organization from the user's favorite organization list.
         Only app users can access this end-point.
       operationId: removeFavoriteOrganization
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user. It must be the same of the userId of the authenticated user.
-          required: true
-          schema:
-            type: string
-        - name: organizationId
-          in: path
-          description: ID of an organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
@@ -236,6 +212,12 @@ paths:
           description: Administrators cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Favorite"
   "/administrator/bindadministrator":
     post:
       tags:

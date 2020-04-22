@@ -11,10 +11,11 @@ import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.constraints.*;
+import javax.validation.Valid;
 import java.util.List;
 
 @Validated
@@ -22,11 +23,10 @@ import java.util.List;
 public interface FavoriteApi {
 
     /**
-     * POST /favorite/{userId}/add/{organizationId} : Adds a new organization to the user&#39;s favorite organization list.
+     * POST /favorite/addfavorite : Adds a new organization to the user&#39;s favorite organization list.
      * Adds a new organization to the user&#39;s favorite organization list. If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker&#39;s account. Only app users can access this end-point.
      *
-     * @param userId ID of the user. It must be the same of the userId of the authenticated user. (required)
-     * @param organizationId ID of an organization. (required)
+     * @param favorite  (required)
      * @return Organization successfully added to the list of favorite.  The favorite record just added (including the organization) gets returned. (status code 201)
      *         or The user already added the organization to the list of favorite organizations. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
@@ -42,12 +42,13 @@ public interface FavoriteApi {
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users who did not bind their account with their organization's account and administrators cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @RequestMapping(value = "/favorite/{userId}/add/{organizationId}",
+    @RequestMapping(value = "/favorite/addfavorite",
         produces = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Favorite> addFavoriteOrganization(@ApiParam(value = "ID of the user. It must be the same of the userId of the authenticated user.",required=true) @PathVariable("userId") String userId,@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
+    ResponseEntity<Favorite> addFavoriteOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Favorite favorite);
 
-
+    
     /**
      * GET /favorite/{userId} : Gets the list of favorite organizations of a user.
      * Gets the list of favorite organizations of a user.  Only app users can access this end-point.
@@ -76,12 +77,11 @@ public interface FavoriteApi {
     ResponseEntity<List<Organization>> getFavoriteOrganizationList(@ApiParam(value = "ID of the user. It must be the same of the userId of the authenticated user.",required=true) @PathVariable("userId") String userId);
 
 
-    /**
-     * DELETE /favorite/{userId}/remove/{organizationId} : Removes the organization from the user&#39;s favorite organization list.
+     /**
+     * POST /favorite/removefavorite : Removes the organization from the user&#39;s favorite organization list.
      * Removes the organization from the user&#39;s favorite organization list. Only app users can access this end-point.
      *
-     * @param userId ID of the user. It must be the same of the userId of the authenticated user. (required)
-     * @param organizationId ID of an organization. (required)
+     * @param favorite  (required)
      * @return Organization successfully removed from the list of favorites. (status code 205)
      *         or The organization is not part of the list of favorite organizations. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
@@ -97,8 +97,9 @@ public interface FavoriteApi {
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @RequestMapping(value = "/favorite/{userId}/remove/{organizationId}",
-        method = RequestMethod.DELETE)
-    ResponseEntity<Void> removeFavoriteOrganization(@ApiParam(value = "ID of the user. It must be the same of the userId of the authenticated user.",required=true) @PathVariable("userId") String userId,@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
-
+    @RequestMapping(value = "/favorite/removefavorite",
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<Void> removeFavoriteOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Favorite favorite);
+    
 }
