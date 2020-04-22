@@ -1121,6 +1121,7 @@ components:
       required:
         - id
         - entranceTimestamp
+        - exitToken
         - placeId
       properties:
         id:
@@ -1151,6 +1152,7 @@ components:
       required:
         - id
         - entranceTimestamp
+        - exitToken
         - organizationId
       properties:
         id:
