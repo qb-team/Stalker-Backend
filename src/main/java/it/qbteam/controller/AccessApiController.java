@@ -5,9 +5,7 @@ import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.service.AuthenticationService;
 
-import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,6 +19,40 @@ public class AccessApiController extends StalkerBaseController implements Access
     @Autowired
     public AccessApiController(NativeWebRequest request, AuthenticationService service) {
         super(request, service);
+    }
+
+    /**
+     * GET /access/organization/{organizationId}/anonymous/{exitTokens} : Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas).
+     * Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.
+     *
+     * @param exitTokens     One or more exitTokens. (required)
+     * @param organizationId ID of an organization. (required)
+     * @return List of anonymous accesses in an organization gets returned successfully. (status code 200)
+     * or List of anonymous accesses in an organization were not found. Nothing gets returned. (status code 204)
+     * or The user is not authenticated. Nothing gets returned. (status code 401)
+     * or Administrators cannot have accesses. Nothing gets returned. (status code 403)
+     * or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @Override
+    public ResponseEntity<List<OrganizationAccess>> getAnonymousAccessListInOrganization(List<String> exitTokens, @Min(1L) Long organizationId) {
+        return null;
+    }
+
+    /**
+     * GET /access/place/{placeId}/anonymous/{exitTokens} : Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas).
+     * Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.
+     *
+     * @param exitTokens One or more exitTokens. (required)
+     * @param placeId    ID of a place. (required)
+     * @return List of anonymous accesses in a place gets returned successfully. (status code 200)
+     * or List of anonymous accesses in a place were not found. Nothing gets returned. (status code 204)
+     * or The user is not authenticated. Nothing gets returned. (status code 401)
+     * or Administrators cannot have accesses. Nothing gets returned. (status code 403)
+     * or The place could not be found. Nothing gets returned. (status code 404)
+     */
+    @Override
+    public ResponseEntity<List<PlaceAccess>> getAnonymousAccessListInPlace(List<String> exitTokens, @Min(1L) Long placeId) {
+        return null;
     }
 
     /**

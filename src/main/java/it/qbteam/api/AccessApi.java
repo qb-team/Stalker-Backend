@@ -22,6 +22,60 @@ import java.util.List;
 public interface AccessApi {
 
     /**
+     * GET /access/organization/{organizationId}/anonymous/{exitTokens} : Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas).
+     * Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.
+     *
+     * @param exitTokens One or more exitTokens. (required)
+     * @param organizationId ID of an organization. (required)
+     * @return List of anonymous accesses in an organization gets returned successfully. (status code 200)
+     *         or List of anonymous accesses in an organization were not found. Nothing gets returned. (status code 204)
+     *         or The user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators cannot have accesses. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas).", nickname = "getAnonymousAccessListInOrganization", notes = "Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.", response = OrganizationAccess.class, responseContainer = "List", authorizations = {
+            @Authorization(value = "bearerAuth")
+    }, tags={ "access", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of anonymous accesses in an organization gets returned successfully.", response = OrganizationAccess.class, responseContainer = "List"),
+            @ApiResponse(code = 204, message = "List of anonymous accesses in an organization were not found. Nothing gets returned."),
+            @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
+            @ApiResponse(code = 403, message = "Administrators cannot have accesses. Nothing gets returned."),
+            @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/access/organization/{organizationId}/anonymous/{exitTokens}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<OrganizationAccess>> getAnonymousAccessListInOrganization(@ApiParam(value = "One or more exitTokens.",required=true) @PathVariable("exitTokens") List<String> exitTokens,@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId);
+
+
+    /**
+     * GET /access/place/{placeId}/anonymous/{exitTokens} : Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas).
+     * Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.
+     *
+     * @param exitTokens One or more exitTokens. (required)
+     * @param placeId ID of a place. (required)
+     * @return List of anonymous accesses in a place gets returned successfully. (status code 200)
+     *         or List of anonymous accesses in a place were not found. Nothing gets returned. (status code 204)
+     *         or The user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators cannot have accesses. Nothing gets returned. (status code 403)
+     *         or The place could not be found. Nothing gets returned. (status code 404)
+     */
+    @ApiOperation(value = "Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas).", nickname = "getAnonymousAccessListInPlace", notes = "Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.", response = PlaceAccess.class, responseContainer = "List", authorizations = {
+            @Authorization(value = "bearerAuth")
+    }, tags={ "access", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of anonymous accesses in a place gets returned successfully.", response = PlaceAccess.class, responseContainer = "List"),
+            @ApiResponse(code = 204, message = "List of anonymous accesses in a place were not found. Nothing gets returned."),
+            @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
+            @ApiResponse(code = 403, message = "Administrators cannot have accesses. Nothing gets returned."),
+            @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
+    @RequestMapping(value = "/access/place/{placeId}/anonymous/{exitTokens}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<PlaceAccess>> getAnonymousAccessListInPlace(@ApiParam(value = "One or more exitTokens.",required=true) @PathVariable("exitTokens") List<String> exitTokens,@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);
+
+
+    /**
      * GET /access/organization/{organizationId}/authenticated/{orgAuthServerIds} : Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas).
      * Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point.
      *

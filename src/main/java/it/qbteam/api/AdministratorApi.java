@@ -54,7 +54,7 @@ public interface AdministratorApi {
      * POST /administrator/createadministrator : Creates and binds a new administrator to the organization.
      * Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point.
      *
-     * @param administratorInfo  (required)
+     * @param permission  (required)
      * @return Administrator created and bound successfully. The permission record gets returned. (status code 201)
      *         or The administrator to be created has already an account. The process could not succeed. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
@@ -76,7 +76,7 @@ public interface AdministratorApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Permission> createNewAdministratorInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AdministratorInfo administratorInfo);
+    ResponseEntity<Permission> createNewAdministratorInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Permission permission);
 
 
     /**
@@ -89,11 +89,11 @@ public interface AdministratorApi {
      *         or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @ApiOperation(value = "Returns the list of administrators of the organization.", nickname = "getAdministratorListOfOrganization", notes = "Returns the list of administrators of the organization. Only web-app administrators can access this end-point.", response = AdministratorInfo.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Returns the list of administrators of the organization.", nickname = "getAdministratorListOfOrganization", notes = "Returns the list of administrators of the organization. Only web-app administrators can access this end-point.", response = Permission.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "administrator", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Administrators' information returned successfully.", response = AdministratorInfo.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Administrators' information returned successfully.", response = Permission.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
@@ -102,7 +102,7 @@ public interface AdministratorApi {
     @RequestMapping(value = "/administrator/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AdministratorInfo>> getAdministratorListOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least owner permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId);
+    ResponseEntity<List<Permission>> getAdministratorListOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least owner permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId);
 
 
     /**
