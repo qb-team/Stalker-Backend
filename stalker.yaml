@@ -299,7 +299,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AdministratorInfo"
+              $ref: "#/components/schemas/Permission"
   "/administrator/updatepermission":
     patch:
       tags:
@@ -358,7 +358,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/AdministratorInfo"
+                  $ref: "#/components/schemas/Permission"
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -717,6 +717,52 @@ paths:
           description: Users can only retrieve their accesses. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
+  "/access/place/{placeId}/anonymous/{exitTokens}":
+    get:
+      tags:
+        - access
+      summary: Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas).
+      description: >-
+        Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered.
+        Fully registered means that there are both the entrance and the exit timestamp.
+        Only app users can access this end-point.
+      operationId: getAnonymousAccessListInPlace
+      parameters:
+        - name: exitTokens
+          in: path
+          description: >-
+            One or more exitTokens.
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: placeId
+          in: path
+          description: ID of a place.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: List of anonymous accesses in a place gets returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAccess"
+        "204":
+          description: List of anonymous accesses in a place were not found. Nothing gets returned.
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have accesses. Nothing gets returned.
+        "404":
+          description: The place could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}":
     get:
       tags:
@@ -763,6 +809,52 @@ paths:
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "403":
           description: Users can only retrieve their accesses. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
+  "/access/organization/{organizationId}/anonymous/{exitTokens}":
+    get:
+      tags:
+        - access
+      summary: Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas).
+      description: >-
+        Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered.
+        Fully registered means that there are both the entrance and the exit timestamp.
+        Only app users can access this end-point.
+      operationId: getAnonymousAccessListInOrganization
+      parameters:
+        - name: exitTokens
+          in: path
+          description: >-
+            One or more exitTokens.
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: organizationId
+          in: path
+          description: ID of an organization.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: List of anonymous accesses in an organization gets returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationAccess"
+        "204":
+          description: List of anonymous accesses in an organization were not found. Nothing gets returned.
+        "401":
+          description: The user is not authenticated. Nothing gets returned.
+        "403":
+          description: Administrators cannot have accesses. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}":
@@ -1045,18 +1137,6 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
-    AdministratorInfo:
-      type: object
-      required:
-        - mail
-        - permission
-      properties:
-        mail:
-          type: string
-          format: email
-          description: Mail of the administrator.
-        permission:
-          $ref: "#/components/schemas/Permission"
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
@@ -1121,6 +1201,7 @@ components:
       required:
         - id
         - entranceTimestamp
+        - exitToken
         - placeId
       properties:
         id:
@@ -1151,6 +1232,7 @@ components:
       required:
         - id
         - entranceTimestamp
+        - exitToken
         - organizationId
       properties:
         id:

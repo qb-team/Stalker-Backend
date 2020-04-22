@@ -39,7 +39,7 @@ public class AdministratorApiController extends StalkerBaseController implements
      * POST /administrator/createadministrator : Creates and binds a new administrator to the organization.
      * Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point.
      *
-     * @param administratorInfo (required)
+     * @param permission (required)
      * @return Administrator created and bound successfully. The permission record gets returned. (status code 201)
      * or The administrator to be created has already an account. The process could not succeed. Nothing gets returned. (status code 400)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
@@ -47,7 +47,7 @@ public class AdministratorApiController extends StalkerBaseController implements
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid AdministratorInfo administratorInfo) {
+    public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid Permission permission) {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class AdministratorApiController extends StalkerBaseController implements
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<List<AdministratorInfo>> getAdministratorListOfOrganization(@Min(1L) Long organizationId) {
+    public ResponseEntity<List<Permission>> getAdministratorListOfOrganization(@Min(1L) Long organizationId) {
         return null;
     }
 
