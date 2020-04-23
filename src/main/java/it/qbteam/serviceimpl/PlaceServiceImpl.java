@@ -33,7 +33,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public List<Place> getPlaceListOfOrganization(Long organizationId) {
-        Iterable<Place> organizationIterableList = placeRepo.findAllPlaceOfAnOrganization(organizationId);
+        Iterable<Place> organizationIterableList = placeRepo.findAllPlacesOfAnOrganization(organizationId);
         List<Place> organizationList = new ArrayList<>();
         organizationIterableList.forEach(organizationList::add);
         return organizationList;

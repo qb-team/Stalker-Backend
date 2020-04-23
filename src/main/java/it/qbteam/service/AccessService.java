@@ -5,12 +5,47 @@ import it.qbteam.model.PlaceAccess;
 
 import java.util.List;
 
+/**
+ * Access Service
+ * 
+ * This service performs the actual operations for retrieving accesses to organizations and places.
+ * 
+ * @author Tommaso Azzalin
+ */
 public interface AccessService {
+    /**
+     * Description
+     * 
+     * @param exitTokens
+     * @param organizationId
+     * @return
+     */
     public List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId);
 
+    /**
+     * Description
+     * 
+     * @param exitTokens
+     * @param placeId
+     * @return
+     */
     public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId);
 
+    /**
+     * Description
+     * 
+     * @param orgAuthServerIds
+     * @param organizationId
+     * @return
+     */
     public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId);
 
+    /**
+     * Description
+     * 
+     * @param orgAuthServerIds
+     * @param placeId
+     * @return
+     */
     public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId);
 }

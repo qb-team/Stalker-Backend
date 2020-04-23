@@ -22,7 +22,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<TimePerUserReport> getTimePerUserReport(Long organizationId) {
-        Iterable<OrganizationAccess> allAccessOfSingleOrganization = organizationAccessRepo.findAllOrganizationId(organizationId);
+        Iterable<OrganizationAccess> allAccessOfSingleOrganization = organizationAccessRepo.findByOrganizationId(organizationId);
         List<OrganizationAccess> listOfAllAccessOnOrganization = new ArrayList<>();
         allAccessOfSingleOrganization.forEach(listOfAllAccessOnOrganization::add);
         listOfAllAccessOnOrganization.stream().map(orgAccess-> new TimePerUserReport().organizationId(orgAccess.getOrganizationId()).orgAuthServerId(orgAccess.getOrgAuthServerId()).totalTime(
