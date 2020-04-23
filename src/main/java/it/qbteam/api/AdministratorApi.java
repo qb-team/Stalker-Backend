@@ -5,7 +5,6 @@
  */
 package it.qbteam.api;
 
-import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;

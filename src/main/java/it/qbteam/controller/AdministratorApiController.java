@@ -1,7 +1,6 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.AdministratorApi;
-import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
 import it.qbteam.service.AuthenticationService;
 
