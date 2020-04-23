@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PresenceService {
     Optional<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId);
-    Optional<List<OrganizationAccess>> getOrganizationPresenceList(Long organizationId);
+    List<OrganizationAccess> getOrganizationPresenceList(Long organizationId);
     Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId);
-    Optional<List<PlaceAccess>> getPlacePresenceList(Long placeId);
+    List<PlaceAccess> getPlacePresenceList(Long placeId);
 }

@@ -14,4 +14,7 @@ public interface OrganizationAccessRepository extends CrudRepository<Organizatio
 
     @Query("from OrganizationAccess where exitToken=:token and organizationId=:orgId")
     public Iterable<OrganizationAccess> findByExitTokenAndOrganizationId(@Param("token") String exitToken, @Param("orgId") Long organizationId);
+
+    @Query("from OrganizationAccess where organizationId=:orgId")
+    public Iterable<OrganizationAccess> findByOrganizationId(@Param("orgId") Long organizationId);
 }

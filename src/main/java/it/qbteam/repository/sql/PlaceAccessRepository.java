@@ -14,4 +14,7 @@ public interface PlaceAccessRepository extends CrudRepository<PlaceAccess, Long>
     
     @Query("from PlaceAccess where exitToken=:token and placeId=:plId")
     public Iterable<PlaceAccess> findByExitTokenAndPlaceId(@Param("token") String exitToken, @Param("plId") Long placeId);
+
+    @Query("from PlaceAccess where placeId=:plId")
+    public Iterable<PlaceAccess> findByPlaceId(@Param("plId") Long placeId);
 }
