@@ -11,7 +11,8 @@ import it.qbteam.model.OrganizationAccess;
 public interface OrganizationAccessRepository extends CrudRepository<OrganizationAccess, Long> {
     @Query("from OrganizationAccess where orgAuthServerId=:serverId and organizationId=:orgId")
     public Iterable<OrganizationAccess> findByOrgAuthServerIdAndOrganizationId(@Param("serverId") String orgAuthServerId, @Param("orgId") Long organizationId);
-
+    @Query("from OrganizationAccess where  organizationId=:orgId")
+    public Iterable<OrganizationAccess> findAllOrganizationId(@Param("orgId") Long organizationId);
     @Query("from OrganizationAccess where exitToken=:token and organizationId=:orgId")
     public Iterable<OrganizationAccess> findByExitTokenAndOrganizationId(@Param("token") String exitToken, @Param("orgId") Long organizationId);
 

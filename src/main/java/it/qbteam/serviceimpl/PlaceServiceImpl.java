@@ -5,6 +5,7 @@ import it.qbteam.repository.sql.PlaceRepository;
 import it.qbteam.service.PlaceService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,10 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Optional<List<Place>> getPlaceListOfOrganization(Long organizationId) {
-        return Optional.empty();
+    public List<Place> getPlaceListOfOrganization(Long organizationId) {
+        Iterable<Place> organizationIterableList = placeRepo.findAllPlaceOfAnOrganization(organizationId);
+        List<Place> organizationList = new ArrayList<>();
+        organizationIterableList.forEach(organizationList::add);
+        return organizationList;
     }
 }

@@ -9,5 +9,5 @@ public interface PlaceService {
     Optional<Place> createNewPlace(Place place);
     void deletePlace(Place placeId );
     Optional<Place> updatePlace(Long placeId,  Place place);
-    Optional<List<Place>> getPlaceListOfOrganization(Long organizationId);
+    List<Place> getPlaceListOfOrganization(Long organizationId);
 }
