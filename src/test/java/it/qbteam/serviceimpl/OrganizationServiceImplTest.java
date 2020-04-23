@@ -1,12 +1,8 @@
 package it.qbteam.serviceimpl;
 
-import com.google.firebase.database.util.GAuthToken;
 import it.qbteam.model.Organization;
 import it.qbteam.repository.sql.OrganizationRepository;
 import it.qbteam.service.OrganizationService;
-import it.qbteam.serviceimpl.OrganizationServiceImpl;
-import org.aspectj.weaver.ast.Or;
-import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +12,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-import sun.awt.image.OffScreenImageSource;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -81,8 +76,8 @@ public class OrganizationServiceImplTest {
     }
     @Test
     public void testGetOrganizationReturnAnOrganizationNotNull() {
-        Optional expectedReturn = Optional.of(new Organization());
-        Optional optionalReturnObject = Optional.of(new Organization());
+        Optional<Organization> expectedReturn = Optional.of(new Organization());
+        Optional<Organization> optionalReturnObject = Optional.of(new Organization());
 
         Mockito.when(organizationRepository.findById(anyLong())).thenReturn(optionalReturnObject);
 
