@@ -1,9 +1,18 @@
 package it.qbteam.repository.sql;
 
 import it.qbteam.model.Permission;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-@Repository
-public interface PermissionRepository extends CrudRepository<Permission, Long> {
+import it.qbteam.model.PermissionId;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PermissionRepository extends CrudRepository<Permission, PermissionId> {
+    @Query("from PermissionRepository where organizationId=:orgId")
+    Iterable<Permission> findByOrganizationId(@Param("orgId") Long organizationId);
+
+    @Query("from PermissionRepository where administratorId=:adminId")
+    Iterable<Permission> findByAdministratorId(@Param("adminId") String administratorId);
 }

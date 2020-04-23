@@ -1,11 +1,14 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.model.AdministratorInfo;
 import it.qbteam.model.Permission;
+import it.qbteam.model.PermissionId;
 import it.qbteam.repository.sql.PermissionRepository;
 import it.qbteam.service.AdministratorService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,34 +17,57 @@ public class AdministratorServiceImpl implements AdministratorService {
 
     private PermissionRepository permissionRepo;
 
+    @Autowired
+    public AdministratorServiceImpl(PermissionRepository permissionRepository) {
+        this.permissionRepo = permissionRepository;
+    }
 
     @Override
     public Optional<Permission> bindAdministratorToOrganization(Permission permission) {
-        return Optional.empty();
+        if(permission == null)
+            return Optional.empty();
+        
+        return Optional.of(permissionRepo.save(permission));
     }
 
     @Override
-    public Optional<Permission> createNewAdministratorToOrganization(AdministratorInfo administratorInfo) {
-        return Optional.empty();
+    public Optional<Permission> createNewAdministratorToOrganization(Permission permission) {
+        if(permission != null)
+            return Optional.empty();
+        
+        return Optional.of(permissionRepo.save(permission));
     }
 
     @Override
-    public Optional<List<AdministratorInfo>> getAdministratorListOfOrganization(Long organizationId) {
-        return Optional.empty();
+    public List<Permission> getAdministratorListOfOrganization(Long organizationId) {
+        List<Permission> adminList = new LinkedList<>();
+
+        permissionRepo.findByOrganizationId(organizationId).forEach(adminList::add);
+
+        return adminList;
     }
 
     @Override
-    public Optional<List<Permission>> getPermissionList(String administratorId) {
-        return Optional.empty();
+    public List<Permission> getPermissionList(String administratorId) {
+        List<Permission> permissionList = new LinkedList<>();
+
+        permissionRepo.findByAdministratorId(administratorId).forEach(permissionList::add);
+
+        return permissionList;
     }
 
     @Override
     public Optional<Permission> updateAdministratorPermission(Permission permission) {
-        return Optional.empty();
+        if(permission != null)
+            return Optional.empty();
+        
+        return Optional.of(permissionRepo.save(permission));
     }
 
     @Override
     public void unbindAdministratorFromOrganization(Permission permission) {
-
+        if(permission != null) {
+            permissionRepo.deleteById(new PermissionId(permission.getAdministratorId(), permission.getOrganizationId()));
+        }
     }
 }
