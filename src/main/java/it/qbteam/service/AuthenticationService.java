@@ -63,8 +63,20 @@ public interface AuthenticationService {
     /**
      * Returns the userId related to the email address.
      * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
      * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
     public Optional<String> getUserIdByEmail(String accessToken, String email) throws AuthenticationException;
+
+    /**
+     * Returns the userId related to the current user.
+     * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
+     * @param email e-mail address of the userID to be returned
+     * @return userId if the user account was found, and null if it was not.
+     */
+    public String getUserId(String accessToken) throws AuthenticationException;
 }

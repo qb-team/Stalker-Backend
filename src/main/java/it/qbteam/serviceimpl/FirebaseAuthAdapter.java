@@ -60,7 +60,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @param email       e-mail address of the user to be created (must be valid)
+     * @param email       e-mail address of the user to be created
      * @param password    password of the user to be created
      * @return Boolean {@code true} if the user account got created, {@code false}
      *         if it was not
@@ -108,6 +108,8 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     /**
      * Returns the userId related to the email address.
      * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
      * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
@@ -160,6 +162,24 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         } catch (FirebaseAuthException | IllegalArgumentException exc) {
             return false;
         }
+    }
+
+    /**
+     * Returns the userId related to the current user.
+     * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
+     * @param email e-mail address of the userID to be returned
+     * @return userId if the user account was found, and null if it was not.
+     */
+    @Override
+    public String getUserId(String accessToken) throws AuthenticationException {
+        if (!checkToken(accessToken))
+            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+        
+        final FirebaseToken userData = getFirebaseUser(accessToken).get();
+
+        return userData.getUid();      
     }
 
     /**
