@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PermissionRepository extends CrudRepository<Permission, PermissionId> {
-    @Query("from PermissionRepository where organizationId=:orgId")
+    @Query("from Permission where organizationId=:orgId")
     Iterable<Permission> findByOrganizationId(@Param("orgId") Long organizationId);
 
-    @Query("from PermissionRepository where administratorId=:adminId")
+    @Query("from Permission where administratorId=:adminId")
     Iterable<Permission> findByAdministratorId(@Param("adminId") String administratorId);
 }
