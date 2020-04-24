@@ -1,10 +1,7 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.model.Organization;
-import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.TimePerUserReport;
-import it.qbteam.repository.sql.OrganizationAccessRepository;
 import it.qbteam.repository.sql.PlaceAccessRepository;
 import it.qbteam.service.ReportService;
 
@@ -13,14 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImpl implements ReportService {
 
-    // private OrganizationAccessRepository organizationAccessRepo;
     private PlaceAccessRepository placeAccessRepo;
 
     @Autowired
@@ -30,34 +26,25 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<TimePerUserReport> getTimePerUserReport(Long organizationId) {
-        // Iterable<OrganizationAccess> allAccessOfSingleOrganization = organizationAccessRepo.findByOrganizationId(organizationId);
-        // List<OrganizationAccess> listOfAllAccessOnOrganization = new ArrayList<>();
 
-        // allAccessOfSingleOrganization.forEach(listOfAllAccessOnOrganization::add);
-
-        // listOfAllAccessOnOrganization.stream().map(orgAccess-> new TimePerUserReport().organizationId(orgAccess.getOrganizationId()).orgAuthServerId(orgAccess.getOrgAuthServerId()).totalTime(
-        //         orgAccess.getExitTimestamp()
-        //                 .minusSeconds(orgAccess.getEntranceTimestamp().toInstant().toEpochMilli()))).reduce(new TimePerUserReport().setTotalTime(OffsetDateTime.of(LocalDateTime.of(0, 00, 00, 00, 00),
-        //         ZoneOffset.ofHoursMinutes(0, 0))), );
-        Iterable<PlaceAccess> allAccessOfSingleOrganization = placeAccessRepo.findByOrganizationId(organizationId);
+        Iterable<PlaceAccess> allAccessOfSingleOrganization = placeAccessRepo.findByPlaceId(organizationId);
         List<PlaceAccess> listOfAllAccessOnOrganization = new ArrayList<>();
 
         allAccessOfSingleOrganization.forEach(listOfAllAccessOnOrganization::add);
 
-        listOfAllAccessOnOrganization.stream().map(
-            placeAccess -> new TimePerUserReport()
-                .organizationId(placeAccess.getPlaceId())
-                .orgAuthServerId(placeAccess.getOrgAuthServerId())
-                .totalTime(
-                    placeAccess.getExitTimestamp()
-                    .minusSeconds(
-                        placeAccess.getEntranceTimestamp()
-                        .toInstant()
-                        .toEpochMilli()
-                    )
-                )
-        ).count(); // assolutamente a caso, solo perché VS Code stia zitto
-        
-        return null;
+        Map<String, Long> mapUserIdWithTime = listOfAllAccessOnOrganization.stream().filter(access-> access.getOrgAuthServerId()!=null).collect(Collectors.groupingBy(PlaceAccess::getOrgAuthServerId, Collectors.summingLong(acc -> {
+           return acc.getExitTimestamp().minusSeconds(
+                    acc.getEntranceTimestamp()
+                            .toInstant()
+                            .toEpochMilli()*1000
+            ).toInstant().toEpochMilli()*1000;
+        })));
+        List<TimePerUserReport> returnList = new LinkedList<>();
+        mapUserIdWithTime.forEach((id, time)-> returnList.add(new TimePerUserReport()
+                .totalTime(OffsetDateTime.of(LocalDateTime.of(0, 00, 00, 00, 00), ZoneOffset.ofHoursMinutes(0, 0)).plusSeconds(time))
+                .orgAuthServerId(id)
+                .organizationId(organizationId)));
+        return returnList;
     }
 }
+
