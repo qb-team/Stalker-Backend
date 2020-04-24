@@ -1,7 +1,5 @@
 package it.qbteam.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,21 +12,28 @@ import it.qbteam.model.*;
 import org.apache.commons.lang3.time.DateParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-// import org.springframework.http.MediaType;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-// import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.api.OrganizationApi;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
+import it.qbteam.service.OrganizationService;
 
 @Controller
 public class OrganizationApiController extends StalkerBaseController implements OrganizationApi {
+
+    private OrganizationService orgService;
+
+    private AdministratorService adminService;
     
     @Autowired
-    public OrganizationApiController(NativeWebRequest request, AuthenticationService service) {
-        super(request, service);
+    public OrganizationApiController(NativeWebRequest request, AuthenticationService authenticationService, OrganizationService organizationService, AdministratorService administratorService) {
+        super(request, authenticationService);
+        this.orgService = organizationService;
+        this.adminService = administratorService;
     }
     
     /**
@@ -42,7 +47,16 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> getOrganization(@Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<Organization>(HttpStatus.UNAUTHORIZED); //401
+        
+        Optional<Organization> organization = orgService.getOrganization(organizationId);
+
+        if(organization.isPresent()) {
+            return new ResponseEntity<Organization>(organization.get(), HttpStatus.OK); // 200
+        } else {
+            return new ResponseEntity<Organization>(HttpStatus.NOT_FOUND); // 404
+        }
     }
 
     /**
@@ -57,7 +71,19 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(isAuthenticatedAsUser(getAccessToken().get())) {
+            List<Organization> orgList = orgService.getOrganizationList();
+            if(!orgList.isEmpty()) {
+                return new ResponseEntity<>(orgList, HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
     }
 
     /**
@@ -90,7 +116,29 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> updateOrganization(@Min(1L) Long organizationId, @Valid Organization organization) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        final String accessToken = getAccessToken().get();
+
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+
+            if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+            } else {
+                Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
+                if(updatedOrganization.isPresent()) {
+                    return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+                }
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
     }
 
     /**
@@ -107,6 +155,28 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> updateOrganizationTrackingArea(@Min(1L) Long organizationId, String trackingArea) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        final String accessToken = getAccessToken().get();
+
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+
+            if(!permission.isPresent() || permission.get().getPermission() < 2) { // 3 is Owner level
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+            } else {
+                Optional<Organization> updatedOrganization = orgService.updateOrganizationTrackingArea(organizationId, trackingArea);
+                if(updatedOrganization.isPresent()) {
+                    return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+                }
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
     }
 }
