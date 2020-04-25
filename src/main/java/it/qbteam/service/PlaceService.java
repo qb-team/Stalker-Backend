@@ -44,4 +44,12 @@ public interface PlaceService {
      * @return
      */
     List<Place> getPlaceListOfOrganization(Long organizationId);
+
+    /**
+     * Description
+     * 
+     * @param placeId
+     * @return
+     */
+    Optional<Place> getPlace(Long placeId);
 }
