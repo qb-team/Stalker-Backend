@@ -29,7 +29,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         List<Favorite> listOfFavorite = new ArrayList<>();
         iterableListOfFavorite.forEach(listOfFavorite::add);
         List<Long> organizationIdList = new ArrayList<>();
-        for (int i = 0; i < listOfFavorite.size(); i++) {
+        for(int i = 0; i < listOfFavorite.size(); i++) {
             Favorite item = listOfFavorite.get(i);
             organizationIdList.add(item.getOrganizationId());
         }
@@ -42,5 +42,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void removeFavoriteOrganization(Favorite favorite) {
         FavoriteId identificator= new FavoriteId(favorite.getUserId(), favorite.getOrganizationId());
         favoriteRepo.deleteById(identificator);
+    }
+    @Override
+    public boolean isPresent(Favorite favorite){
+        Iterable<Favorite> returnFavorite =favoriteRepo.isPresent(favorite.getUserId(), favorite.getOrganizationId());
+        if (returnFavorite!=null){
+            return true;
+        }
+        return false;
     }
 }

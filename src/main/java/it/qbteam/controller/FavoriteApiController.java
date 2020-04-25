@@ -1,11 +1,14 @@
 package it.qbteam.controller;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import it.qbteam.api.FavoriteApi;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
 import it.qbteam.service.AuthenticationService;
 
+import it.qbteam.service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,9 +16,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
+
+    private FavoriteService favoriteService;
 
     @Autowired
     public FavoriteApiController(NativeWebRequest request, AuthenticationService service) {
@@ -35,7 +41,22 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<Favorite> addFavoriteOrganization(@Valid Favorite favorite) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
+        }
+        if(!favoriteService.isPresent(favorite)){
+            return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
+        }
+        // controllare il binding tra user e organization 403
+        Optional<Favorite> favouriteInsertion = favoriteService.addFavoriteOrganization(favorite);
+        if(favouriteInsertion.isPresent())
+        {
+            return new ResponseEntity<Favorite>(favouriteInsertion.get(), HttpStatus.OK); // 201
+        }
+        else
+        {
+            return new ResponseEntity<Favorite>(HttpStatus.NOT_FOUND); // 404
+        }
     }
 
     /**
@@ -52,7 +73,19 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<List<Organization>> getFavoriteOrganizationList(String userId) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<List<Organization>>(HttpStatus.UNAUTHORIZED); //401
+        }
+        List<Organization> returnList= favoriteService.getFavoriteOrganizationList(userId);
+        if(returnList.isEmpty())
+        {
+            return new ResponseEntity<List<Organization>>(HttpStatus.NO_CONTENT); //204
+        }
+        else{
+            return new ResponseEntity<List<Organization>>(HttpStatus.OK); // 200
+        }
+        //return new ResponseEntity<List<Organization>>(HttpStatus.FORBIDDEN) // 403;
+
     }
 
 
@@ -69,6 +102,15 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<Void> removeFavoriteOrganization(@Valid Favorite favorite) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED); //401
+        }
+        if (!favoriteService.isPresent(favorite)){
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST); //400
+        }
+
+        favoriteService.removeFavoriteOrganization(favorite);
+        return new ResponseEntity<Void>(HttpStatus.OK); //200
+
     }
 }
