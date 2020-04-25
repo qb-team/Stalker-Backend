@@ -1,23 +1,47 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.PlaceApi;
+import it.qbteam.model.Permission;
 import it.qbteam.model.Place;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
+import it.qbteam.service.PlaceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 public class PlaceApiController extends StalkerBaseController implements PlaceApi {
+
+    private PlaceService placeService;
+    
+    private AdministratorService adminService;
     
     @Autowired
-    public PlaceApiController(NativeWebRequest request, AuthenticationService service) {
+    public PlaceApiController(NativeWebRequest request, AuthenticationService service, PlaceService placeService, AdministratorService administratorService) {
         super(request, service);
+        this.placeService = placeService;
+        this.adminService = administratorService;
     }
+
+    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+            
+            return permission;
+        } else {
+            return Optional.empty();
+        }
+    }
+
     /**
      * POST /place : Creates a new place for an organization.
      * Creates a new place for an organization. Only web-app administrators can access this end-point.
@@ -30,7 +54,21 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Place> createNewPlace(@Valid Place place) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.getOrganizationId());
+
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            Optional<Place> createdPlace = placeService.createNewPlace(place);
+            if(createdPlace.isPresent()) {
+                return new ResponseEntity<>(createdPlace.get(), HttpStatus.OK); // 201
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            }
+        }
     }
 
     /**
@@ -45,7 +83,22 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Void> deletePlace(@Min(1L) Long placeId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        Optional<Place> place = placeService.getPlace(placeId);
+
+        if(!place.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId());
+
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            placeService.deletePlace(place.get());
+            return new ResponseEntity<>(HttpStatus.RESET_CONTENT); // 205
+        }
     }
 
     /**
@@ -62,7 +115,22 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Place> updatePlace(@Min(1L) Long placeId, @Valid Place place) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.getOrganizationId());
+
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            Optional<Place> updatedPlace = placeService.updatePlace(placeId, place);
+            if(updatedPlace.isPresent()) {
+                return new ResponseEntity<>(updatedPlace.get(), HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            }
+        }
+        // manca il 400
     }
 
     /**
@@ -78,6 +146,22 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<List<Place>> getPlaceListOfOrganization(@Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
+
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            List<Place> places = placeService.getPlaceListOfOrganization(organizationId);
+            if(!places.isEmpty()) {
+                return new ResponseEntity<>(places, HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+            }
+        }
+
+        // manca il 404
     }
 }

@@ -2,25 +2,53 @@ package it.qbteam.controller;
 
 import it.qbteam.api.AccessApi;
 import it.qbteam.model.OrganizationAccess;
+import it.qbteam.model.Permission;
+import it.qbteam.model.Place;
 import it.qbteam.model.PlaceAccess;
+import it.qbteam.service.AccessService;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
+import it.qbteam.service.PlaceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AccessApiController extends StalkerBaseController implements AccessApi {
 
+    private AccessService accessService;
+
+    private AdministratorService adminService;
+
+    private PlaceService placeService;
+
     @Autowired
-    public AccessApiController(NativeWebRequest request, AuthenticationService service) {
+    public AccessApiController(NativeWebRequest request, AuthenticationService service, AccessService accessService, AdministratorService administratorService, PlaceService placeService) {
         super(request, service);
+        this.accessService = accessService;
+        this.adminService = administratorService;
+        this.placeService = placeService;
     }
 
+    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+            
+            return permission;
+        } else {
+            return Optional.empty();
+        }
+    }
+    
     /**
      * GET /access/organization/{organizationId}/anonymous/{exitTokens} : Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas).
      * Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point.
@@ -35,7 +63,20 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAnonymousAccessListInOrganization(List<String> exitTokens, @Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(isAuthenticatedAsUser(getAccessToken().get())) {
+            List<OrganizationAccess> accessList = accessService.getAnonymousAccessListInOrganization(exitTokens, organizationId);
+            if(!accessList.isEmpty()) {
+                return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        // manca 404
     }
 
     /**
@@ -52,7 +93,20 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAnonymousAccessListInPlace(List<String> exitTokens, @Min(1L) Long placeId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(isAuthenticatedAsUser(getAccessToken().get())) {
+            List<PlaceAccess> accessList = accessService.getAnonymousAccessListInPlace(exitTokens, placeId);
+            if(!accessList.isEmpty()) {
+                return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        // manca 404
     }
 
     /**
@@ -69,7 +123,24 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, @Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(isAuthenticatedAsUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+
+        if(isAuthenticatedAsAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+
+        List<OrganizationAccess> accessList = accessService.getAuthenticatedAccessListInOrganization(orgAuthServerIds, organizationId);
+        if(!accessList.isEmpty()) {
+            return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+        }
+        // manca 404
     }
 
     /**
@@ -86,6 +157,29 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, @Min(1L) Long placeId) {
-        return null;
+        if(!getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(isAuthenticatedAsUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+
+        Optional<Place> place = placeService.getPlace(placeId);
+
+        if(!place.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if(isAuthenticatedAsAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+
+        List<PlaceAccess> accessList = accessService.getAuthenticatedAccessListInPlace(orgAuthServerIds, place.get().getOrganizationId());
+        if(!accessList.isEmpty()) {
+            return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+        }
+        // manca 404
     }
 }

@@ -38,4 +38,9 @@ public class PlaceServiceImpl implements PlaceService {
         organizationIterableList.forEach(organizationList::add);
         return organizationList;
     }
+
+    @Override
+    public Optional<Place> getPlace(Long placeId) {
+        return placeRepo.findById(placeId);  
+    }
 }

@@ -6,13 +6,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
-// import com.google.firebase.FirebaseApp;
-
-import it.qbteam.model.*;
-import org.apache.commons.lang3.time.DateParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,6 +16,8 @@ import it.qbteam.api.OrganizationApi;
 import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.service.OrganizationService;
+import it.qbteam.model.Organization;
+import it.qbteam.model.Permission;
 
 @Controller
 public class OrganizationApiController extends StalkerBaseController implements OrganizationApi {
@@ -36,6 +33,18 @@ public class OrganizationApiController extends StalkerBaseController implements 
         this.adminService = administratorService;
     }
     
+    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+            
+            return permission;
+        } else {
+            return Optional.empty();
+        }
+    }
+
     /**
      * GET /organization/{organizationId} : Gets the available data for a single organization.
      * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
@@ -119,25 +128,17 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        final String accessToken = getAccessToken().get();
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-
-            if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
-            } else {
-                Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
-                if(updatedOrganization.isPresent()) {
-                    return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
-                } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
-                }
-            }
-        } else {
+        if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
+            if(updatedOrganization.isPresent()) {
+                return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            }
         }
     }
 
@@ -158,25 +159,17 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        final String accessToken = getAccessToken().get();
+        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-
-            if(!permission.isPresent() || permission.get().getPermission() < 2) { // 3 is Owner level
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
-            } else {
-                Optional<Organization> updatedOrganization = orgService.updateOrganizationTrackingArea(organizationId, trackingArea);
-                if(updatedOrganization.isPresent()) {
-                    return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
-                } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
-                }
-            }
-        } else {
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            Optional<Organization> updatedOrganization = orgService.updateOrganizationTrackingArea(organizationId, trackingArea);
+            if(updatedOrganization.isPresent()) {
+                return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            }
         }
     }
 }
