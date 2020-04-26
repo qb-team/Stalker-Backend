@@ -9,40 +9,42 @@ import it.qbteam.repository.sql.PlaceAccessRepository;
 import it.qbteam.service.PresenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PresenceServiceImpl implements PresenceService {
 
     private OrganizationAccessRepository organizationAccessRepo;
     private PlaceAccessRepository placeAccessRepo;
-    private RedisTemplate<String, Integer> organizationPresenceCounter;
-    private RedisTemplate<String, Integer> placePresenceCounter;
+    private RedisTemplate<String, Integer> presenceCounterTemplate;
 
     @Autowired
     public PresenceServiceImpl(
         OrganizationAccessRepository organizationAccessRepository,
         PlaceAccessRepository placeAccessRepository,
-        RedisTemplate<String, Integer> organizationPresenceCounter,
-        RedisTemplate<String, Integer> placePresenceCounter
+        @Qualifier("presenceCounterTemplate") RedisTemplate<String, Integer> presenceCounterTemplate
     ) {
         this.organizationAccessRepo = organizationAccessRepository;
         this.placeAccessRepo = placeAccessRepository;
-        this.organizationPresenceCounter = organizationPresenceCounter;
-        this.placePresenceCounter = placePresenceCounter;
+        this.presenceCounterTemplate = presenceCounterTemplate;
     }
 
 
     @Override
     public Optional<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
-        return Optional.empty();
+        Integer currentCounter = presenceCounterTemplate.opsForValue().get("organization:"+organizationId);
+
+        if(currentCounter == null)
+            return Optional.empty();
+        
+        OrganizationPresenceCounter orgPresenceCounter = new OrganizationPresenceCounter().organizationId(organizationId).counter(currentCounter);
+        return Optional.of(orgPresenceCounter);
     }
 
     @Override
@@ -59,7 +61,13 @@ public class PresenceServiceImpl implements PresenceService {
 
     @Override
     public Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
-        return Optional.empty();
+        Integer currentCounter = presenceCounterTemplate.opsForValue().get("place:"+placeId);
+
+        if(currentCounter == null)
+            return Optional.empty();
+        
+        PlacePresenceCounter placePresenceCounter = new PlacePresenceCounter().placeId(placeId).counter(currentCounter);
+        return Optional.of(placePresenceCounter);
     }
 
     @Override

@@ -27,9 +27,6 @@ public class PresenceApiController extends StalkerBaseController implements Pres
         super(request, service);
     }
 
-    private static final String ORGANIZATION_PRESENCE_KEY = "ORGANIZATION_PRESENCE";
-    // private static final String PLACE_PRESENCE_KEY = "PLACE_PRESENCE";
-
     /**
      * GET /presence/organization/{organizationId} : Gets the list of people currently inside the organization&#39;s trackingArea.
      * Gets the list of people currently inside the organization&#39;s trackingArea. The organization is required to track people with trackingMode: authenticated. Only web-app administrators can access this end-point.
@@ -62,9 +59,6 @@ public class PresenceApiController extends StalkerBaseController implements Pres
         return null;
     }
 
-    @Autowired @Qualifier("presenceCounterTemplate")
-    RedisTemplate<String, Integer> presenceCounterTemplate;
-
     /**
      * GET /presence/{organizationId} : Gets the number of presences in an organization given its organizationId.
      * Gets the number of presences in an organization given its organizationId.
@@ -76,8 +70,7 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
-        Integer counter = (Integer) presenceCounterTemplate.opsForHash().get(ORGANIZATION_PRESENCE_KEY, organizationId.toString());
-        return new ResponseEntity<OrganizationPresenceCounter>(new OrganizationPresenceCounter().counter(counter).organizationId(organizationId), HttpStatus.OK);
+        return null;
     }
 
     /**
@@ -91,6 +84,6 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
-        return new ResponseEntity<PlacePresenceCounter>(HttpStatus.NOT_IMPLEMENTED);
+        return null;
     }
 }
