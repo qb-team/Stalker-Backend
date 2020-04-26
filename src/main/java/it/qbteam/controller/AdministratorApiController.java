@@ -1,24 +1,44 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.AdministratorApi;
+import it.qbteam.model.Organization;
 import it.qbteam.model.Permission;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 
+import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 public class AdministratorApiController extends StalkerBaseController implements AdministratorApi {
+
+    private AdministratorService adminService;
+    private OrganizationService organizationService;
 
     @Autowired
     public AdministratorApiController(NativeWebRequest request, AuthenticationService service) {
         super(request, service);
     }
-    
+
+    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+
+            return permission;
+        } else {
+            return Optional.empty();
+        }
+    }
     /**
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
      * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.
@@ -31,7 +51,21 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Permission> bindAdministratorToOrganization(@Valid Permission permission) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 2) { // 2 is Manager level
+            return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
+        }
+        Optional<Permission> returnedPermission = adminService.bindAdministratorToOrganization(permission);
+        if (returnedPermission.isPresent()){
+            return new ResponseEntity<Permission>(returnedPermission.get(), HttpStatus.OK); //201
+        }
+        else
+        {
+            return new ResponseEntity<Permission>(HttpStatus.NOT_FOUND); //404
+        }
     }
 
     /**
@@ -47,7 +81,21 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid Permission permission) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
+            return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
+        }
+        Optional<Permission> returnedCreation = adminService.createNewAdministratorToOrganization(permission);
+        if(returnedCreation.isPresent()){
+            return new ResponseEntity<Permission>(returnedCreation.get(), HttpStatus.OK); //201
+        }
+        else
+        {
+            return new ResponseEntity<Permission>(HttpStatus.NOT_FOUND); //404
+        }
     }
 
     /**
@@ -62,7 +110,22 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<List<Permission>> getAdministratorListOfOrganization(@Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), organizationId);
+        if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        List<Permission> returnedList = adminService.getAdministratorListOfOrganization(organizationId);
+        if(returnedList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+        }
+        else
+        {
+            return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //201
+        }
+
     }
 
     /**
@@ -78,7 +141,24 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<List<Permission>> getPermissionList(String administratorId) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<String> authenticatedAdministratorId = authenticationProviderUserId(getAccessToken().get());
+        if(authenticatedAdministratorId.isPresent() && authenticatedAdministratorId.get()== administratorId){
+            List<Permission> returnedListOfPermission = adminService.getPermissionList(administratorId);
+            if (returnedListOfPermission.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+            }
+            else
+            {
+                return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
+            }
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
     }
 
     /**
@@ -93,7 +173,15 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Void> unbindAdministratorFromOrganization(@Valid Permission permission) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        adminService.unbindAdministratorFromOrganization(permission);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
     }
 
     /**
@@ -109,6 +197,21 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Permission> updateAdministratorPermission(@Valid Permission permission) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        Optional<Permission> returnedUpdatedPermission= adminService.updateAdministratorPermission(permission);
+        if(returnedUpdatedPermission.isPresent())
+        {
+            return new ResponseEntity<Permission>(returnedUpdatedPermission.get(), HttpStatus.OK); //201
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+        }
     }
 }

@@ -4,6 +4,8 @@ import com.google.gson.internal.$Gson$Preconditions;
 import it.qbteam.api.FavoriteApi;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
+import it.qbteam.model.Permission;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 
 import it.qbteam.service.FavoriteService;
@@ -22,12 +24,25 @@ import java.util.Optional;
 public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
 
     private FavoriteService favoriteService;
+    private AdministratorService administratorService;
 
     @Autowired
     public FavoriteApiController(NativeWebRequest request, AuthenticationService service) {
         super(request, service);
     }
-    
+
+    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
+        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = administratorService.getPermissionList(authenticationProviderUserId(accessToken).get());
+
+            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
+
+            return permission;
+        } else {
+            return Optional.empty();
+        }
+    }
+
     /**
      * POST /favorite/addfavorite : Adds a new organization to the user&#39;s favorite organization list.
      * Adds a new organization to the user&#39;s favorite organization list. If the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker&#39;s account. Only app users can access this end-point.
@@ -44,10 +59,12 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
         }
+        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+            return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
+        }
         if(!favoriteService.isPresent(favorite)){
             return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
         }
-        // controllare il binding tra user e organization 403
         Optional<Favorite> favouriteInsertion = favoriteService.addFavoriteOrganization(favorite);
         if(favouriteInsertion.isPresent())
         {
@@ -77,6 +94,10 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
             return new ResponseEntity<List<Organization>>(HttpStatus.UNAUTHORIZED); //401
         }
         List<Organization> returnList= favoriteService.getFavoriteOrganizationList(userId);
+
+        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+            return new ResponseEntity<List<Organization>>(HttpStatus.FORBIDDEN); //403
+        }
         if(returnList.isEmpty())
         {
             return new ResponseEntity<List<Organization>>(HttpStatus.NO_CONTENT); //204
@@ -84,7 +105,6 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         else{
             return new ResponseEntity<List<Organization>>(HttpStatus.OK); // 200
         }
-        //return new ResponseEntity<List<Organization>>(HttpStatus.FORBIDDEN) // 403;
 
     }
 
@@ -108,7 +128,9 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         if (!favoriteService.isPresent(favorite)){
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST); //400
         }
-
+        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+            return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
+        }
         favoriteService.removeFavoriteOrganization(favorite);
         return new ResponseEntity<Void>(HttpStatus.OK); //200
 
