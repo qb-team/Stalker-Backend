@@ -1,11 +1,13 @@
 package it.qbteam.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.dao.TransientDataAccessException;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -16,9 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
-// import it.qbteam.movementtracker.publisher.MovementPublisher;
-// import it.qbteam.movementtracker.publisher.OrganizationMovementRedisPublisher;
-// import it.qbteam.movementtracker.publisher.PlaceMovementRedisPublisher;
 import it.qbteam.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
 import it.qbteam.movementtracker.subscriber.PlaceMovementRedisSubscriber;
 
@@ -66,8 +65,8 @@ public class RedisConfig {
      * @return active Redis connection factory
      */
     @Bean
-    public RedisConnectionFactory connectionFactory(final RedisStandaloneConfiguration redisConfig) {
-        LettuceConnectionFactory connFactory = new LettuceConnectionFactory(redisConfig);
+    public RedisConnectionFactory connectionFactory() {
+        LettuceConnectionFactory connFactory = new LettuceConnectionFactory(redisConfiguration());
         connFactory.afterPropertiesSet();
         return connFactory;
     }
@@ -78,10 +77,10 @@ public class RedisConfig {
      * @return template for reading/writing with redis value operations
      */
     @Bean(name="presenceCounterTemplate")
-    public RedisTemplate<String,Integer> presenceCounterTemplate(final RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,Integer> presenceCounterTemplate(/*final RedisConnectionFactory connectionFactory*/) {
         RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
 
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(connectionFactory());
         // key values will be organization:organizationId or place:placeId
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         // value values will be integers
@@ -93,9 +92,9 @@ public class RedisConfig {
     }
     
     @Bean(name="organizationMovementTemplate")
-    public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate(final RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate(/*final RedisConnectionFactory connectionFactory*/) {
         RedisTemplate<String,OrganizationMovement> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(connectionFactory());
         // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -105,9 +104,9 @@ public class RedisConfig {
     }
 
     @Bean(name="placeMovementTemplate")
-    public RedisTemplate<String,PlaceMovement> placeMovementTemplate(final RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,PlaceMovement> placeMovementTemplate(/*final RedisConnectionFactory connectionFactory*/) {
         RedisTemplate<String,PlaceMovement> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(connectionFactory());
         // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -148,21 +147,21 @@ public class RedisConfig {
 
     @Bean(name="organizationMovementSubscriberContainer")
 	public RedisMessageListenerContainer organizationMovementSubscriberContainer(
-        final RedisConnectionFactory connectionFactory,
-        @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
-        @Qualifier("organizationMovementTopic") final ChannelTopic topic
+        // final RedisConnectionFactory connectionFactory,
+        // @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
+        // @Qualifier("organizationMovementTopic") final ChannelTopic topic
     ) {
-        return createContainer(connectionFactory, listenerAdapter, topic);
+        return createContainer(connectionFactory(), organizationMovementSubscriber(), organizationMovementTopic());
     }
     
-    // @Bean(name="placeMovementSubscriberContainer")
-	// public RedisMessageListenerContainer placeMovementSubscriberContainer(
-    //     final RedisConnectionFactory connectionFactory,
-    //     @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
-    //     @Qualifier("placeMovementTopic") final ChannelTopic topic
-    // ) {
-	// 	return createContainer(connectionFactory, listenerAdapter, topic);
-    // }
+    @Bean(name="placeMovementSubscriberContainer")
+	public RedisMessageListenerContainer placeMovementSubscriberContainer(
+        // final RedisConnectionFactory connectionFactory,
+        // @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
+        // @Qualifier("placeMovementTopic") final ChannelTopic topic
+    ) {
+		return createContainer(connectionFactory(), placeMovementSubscriber(), placeMovementTopic());
+    }
     
     private RedisMessageListenerContainer createContainer(
         final RedisConnectionFactory connectionFactory,
@@ -171,7 +170,8 @@ public class RedisConfig {
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
-		container.addMessageListener(listenerAdapter, topic);
+        container.addMessageListener(listenerAdapter, topic);
+        container.afterPropertiesSet();
 		return container;
     }
 }
