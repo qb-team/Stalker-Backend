@@ -4,7 +4,10 @@ import it.qbteam.api.ReportApi;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.model.TimePerUserReport;
 
+import it.qbteam.service.OrganizationService;
+import it.qbteam.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -12,6 +15,9 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 public class ReportApiController extends StalkerBaseController implements ReportApi {
+
+    private ReportService reportService;
+    private OrganizationService organizationService;
 
     @Autowired
     public ReportApiController(NativeWebRequest request, AuthenticationService service) {
@@ -30,6 +36,22 @@ public class ReportApiController extends StalkerBaseController implements Report
      */
     @Override
     public ResponseEntity<List<TimePerUserReport>> getTimePerUserReport(@Min(1L) Long organizationId) {
-        return null;
+        if(!getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+        }
+        if(isAuthenticatedAsUser(getAccessToken().get())){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
+        if(!organizationService.getOrganization(organizationId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+        }
+        List<TimePerUserReport> returnedList= reportService.getTimePerUserReport(organizationId);
+        if (returnedList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+        }
+        else
+        {
+            return new ResponseEntity<List<TimePerUserReport>>(returnedList, HttpStatus.OK); // 201
+        }
     }
 }
