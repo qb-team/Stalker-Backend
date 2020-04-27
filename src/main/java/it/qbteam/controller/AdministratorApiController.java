@@ -84,6 +84,9 @@ public class AdministratorApiController extends StalkerBaseController implements
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
         }
+        if(adminService.getAdministratorListOfOrganization(permission.getOrganizationId()).stream().filter(id -> id.getOrgAuthServerId().equals(permission.getOrgAuthServerId())).findAny().isPresent()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
         Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
@@ -144,20 +147,16 @@ public class AdministratorApiController extends StalkerBaseController implements
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<String> authenticatedAdministratorId = authenticationProviderUserId(getAccessToken().get());
-        if(authenticatedAdministratorId.isPresent() && authenticatedAdministratorId.get()== administratorId){
-            List<Permission> returnedListOfPermission = adminService.getPermissionList(administratorId);
-            if (returnedListOfPermission.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
-            }
-            else
-            {
-                return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
-            }
-        }
-        else
-        {
+        if(!isAuthenticatedAsAdministrator(getAccessToken().get()) && authenticationProviderUserId(getAccessToken().get()).get()!=administratorId){
+
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
+        List<Permission> returnedListOfPermission = adminService.getPermissionList(administratorId);
+        if (returnedListOfPermission.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+        }
+        else {
+            return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
         }
     }
 
@@ -179,6 +178,9 @@ public class AdministratorApiController extends StalkerBaseController implements
         Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent() || adminService.getPermissionList(permission.getAdministratorId()).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         adminService.unbindAdministratorFromOrganization(permission);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
