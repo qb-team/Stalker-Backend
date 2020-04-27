@@ -184,7 +184,7 @@ containers/mysql-container/data/*
 !containers/mysql-container/data/.gitkeep
 containers/redis-container/data/*
 !containers/redis-container/data/.gitkeep
-.env
+*.env
 
 ### Firebase ###
 firebase*.json
