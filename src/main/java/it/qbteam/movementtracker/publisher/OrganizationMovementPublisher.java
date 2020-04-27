@@ -1,4 +1,6 @@
 package it.qbteam.movementtracker.publisher;
 
-public abstract class OrganizationMovementPublisher implements MovementPublisher<String> {
+import it.qbteam.model.OrganizationMovement;
+
+public abstract class OrganizationMovementPublisher implements MovementPublisher<OrganizationMovement> {
 }

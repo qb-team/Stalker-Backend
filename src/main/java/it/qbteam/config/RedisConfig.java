@@ -16,9 +16,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
-import it.qbteam.movementtracker.publisher.MovementPublisher;
-import it.qbteam.movementtracker.publisher.OrganizationMovementRedisPublisher;
-import it.qbteam.movementtracker.publisher.PlaceMovementRedisPublisher;
+// import it.qbteam.movementtracker.publisher.MovementPublisher;
+// import it.qbteam.movementtracker.publisher.OrganizationMovementRedisPublisher;
+// import it.qbteam.movementtracker.publisher.PlaceMovementRedisPublisher;
 import it.qbteam.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
 import it.qbteam.movementtracker.subscriber.PlaceMovementRedisSubscriber;
 
@@ -67,7 +67,9 @@ public class RedisConfig {
      */
     @Bean
     public RedisConnectionFactory connectionFactory(final RedisStandaloneConfiguration redisConfig) {
-        return new LettuceConnectionFactory(redisConfig);
+        LettuceConnectionFactory connFactory = new LettuceConnectionFactory(redisConfig);
+        connFactory.afterPropertiesSet();
+        return connFactory;
     }
     
     /**
@@ -91,8 +93,8 @@ public class RedisConfig {
     }
     
     @Bean(name="organizationMovementTemplate")
-    public RedisTemplate<String,String> organizationMovementTemplate(final RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate(final RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String,OrganizationMovement> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
@@ -103,8 +105,8 @@ public class RedisConfig {
     }
 
     @Bean(name="placeMovementTemplate")
-    public RedisTemplate<String,String> placeMovementTemplate(final RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String,PlaceMovement> placeMovementTemplate(final RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String,PlaceMovement> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
@@ -124,15 +126,15 @@ public class RedisConfig {
         return new ChannelTopic("stalker-backend-movement-place");
     }
 
-    @Bean
-    public MovementPublisher<String> organizationMovementPublisher(@Qualifier("organizationMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
-        return new OrganizationMovementRedisPublisher(template, channel);
-    }
+    // @Bean
+    // public MovementPublisher<String> organizationMovementPublisher(@Qualifier("organizationMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
+    //     return new OrganizationMovementRedisPublisher(template, channel);
+    // }
 
-    @Bean
-    public MovementPublisher<String> placeMovementPublisher(@Qualifier("placeMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
-        return new PlaceMovementRedisPublisher(template, channel);
-    }
+    // @Bean
+    // public MovementPublisher<String> placeMovementPublisher(@Qualifier("placeMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
+    //     return new PlaceMovementRedisPublisher(template, channel);
+    // }
     
     @Bean(name="organizationMovementSubscriber")
     public MessageListenerAdapter organizationMovementSubscriber() {
@@ -144,7 +146,7 @@ public class RedisConfig {
         return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(), "onMessage");
     }
 
-    @Bean
+    @Bean(name="organizationMovementSubscriberContainer")
 	public RedisMessageListenerContainer organizationMovementSubscriberContainer(
         final RedisConnectionFactory connectionFactory,
         @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
@@ -153,14 +155,14 @@ public class RedisConfig {
         return createContainer(connectionFactory, listenerAdapter, topic);
     }
     
-    @Bean
-	public RedisMessageListenerContainer placeMovementSubscriberContainer(
-        final RedisConnectionFactory connectionFactory,
-        @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
-        @Qualifier("placeMovementTopic") final ChannelTopic topic
-    ) {
-		return createContainer(connectionFactory, listenerAdapter, topic);
-    }
+    // @Bean(name="placeMovementSubscriberContainer")
+	// public RedisMessageListenerContainer placeMovementSubscriberContainer(
+    //     final RedisConnectionFactory connectionFactory,
+    //     @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
+    //     @Qualifier("placeMovementTopic") final ChannelTopic topic
+    // ) {
+	// 	return createContainer(connectionFactory, listenerAdapter, topic);
+    // }
     
     private RedisMessageListenerContainer createContainer(
         final RedisConnectionFactory connectionFactory,
