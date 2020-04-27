@@ -1,6 +1,5 @@
 package it.qbteam.controller;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import it.qbteam.api.FavoriteApi;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +94,10 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         List<Organization> returnList= favoriteService.getFavoriteOrganizationList(userId);
 
         if(isAuthenticatedAsAdministrator(getAccessToken().get())){
-            return new ResponseEntity<List<Organization>>(HttpStatus.FORBIDDEN); //403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
+        if(authenticationProviderUserId(getAccessToken().get()).get()!=userId){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
         if(returnList.isEmpty())
         {
@@ -126,7 +127,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
             return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED); //401
         }
         if (!favoriteService.isPresent(favorite)){
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST); //400
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //400 //404g
         }
         if(isAuthenticatedAsAdministrator(getAccessToken().get())){
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
