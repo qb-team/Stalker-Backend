@@ -36,9 +36,9 @@ import it.qbteam.repository.sql.PermissionRepository;
 
 @RunWith(SpringRunner.class)
 // @ExtendWith(SpringExtension.class)
-// @ContextConfiguration(classes = FirebaseAuthAdapterTest.AuthenticationServiceConfiguration.class)
+// @ContextConfiguration(classes = AuthenticationServiceImplTest.AuthenticationServiceConfiguration.class)
 // @SpringBootTest
-public class FirebaseAuthAdapterTest {
+public class AuthenticationServiceImplTest {
     @MockBean
     private FirebaseAuth firebaseAuth;
 
@@ -51,13 +51,13 @@ public class FirebaseAuthAdapterTest {
     @TestConfiguration
     static public class AuthenticationServiceConfiguration {
         @Bean
-        FirebaseAuthAdapter authenticationService(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
-            return new FirebaseAuthAdapter(firebaseAuth, permissionRepository);
+        AuthenticationServiceImpl authenticationService(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
+            return new AuthenticationServiceImpl(firebaseAuth, permissionRepository);
         }
     }
     
     @Autowired
-    private FirebaseAuthAdapter authenticationService;
+    private AuthenticationServiceImpl authenticationService;
 
     private String randomToken;
 
@@ -67,7 +67,7 @@ public class FirebaseAuthAdapterTest {
 
     private UserRecord userRecord;
 
-    public FirebaseAuthAdapterTest() {}
+    public AuthenticationServiceImplTest() {}
 
     // @BeforeEach
     @Before

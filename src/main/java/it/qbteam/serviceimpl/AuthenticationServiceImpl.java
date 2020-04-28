@@ -1,12 +1,8 @@
 package it.qbteam.serviceimpl;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Map.Entry;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -23,7 +19,7 @@ import it.qbteam.repository.sql.PermissionRepository;
 import it.qbteam.service.AuthenticationService;
 
 @Service
-public class FirebaseAuthAdapter implements AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final String INVALID_TOKEN_EXCEPTION_MESSAGE = "Token is not valid or expired.";
 
@@ -35,7 +31,7 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     private PermissionRepository permissionRepo;
 
     @Autowired
-    public FirebaseAuthAdapter(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
+    public AuthenticationServiceImpl(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
         this.firebaseAdaptee = firebaseAuth;
         this.permissionRepo = permissionRepository;
     }
