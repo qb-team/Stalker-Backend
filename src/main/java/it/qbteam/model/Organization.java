@@ -79,9 +79,9 @@ public class Organization   {
    * How an user who added to its favorites the organization can be tracked inside the organization's trackingArea and its places.
    */
   public enum TrackingModeEnum {
-    AUTHENTICATED("authenticated"),
+    authenticated("authenticated"),
     
-    ANONYMOUS("anonymous");
+    anonymous("anonymous");
 
     private String value;
 
