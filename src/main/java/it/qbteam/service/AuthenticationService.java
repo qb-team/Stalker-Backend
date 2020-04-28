@@ -14,37 +14,22 @@ import it.qbteam.exception.AuthenticationException;
  */
 public interface AuthenticationService {
     /**
-     * Key for claims map in the authentication service
-     */
-    public static final String USER = "stalker_permission_user";
-
-    /**
-     * Key for claims map in the authentication service.
-     */
-    public static final String ADMIN = "stalker_permission_admin";
-
-    /**
-     * Given a map of ({@code String},{@code Boolean}) pairs in which {@code String}
-     * keys are considered to be only {@code USER} or {@code ADMIN} sets the claims
-     * of the user/admin owner of the {@code accessToken}.
+     * Returns true if the user is a web-app administrator.
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @param claims      claims to set to the user requested by the client
-     * @return Boolean {@code true} if {@code Permission} data got stored in the
-     *         authentication service, otherwise {@code false}. It returns
-     *         {@code false} even if {@code accessToken} was not valid
+     * @return true if the user is a web-app administrator., false otherwise
      */
-    public Boolean setClaims(String accessToken, Map<String, Boolean> claims) throws AuthenticationException;
+    public Boolean isWebAppAdministrator(String accessToken) throws AuthenticationException;
 
     /**
-     * Returns the claims of the user.
+     * Returns true if the user is an app user.
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @return Map<String, Boolean> claims of the user requested by the client
+     * @return true if the user is an app user, false otherwise
      */
-    public Map<String, Boolean> getClaims(String accessToken) throws AuthenticationException;
+    public Boolean isAppUser(String accessToken) throws AuthenticationException;
 
     /**
      * Creates a new user on the system with the given email and password. Depending

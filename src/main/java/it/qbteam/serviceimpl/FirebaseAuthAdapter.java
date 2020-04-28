@@ -2,6 +2,8 @@ package it.qbteam.serviceimpl;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.qbteam.exception.AuthenticationException;
+import it.qbteam.model.Permission;
+import it.qbteam.repository.sql.PermissionRepository;
 import it.qbteam.service.AuthenticationService;
 
 @Service
@@ -28,9 +32,12 @@ public class FirebaseAuthAdapter implements AuthenticationService {
      */
     private FirebaseAuth firebaseAdaptee;
 
+    private PermissionRepository permissionRepo;
+
     @Autowired
-    public FirebaseAuthAdapter(FirebaseAuth firebaseAuth) {
+    public FirebaseAuthAdapter(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
         this.firebaseAdaptee = firebaseAuth;
+        this.permissionRepo = permissionRepository;
     }
 
     /**
@@ -51,6 +58,44 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         } catch (FirebaseAuthException exception) {
             return false;
         }
+    }
+
+        /**
+     * Returns true if the user is a web-app administrator.
+     * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
+     * @return true if the user is a web-app administrator., false otherwise
+     */
+    public Boolean isWebAppAdministrator(String accessToken) throws AuthenticationException {
+        if (!checkToken(accessToken))
+            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+
+        final String administratorId = getFirebaseUser(accessToken).get().getUid();
+        List<Permission> adminList = new LinkedList<>();
+        
+        permissionRepo.findByAdministratorId(administratorId).forEach(adminList::add);
+
+        return !adminList.isEmpty();
+    }
+
+    /**
+     * Returns true if the user is an app user.
+     * 
+     * @param accessToken access token returned by the authentication provider in
+     *                    the client application
+     * @return true if the user is an app user, false otherwise
+     */
+    public Boolean isAppUser(String accessToken) throws AuthenticationException {
+        if (!checkToken(accessToken))
+            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+
+        final String administratorId = getFirebaseUser(accessToken).get().getUid();
+        List<Permission> adminList = new LinkedList<>();
+        
+        permissionRepo.findByAdministratorId(administratorId).forEach(adminList::add);
+
+        return adminList.isEmpty();
     }
 
     /**
@@ -83,29 +128,6 @@ public class FirebaseAuthAdapter implements AuthenticationService {
     }
 
     /**
-     * Returns the claims of the user.
-     * 
-     * @param accessToken access token returned by the authentication provider in
-     *                    the client application
-     * @return Map<String, Boolean> claims of the user requested by the client
-     */
-    @Override
-    public Map<String, Boolean> getClaims(String accessToken) throws AuthenticationException {
-        if (!checkToken(accessToken))
-            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
-
-        // getFirebaseUser could return Optional.empty() by its definition but it's impossibile by how this method works.
-        // Internally, checkToken and getFirebaseUser call the same method FirebaseAuth#verifyIdToken
-        final FirebaseToken userData = getFirebaseUser(accessToken).get();
-
-        final Map<String, Boolean> m = new HashMap<>();
-
-        userData.getClaims().forEach((key, value) -> m.put(key, Boolean.parseBoolean(value.toString())));
-
-        return m;
-    }
-
-    /**
      * Returns the userId related to the email address.
      * 
      * @param accessToken access token returned by the authentication provider in
@@ -126,41 +148,6 @@ public class FirebaseAuthAdapter implements AuthenticationService {
             return Optional.of(userRecord.getUid());
         } catch (FirebaseAuthException | IllegalArgumentException exception) {
             return Optional.empty();
-        }
-    }
-
-    /**
-     * Given a map of ({@code String},{@code Boolean}) pairs in which {@code String}
-     * keys are considered to be only {@code USER} or {@code ADMIN} sets the claims
-     * of the user/admin owner of the {@code accessToken}.
-     * 
-     * @param accessToken access token returned by the authentication provider in
-     *                    the client application
-     * @param claims      claims to set to the user requested by the client
-     * @return Boolean {@code true} if {@code Permission} data got stored in the
-     *         authentication service, otherwise {@code false}. It returns
-     *         {@code false} even if {@code accessToken} was not valid
-     */
-    @Override
-    public Boolean setClaims(String accessToken, Map<String, Boolean> claims) throws AuthenticationException {
-        if (!checkToken(accessToken))
-            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
-
-        final FirebaseToken userData = getFirebaseUser(accessToken).get();
-
-        try {
-            if (checkClaimsValidity(claims)) {
-                final Map<String, Object> m = new HashMap<>();
-
-                m.forEach(m::put);
-
-                firebaseAdaptee.setCustomUserClaims(userData.getUid(), m);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (FirebaseAuthException | IllegalArgumentException exc) {
-            return false;
         }
     }
 
@@ -195,27 +182,6 @@ public class FirebaseAuthAdapter implements AuthenticationService {
         } catch (FirebaseAuthException exc) {
             return Optional.empty();
         }
-    }
-
-    /**
-     * Checks whether the claims map given is correct.
-     * 
-     * @param claims is a map of pairs (String, Object)
-     * @return true if the map is valid, false if it is not
-     */
-    private Boolean checkClaimsValidity(Map<String, Boolean> claims) {
-        Iterator<Entry<String, Boolean>> entryIterator = claims.entrySet().iterator();
-        Boolean invalidEntryExists = false;
-
-        while (!invalidEntryExists && entryIterator.hasNext()) {
-            final Entry<String, Boolean> e = entryIterator.next();
-            final String key = e.getKey();
-            if (!key.equals(ADMIN) && !key.equals(USER)) {
-                invalidEntryExists = true;
-            }
-        }
-
-        return !invalidEntryExists;
     }
 
 }

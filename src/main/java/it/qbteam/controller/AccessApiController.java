@@ -38,7 +38,7 @@ public class AccessApiController extends StalkerBaseController implements Access
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
             List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
@@ -66,7 +66,7 @@ public class AccessApiController extends StalkerBaseController implements Access
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAuthenticatedAsUser(getAccessToken().get())) {
+        if(isAppUser(getAccessToken().get())) {
             List<OrganizationAccess> accessList = accessService.getAnonymousAccessListInOrganization(exitTokens, organizationId);
             if(!accessList.isEmpty()) {
                 return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
@@ -96,7 +96,7 @@ public class AccessApiController extends StalkerBaseController implements Access
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAuthenticatedAsUser(getAccessToken().get())) {
+        if(isAppUser(getAccessToken().get())) {
             List<PlaceAccess> accessList = accessService.getAnonymousAccessListInPlace(exitTokens, placeId);
             if(!accessList.isEmpty()) {
                 return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
@@ -126,11 +126,11 @@ public class AccessApiController extends StalkerBaseController implements Access
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAuthenticatedAsUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+        if(isAppUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
-        if(isAuthenticatedAsAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
+        if(isWebAppAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -160,7 +160,7 @@ public class AccessApiController extends StalkerBaseController implements Access
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAuthenticatedAsUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+        if(isAppUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -170,7 +170,7 @@ public class AccessApiController extends StalkerBaseController implements Access
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if(isAuthenticatedAsAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
+        if(isWebAppAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 

@@ -30,7 +30,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
             List<Permission> adminPermissions = administratorService.getPermissionList(authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
@@ -57,7 +57,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
         }
-        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+        if(isWebAppAdministrator(getAccessToken().get())){
             return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
         }
         if(!favoriteService.isPresent(favorite)){
@@ -93,7 +93,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         }
         List<Organization> returnList= favoriteService.getFavoriteOrganizationList(userId);
 
-        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+        if(isWebAppAdministrator(getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
         if(authenticationProviderUserId(getAccessToken().get()).get()!=userId){
@@ -129,7 +129,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         if (!favoriteService.isPresent(favorite)){
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //400 //404g
         }
-        if(isAuthenticatedAsAdministrator(getAccessToken().get())){
+        if(isWebAppAdministrator(getAccessToken().get())){
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
         }
         favoriteService.removeFavoriteOrganization(favorite);

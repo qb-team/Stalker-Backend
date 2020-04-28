@@ -50,24 +50,22 @@ public abstract class StalkerBaseController {
         }
     }
 
-    private Boolean isAuthenticatedAs(String accessToken, String systemActor) {
+    protected Boolean isAppUser(String accessToken) {
         try {
-            final Map<String, Boolean> claims = authenticationService.getClaims(accessToken);
-            // if there is a pair with key = systemActor then the user can either be authenticated as "systemActor" or not
-            // if there is not then the user is simply considered not authenticated
-            return claims.containsKey(systemActor) && claims.get(systemActor);
+            return authenticationService.isAppUser(accessToken);
         } catch(AuthenticationException exc) {
             System.out.println("Thrown AuthenticationException: " + exc.toString());
             return false;
         }
     }
-
-    protected Boolean isAuthenticatedAsUser(String accessToken) {
-        return isAuthenticatedAs(accessToken, AuthenticationService.USER);
-    }
     
-    protected Boolean isAuthenticatedAsAdministrator(String accessToken) {
-        return isAuthenticatedAs(accessToken, AuthenticationService.ADMIN);
+    protected Boolean isWebAppAdministrator(String accessToken) {
+        try {
+            return authenticationService.isWebAppAdministrator(accessToken);
+        } catch(AuthenticationException exc) {
+            System.out.println("Thrown AuthenticationException: " + exc.toString());
+            return false;
+        }
     }
 
     protected Optional<String> authenticationProviderUserId(String accessToken) {

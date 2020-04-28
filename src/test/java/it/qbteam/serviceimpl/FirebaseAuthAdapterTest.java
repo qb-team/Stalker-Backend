@@ -14,23 +14,36 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+// import org.springframework.test.context.ContextConfiguration;
+// import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.exception.AuthenticationException;
+import it.qbteam.repository.sql.PermissionRepository;
 
 @RunWith(SpringRunner.class)
+// @ExtendWith(SpringExtension.class)
+// @ContextConfiguration(classes = FirebaseAuthAdapterTest.AuthenticationServiceConfiguration.class)
+// @SpringBootTest
 public class FirebaseAuthAdapterTest {
     @MockBean
     private FirebaseAuth firebaseAuth;
+
+    @MockBean
+    private PermissionRepository permissionRepo;
 
     @MockBean
     private FirebaseToken firebaseToken;
@@ -38,8 +51,8 @@ public class FirebaseAuthAdapterTest {
     @TestConfiguration
     static public class AuthenticationServiceConfiguration {
         @Bean
-        FirebaseAuthAdapter authenticationService(FirebaseAuth firebaseAuth) {
-            return new FirebaseAuthAdapter(firebaseAuth);
+        FirebaseAuthAdapter authenticationService(FirebaseAuth firebaseAuth, PermissionRepository permissionRepository) {
+            return new FirebaseAuthAdapter(firebaseAuth, permissionRepository);
         }
     }
     
@@ -54,8 +67,12 @@ public class FirebaseAuthAdapterTest {
 
     private UserRecord userRecord;
 
+    public FirebaseAuthAdapterTest() {}
+
+    // @BeforeEach
     @Before
     public void setUp() throws FirebaseAuthException {
+        MockitoAnnotations.initMocks(this);
         randomToken = Double.valueOf(new Random().nextDouble()).toString();
         // Mocking FirebaseAuth#verifyIdToken
         // CASE 1: accessToken is null
@@ -74,31 +91,23 @@ public class FirebaseAuthAdapterTest {
     }
     
     @Test(expected = AuthenticationException.class)
+    // @Test
     public void testCreateUserThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        final String token = ""; // token can also be null
-        // expected can either be true or false
-        Assert.assertEquals(false, authenticationService.createUser(token, "email", "password"));
+        // Assertions.assertThrows(AuthenticationException.class, () -> {
+            final String token = ""; // token can also be null
+            // expected can either be true or false
+            Assertions.assertEquals(false, authenticationService.createUser(token, "email", "password"));
+        // } );
     }
 
     @Test(expected = AuthenticationException.class)
-    public void testSetClaimsThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        final String token = null; // token can also be empty
-        // expected can either be true or false
-        Assert.assertEquals(true, authenticationService.setClaims(token, new HashMap<>()));
-    }
-
-    @Test(expected = AuthenticationException.class)
-    public void testGetClaimsThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        final String token = ""; // token can also be null
-        // expected can be whatever map or object
-        Assert.assertEquals(new HashMap<>(), authenticationService.getClaims(token));
-    }
-
-    @Test(expected = AuthenticationException.class)
+    // @Test
     public void testGetUserIdByEmailThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        final String token = ""; // token can also be null
-        // expected can be whatever string
-        Assert.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
+        // Assertions.assertThrows(AuthenticationException.class, () -> {
+            final String token = ""; // token can also be null
+            // expected can be whatever string
+            Assertions.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
+        // });
     }
 
     @Test
@@ -106,23 +115,23 @@ public class FirebaseAuthAdapterTest {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(validRequest)).thenReturn(userRecord);
         
-        Assert.assertEquals(true, authenticationService.createUser(randomToken, "email@email.it", "password"));
+        Assertions.assertEquals(true, authenticationService.createUser(randomToken, "email@email.it", "password"));
     }
 
     @Test
     public void testCreateUserDoesNotCreateUserRecordBecauseOfInvalidMail() throws AuthenticationException, FirebaseAuthException {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(invalidRequest)).thenReturn(userRecord);
-        
-        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email", "password"));
+
+        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email", "password"));
     }
 
     @Test
     public void testCreateUserDoesNotCreateUserRecordBecauseOfInvalidPassword() throws AuthenticationException, FirebaseAuthException {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(validRequest)).thenReturn(userRecord);
-        
-        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "psw"));
+
+        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "psw"));
     }
 
     @Test
@@ -132,17 +141,8 @@ public class FirebaseAuthAdapterTest {
         // Mockito.doThrow(FirebaseAuthException.class).when(firebaseAuth).createUser(null);
 
         // Mockito.doThrow(FirebaseAuthException.class).when(firebaseAuth.createUser(invalidRequest));>
-        
-        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "password"));
-    }
 
-    @Test
-    public void testGetClaimsMapReturned() throws AuthenticationException {
-        FirebaseToken userData = Mockito.mock(FirebaseToken.class);
-
-        doReturn(new HashMap<>()).when(userData).getClaims();
-
-        Assert.assertEquals(new HashMap<>(), authenticationService.getClaims(randomToken));
+        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "password"));
     }
 
     @Test
@@ -150,23 +150,23 @@ public class FirebaseAuthAdapterTest {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
         Mockito.when(userRecord.getUid()).thenReturn("uid");
 
-        Assert.assertEquals(true, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
-        Assert.assertEquals("uid", authenticationService.getUserIdByEmail(randomToken, "email@email.it").get());
+        Assertions.assertEquals(true, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
+        Assertions.assertEquals("uid", authenticationService.getUserIdByEmail(randomToken, "email@email.it").get());
     }
 
     @Test
     public void testGetUserIdByEmailNotValidRequest() throws AuthenticationException, FirebaseAuthException {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenThrow(FirebaseAuthException.class);
 
-        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
+        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
     }
 
     @Test
     public void testGetUserIdByEmailNullOrEmptyMail() throws AuthenticationException, FirebaseAuthException {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
 
-        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "").isPresent());
-        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, null).isPresent());
+        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "").isPresent());
+        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, null).isPresent());
     }
 
     @Test
@@ -174,56 +174,6 @@ public class FirebaseAuthAdapterTest {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
         Mockito.when(userRecord.getUid()).thenReturn("uid");
 
-        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email").isPresent());
-    }
-
-    @Test
-    public void testSetClaimsEmptyMapSet() throws AuthenticationException, FirebaseAuthException {
-        FirebaseToken userData = Mockito.mock(FirebaseToken.class);
-        Mockito.when(userData.getUid()).thenReturn("uid");
-        doNothing().when(firebaseAuth).setCustomUserClaims("uid", new HashMap<>());
-        
-        Assert.assertEquals(true, authenticationService.setClaims(randomToken, new HashMap<>()));
-    }
-
-    @Test
-    public void testSetClaimsMapSet() throws AuthenticationException, FirebaseAuthException {
-        Map<String, Boolean> m1 = new HashMap<>();
-        Map<String, Object> m2 = new HashMap<>();
-
-        m1.put(FirebaseAuthAdapter.ADMIN, true);
-        m1.put(FirebaseAuthAdapter.USER, false);
-
-        m2.put(FirebaseAuthAdapter.ADMIN, true);
-        m2.put(FirebaseAuthAdapter.USER, false);
-
-        FirebaseToken userData = Mockito.mock(FirebaseToken.class);
-        Mockito.when(userData.getUid()).thenReturn("uid");
-        doNothing().when(firebaseAuth).setCustomUserClaims("uid", m2);
-
-        Assert.assertEquals(true, authenticationService.setClaims(randomToken, m1));
-    }
-
-    @Test
-    public void testSetClaimsMapNotSetInvalidMap() throws AuthenticationException, FirebaseAuthException {
-        Map<String, Boolean> m1 = new HashMap<>();
-        Map<String, Object> m2 = new HashMap<>();
-
-        m1.put("wrong_key", true);
-
-        m2.put("wrong_key", true);
-
-        FirebaseToken userData = Mockito.mock(FirebaseToken.class);
-        Mockito.when(userData.getUid()).thenReturn("uid");
-        doNothing().when(firebaseAuth).setCustomUserClaims("uid", m2);
-
-        Assert.assertEquals(false, authenticationService.setClaims(randomToken, m1));
-    }
-
-    @Test
-    public void testSetClaimsMapNotSetExceptionThrown() throws AuthenticationException, FirebaseAuthException {
-        doThrow(FirebaseAuthException.class).when(firebaseAuth).setCustomUserClaims(null, new HashMap<>());
-        
-        Assert.assertEquals(false, authenticationService.setClaims(randomToken, new HashMap<>()));
+        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email").isPresent());
     }
 }

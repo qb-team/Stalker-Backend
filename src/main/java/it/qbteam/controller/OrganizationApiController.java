@@ -34,7 +34,7 @@ public class OrganizationApiController extends StalkerBaseController implements 
     }
     
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
             List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
@@ -83,7 +83,7 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAuthenticatedAsUser(getAccessToken().get())) {
+        if(isAppUser(getAccessToken().get())) {
             List<Organization> orgList = orgService.getOrganizationList();
             if(!orgList.isEmpty()) {
                 return new ResponseEntity<>(orgList, HttpStatus.OK); // 200

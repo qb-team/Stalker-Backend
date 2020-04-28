@@ -39,7 +39,7 @@ public class ReportApiController extends StalkerBaseController implements Report
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(isAuthenticatedAsUser(getAccessToken().get())){
+        if(isAppUser(getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
         if(!organizationService.getOrganization(organizationId).isPresent()){

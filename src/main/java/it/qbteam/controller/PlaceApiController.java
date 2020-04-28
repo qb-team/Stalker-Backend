@@ -31,7 +31,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isAuthenticatedAsAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
+        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
             List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
