@@ -2,7 +2,7 @@ version: '3'
 services:
   mysql_engine:
     container_name: stalker-rdbms
-    build: ./containers/mysql-container
+    image: mysql:8.0.20
     env_file:
       - .env
     environment:
@@ -26,8 +26,10 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
   redis_engine:
     container_name: stalker-nosql
-    build: ./containers/redis-container
+    image: redis:5.0.9
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     ports:
       - "${REDIS_PRT}:6379"
     volumes:
+      - ./containers/redis-container/redis.conf:/usr/local/etc/redis/redis.conf
       - ./containers/redis-container/data:/data
