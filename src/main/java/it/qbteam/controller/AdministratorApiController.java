@@ -24,8 +24,9 @@ public class AdministratorApiController extends StalkerBaseController implements
     private OrganizationService organizationService;
 
     @Autowired
-    public AdministratorApiController(NativeWebRequest request, AuthenticationService service) {
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService) {
         super(request, service);
+        this.adminService = admininistratorService;
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
