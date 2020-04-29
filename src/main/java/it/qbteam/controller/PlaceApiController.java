@@ -163,7 +163,6 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
         } else { 
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        // return new ResponseEntity<>(HttpStatus.OK); // 403
         // manca il 404
     }
 }
