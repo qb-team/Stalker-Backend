@@ -10,6 +10,7 @@ import it.qbteam.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
+@Controller
 public class PlaceApiController extends StalkerBaseController implements PlaceApi {
 
     private PlaceService placeService;
@@ -141,7 +143,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      * @return Place list of organization returned successfully. (status code 200)
      * or Place list of organization is empty. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
-     * or Administrators who do not manage the organization cannot access this end-point. Nothing gets returned. (status code 403)
+     * or Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned. (status code 403)
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
@@ -151,17 +153,17 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
 
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
-        if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
-        } else {
+        if(isAppUser(getAccessToken().get()) || permission.isPresent()) { // 2 is Manager level
             List<Place> places = placeService.getPlaceListOfOrganization(organizationId);
             if(!places.isEmpty()) {
                 return new ResponseEntity<>(places, HttpStatus.OK); // 200
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
-            }
+            } 
+        } else { 
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-
+        // return new ResponseEntity<>(HttpStatus.OK); // 403
         // manca il 404
     }
 }

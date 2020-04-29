@@ -9,11 +9,13 @@ import it.qbteam.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.constraints.Min;
 import java.util.List;
 
+@Controller
 public class ReportApiController extends StalkerBaseController implements ReportApi {
 
     private ReportService reportService;

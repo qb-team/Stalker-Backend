@@ -87,7 +87,7 @@ public interface PlaceApi {
         @ApiResponse(code = 200, message = "Place list of organization returned successfully.", response = Place.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "Place list of organization is empty. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators who do not manage the organization cannot access this end-point. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/place/organization/{organizationId}",
         produces = { "application/json" }, 

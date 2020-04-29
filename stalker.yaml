@@ -517,7 +517,7 @@ paths:
         "401":
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "403":
-          description: Administrators who do not manage the organization cannot access this end-point. Nothing gets returned.
+          description: Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/place":

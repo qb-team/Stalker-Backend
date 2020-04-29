@@ -1,7 +1,6 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.AdministratorApi;
-import it.qbteam.model.Organization;
 import it.qbteam.model.Permission;
 import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
@@ -10,14 +9,15 @@ import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
+@Controller
 public class AdministratorApiController extends StalkerBaseController implements AdministratorApi {
 
     private AdministratorService adminService;
