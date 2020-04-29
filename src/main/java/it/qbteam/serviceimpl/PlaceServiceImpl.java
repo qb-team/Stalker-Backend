@@ -3,6 +3,8 @@ package it.qbteam.serviceimpl;
 import it.qbteam.model.Place;
 import it.qbteam.repository.sql.PlaceRepository;
 import it.qbteam.service.PlaceService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +15,11 @@ import java.util.Optional;
 public class PlaceServiceImpl implements PlaceService {
 
     private PlaceRepository placeRepo;
+
+    @Autowired
+    public PlaceServiceImpl(PlaceRepository placeRepository) {
+        this.placeRepo = placeRepository;
+    }
 
     @Override
     public Optional<Place> createNewPlace(Place place) {

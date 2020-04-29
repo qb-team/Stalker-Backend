@@ -6,6 +6,8 @@ import it.qbteam.model.Organization;
 import it.qbteam.repository.sql.FavoriteRepository;
 import it.qbteam.repository.sql.OrganizationRepository;
 import it.qbteam.service.FavoriteService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -16,6 +18,12 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private FavoriteRepository favoriteRepo;
     private OrganizationRepository organizationRepo;
+
+    @Autowired
+    public FavoriteServiceImpl(FavoriteRepository favoriteRepository, OrganizationRepository organizationRepository) {
+        this.favoriteRepo = favoriteRepository;
+        this.organizationRepo = organizationRepository;
+    }
 
     @Override
     public Optional<Favorite> addFavoriteOrganization(Favorite favorite) {
