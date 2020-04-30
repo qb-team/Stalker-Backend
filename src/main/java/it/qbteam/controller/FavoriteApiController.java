@@ -43,16 +43,20 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
         }
+        
         if(isWebAppAdministrator(getAccessToken().get())){
             return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
         }
-        if(!favoriteService.isPresent(favorite)){
+
+        if(favoriteService.isPresent(favorite)){
             return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
         }
+
         Optional<Favorite> favouriteInsertion = favoriteService.addFavoriteOrganization(favorite);
+
         if(favouriteInsertion.isPresent())
         {
-            return new ResponseEntity<Favorite>(favouriteInsertion.get(), HttpStatus.OK); // 201
+            return new ResponseEntity<Favorite>(favouriteInsertion.get(), HttpStatus.CREATED); // 201
         }
         else
         {
