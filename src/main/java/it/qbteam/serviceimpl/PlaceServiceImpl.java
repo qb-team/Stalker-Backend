@@ -34,8 +34,13 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> updatePlace(Long placeId, Place place) {
-        placeRepo.deleteById(placeId);
-        return Optional.of(placeRepo.save(place));
+        if( placeRepo.findById(placeId).isPresent()){
+            return Optional.of(placeRepo.save(place));
+        }
+        else
+        {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -6,10 +6,6 @@ import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +44,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Optional<Organization> updateOrganization(Long organizationId, Organization organization) {
-        return Optional.of(organizationRepo.save(organization));
+
+        if(organizationId==organization.getId()){
+            return Optional.of(organizationRepo.save(organization));
+        }
+        else
+        {
+            organization.setId(organizationId);
+            return Optional.of(organizationRepo.save(organization));
+        }
 
     }
 
@@ -56,7 +60,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Optional<Organization> updateOrganizationTrackingArea(Long organizationId, String trackingArea) {
         Optional<Organization> original= organizationRepo.findById(organizationId);
         Organization updatedOrganization = null;
-        if(original.isPresent()){updatedOrganization = original.get();}
+        if(!original.isPresent()){
+            return Optional.empty();
+        }
+        updatedOrganization = original.get();
         updatedOrganization.setTrackingArea(trackingArea);
         return Optional.of(organizationRepo.save(updatedOrganization));
     }

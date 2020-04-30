@@ -128,8 +128,8 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if( organizationId != organization.getId()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        if( !orgService.getOrganization(organizationId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
@@ -140,7 +140,7 @@ public class OrganizationApiController extends StalkerBaseController implements 
             if(updatedOrganization.isPresent()) {
                 return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
             }
         }
     }
@@ -161,7 +161,7 @@ public class OrganizationApiController extends StalkerBaseController implements 
     public ResponseEntity<Organization> updateOrganizationTrackingArea(@Min(1L) Long organizationId, String trackingArea) {
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-        if( orgService.getOrganization(organizationId).isPresent()){
+        if(!orgService.getOrganization(organizationId).isPresent()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);

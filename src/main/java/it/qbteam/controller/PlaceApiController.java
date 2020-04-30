@@ -91,7 +91,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
         Optional<Place> place = placeService.getPlace(placeId);
 
         if(!place.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
 
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId());
 
