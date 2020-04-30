@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
 
 /**
  * What can or cannot do an organization&#39;s administrator.

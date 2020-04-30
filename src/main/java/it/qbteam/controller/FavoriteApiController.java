@@ -6,7 +6,6 @@ import it.qbteam.model.Organization;
 import it.qbteam.service.AuthenticationService;
 
 import it.qbteam.service.FavoriteService;
-import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.util.Optional;
 public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
 
     private FavoriteService favoriteService;
-
 
     @Autowired
     public FavoriteApiController(NativeWebRequest request, AuthenticationService authenticationService, FavoriteService favoriteService) {
