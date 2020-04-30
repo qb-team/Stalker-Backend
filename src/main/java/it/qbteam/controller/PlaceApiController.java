@@ -66,7 +66,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
         } else {
             Optional<Place> createdPlace = placeService.createNewPlace(place);
             if(createdPlace.isPresent()) {
-                return new ResponseEntity<>(createdPlace.get(), HttpStatus.OK); // 201
+                return new ResponseEntity<>(createdPlace.get(), HttpStatus.CREATED); // 201
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
             }
@@ -110,7 +110,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      * @param placeId ID of a place. (required)
      * @param place   (required)
      * @return Place updated successfully. The updated place gets returned. (status code 200)
-     * or The new tracking area does not respect the area constraints for the organization. Nothing gets returned. (status code 400)
+     * or The inserted data has some issues. Nothing gets returned. (status code 400)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
      * or Invalid place ID supplied. Nothing gets returned. (status code 404)

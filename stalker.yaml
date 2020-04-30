@@ -574,7 +574,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Place"
         "400":
-          description: The new tracking area does not respect the area constraints for the organization. Nothing gets returned.
+          description: The inserted data has some issues. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
