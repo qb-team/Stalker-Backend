@@ -204,14 +204,12 @@ paths:
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
-        "400":
-          description: The organization is not part of the list of favorite organizations.
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.
+          description: The favorite was not found, hence it was not removed. Nothing gets returned.
       requestBody:
         required: true
         content:

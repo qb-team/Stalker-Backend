@@ -82,21 +82,19 @@ public interface FavoriteApi {
      * Removes the organization from the user&#39;s favorite organization list. Only app users can access this end-point.
      *
      * @param favorite  (required)
-     * @return Organization successfully removed from the list of favorites. (status code 205)
-     *         or The organization is not part of the list of favorite organizations. (status code 400)
+     * @return Organization successfully removed from the list of favorites. (status code 205)ì
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The favorite was not found, hence it was not removed. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Removes the organization from the user's favorite organization list.", nickname = "removeFavoriteOrganization", notes = "Removes the organization from the user's favorite organization list. Only app users can access this end-point.", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "favorite", })
     @ApiResponses(value = { 
         @ApiResponse(code = 205, message = "Organization successfully removed from the list of favorites."),
-        @ApiResponse(code = 400, message = "The organization is not part of the list of favorite organizations."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 404, message = "The favorite was not found, hence it was not removed. Nothing gets returned.") })
     @RequestMapping(value = "/favorite/removefavorite",
         consumes = { "application/json" },
         method = RequestMethod.POST)
