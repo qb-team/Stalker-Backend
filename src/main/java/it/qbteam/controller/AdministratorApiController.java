@@ -148,7 +148,7 @@ public class AdministratorApiController extends StalkerBaseController implements
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(!isWebAppAdministrator(getAccessToken().get()) && authenticationProviderUserId(getAccessToken().get()).get()!=administratorId){
+        if(!isWebAppAdministrator(getAccessToken().get()) && !authenticationProviderUserId(getAccessToken().get()).get().equals(administratorId)){
 
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }

@@ -27,6 +27,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Optional<Favorite> addFavoriteOrganization(Favorite favorite) {
+        if(!organizationRepo.existsById(favorite.getOrganizationId())){
+            return Optional.empty();
+        }
         return Optional.of(favoriteRepo.save(favorite));
     }
 
