@@ -119,7 +119,9 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
     public ResponseEntity<Place> updatePlace(@Min(1L) Long placeId, @Valid Place place) {
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-
+        if(!placeService.getPlace(placeId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+        }
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
@@ -132,7 +134,6 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
             }
         }
-        // manca il 400
     }
 
     /**

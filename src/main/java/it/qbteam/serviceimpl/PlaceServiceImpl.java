@@ -5,6 +5,7 @@ import it.qbteam.repository.sql.PlaceRepository;
 import it.qbteam.service.PlaceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,12 +35,13 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> updatePlace(Long placeId, Place place) {
-        if( placeRepo.findById(placeId).isPresent()){
+        if(placeId == place.getId()){
             return Optional.of(placeRepo.save(place));
         }
         else
         {
-            return Optional.empty();
+            place.setId(placeId);
+            return Optional.of(placeRepo.save(place));
         }
     }
 
