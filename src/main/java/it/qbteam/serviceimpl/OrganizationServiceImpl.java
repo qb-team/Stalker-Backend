@@ -6,6 +6,7 @@ import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -47,33 +48,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Optional<Organization> updateOrganization(Long organizationId, Organization organization) {
-        Optional<Organization> original= organizationRepo.findById(organizationId);
-        Organization prova = null;
-        if(original.isPresent()){prova = original.get();}
-        prova.setAuthenticationServerURL(organization.getAuthenticationServerURL());
-        prova.setCity(organization.getCity());
-        prova.setCountry(organization.getCountry());
-        prova.setCreationDate(organization.getCreationDate());
-        prova.setDescription(organization.getDescription());
-        prova.setImage(organization.getImage());
-        prova.setName(organization.getName());
-        prova.setNumber(organization.getNumber());
-        prova.setPostCode(organization.getPostCode());
-        prova.setStreet(organization.getStreet());
-        prova.setTrackingArea(organization.getTrackingArea());
-        prova.setTrackingMode(organization.getTrackingMode());
-        prova.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
-        organizationRepo.save(prova);
-        return Optional.of(prova);
+        return Optional.of(organizationRepo.save(organization));
+
     }
 
     @Override
     public Optional<Organization> updateOrganizationTrackingArea(Long organizationId, String trackingArea) {
         Optional<Organization> original= organizationRepo.findById(organizationId);
-        Organization prova = null;
-        if(original.isPresent()){prova = original.get();}
-        prova.setTrackingArea(trackingArea);
-        organizationRepo.save(prova);
-        return Optional.of(prova);
+        Organization updatedOrganization = null;
+        if(original.isPresent()){updatedOrganization = original.get();}
+        updatedOrganization.setTrackingArea(trackingArea);
+        return Optional.of(organizationRepo.save(updatedOrganization));
     }
 }

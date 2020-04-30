@@ -128,6 +128,9 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
+        if( organizationId != organization.getId()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
@@ -158,7 +161,9 @@ public class OrganizationApiController extends StalkerBaseController implements 
     public ResponseEntity<Organization> updateOrganizationTrackingArea(@Min(1L) Long organizationId, String trackingArea) {
         if(!getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-
+        if( orgService.getOrganization(organizationId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
         Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
