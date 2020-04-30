@@ -75,24 +75,25 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
     @Override
     public ResponseEntity<List<Organization>> getFavoriteOrganizationList(String userId) {
         if(!getAccessToken().isPresent()) {
-            return new ResponseEntity<List<Organization>>(HttpStatus.UNAUTHORIZED); //401
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
-        List<Organization> returnList= favoriteService.getFavoriteOrganizationList(userId);
-
+        
         if(isWebAppAdministrator(getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
-        if(authenticationProviderUserId(getAccessToken().get()).get()!=userId){
+
+        if(!authenticationProviderUserId(getAccessToken().get()).get().equals(userId)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
-        if(returnList.isEmpty())
-        {
-            return new ResponseEntity<List<Organization>>(HttpStatus.NO_CONTENT); //204
-        }
-        else{
-            return new ResponseEntity<List<Organization>>(HttpStatus.OK); // 200
-        }
 
+        List<Organization> returnList = favoriteService.getFavoriteOrganizationList(userId);
+
+        if(returnList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+        } else {
+            return new ResponseEntity<>(returnList, HttpStatus.OK); // 200
+        }
+        // 404 non fatto
     }
 
 
