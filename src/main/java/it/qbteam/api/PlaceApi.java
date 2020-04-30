@@ -112,7 +112,7 @@ public interface PlaceApi {
     }, tags={ "place", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Place updated successfully. The updated place gets returned.", response = Place.class),
-        @ApiResponse(code = 400, message = "The new tracking area does not respect the area constraints for the organization. Nothing gets returned."),
+        @ApiResponse(code = 400, message = "The inserted data has some issues. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "Invalid place ID supplied. Nothing gets returned.") })
