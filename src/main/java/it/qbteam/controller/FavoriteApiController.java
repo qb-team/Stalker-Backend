@@ -3,8 +3,6 @@ package it.qbteam.controller;
 import it.qbteam.api.FavoriteApi;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
-import it.qbteam.model.Permission;
-import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 
 import it.qbteam.service.FavoriteService;
@@ -22,23 +20,11 @@ import java.util.Optional;
 public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
 
     private FavoriteService favoriteService;
-    private AdministratorService administratorService;
 
     @Autowired
-    public FavoriteApiController(NativeWebRequest request, AuthenticationService service) {
-        super(request, service);
-    }
-
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = administratorService.getPermissionList(authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-
-            return permission;
-        } else {
-            return Optional.empty();
-        }
+    public FavoriteApiController(NativeWebRequest request, AuthenticationService authenticationService, FavoriteService favoriteService) {
+        super(request, authenticationService);
+        this.favoriteService = favoriteService;
     }
 
     /**
