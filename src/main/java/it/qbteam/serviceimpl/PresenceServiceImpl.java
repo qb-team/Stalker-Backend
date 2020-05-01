@@ -39,11 +39,10 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public Optional<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
         Integer currentCounter = presenceCounterTemplate.opsForValue().get("organization:"+organizationId);
-
-        if(currentCounter == null)
-            return Optional.empty();
         
-        OrganizationPresenceCounter orgPresenceCounter = new OrganizationPresenceCounter().organizationId(organizationId).counter(currentCounter);
+        OrganizationPresenceCounter orgPresenceCounter = new OrganizationPresenceCounter().organizationId(organizationId);
+        orgPresenceCounter = orgPresenceCounter.counter(currentCounter == null ? 0 : currentCounter);
+
         return Optional.of(orgPresenceCounter);
     }
 
@@ -62,11 +61,10 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
         Integer currentCounter = presenceCounterTemplate.opsForValue().get("place:"+placeId);
-
-        if(currentCounter == null)
-            return Optional.empty();
         
-        PlacePresenceCounter placePresenceCounter = new PlacePresenceCounter().placeId(placeId).counter(currentCounter);
+        PlacePresenceCounter placePresenceCounter = new PlacePresenceCounter().placeId(placeId);
+        placePresenceCounter = placePresenceCounter.counter(currentCounter == null ? 0 : currentCounter);
+        
         return Optional.of(placePresenceCounter);
     }
 
