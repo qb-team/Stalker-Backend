@@ -22,8 +22,10 @@ public class ReportApiController extends StalkerBaseController implements Report
     private OrganizationService organizationService;
 
     @Autowired
-    public ReportApiController(NativeWebRequest request, AuthenticationService service) {
+    public ReportApiController(NativeWebRequest request, AuthenticationService service, ReportService reportService, OrganizationService organizationService) {
         super(request, service);
+        this.reportService = reportService;
+        this.organizationService = organizationService;
     }
     /**
      * GET /report/organization/{organizationId} : Gets the report of total time spent per user inside the organization.
