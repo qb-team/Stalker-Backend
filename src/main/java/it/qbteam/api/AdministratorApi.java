@@ -33,6 +33,7 @@ public interface AdministratorApi {
      *
      * @param permission  (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
+     *         or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      *         or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
@@ -42,6 +43,7 @@ public interface AdministratorApi {
     }, tags={ "administrator", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Administrator bound successfully. The permission record gets returned.", response = Permission.class),
+        @ApiResponse(code = 400, message = "Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })

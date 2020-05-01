@@ -2,6 +2,8 @@ package it.qbteam.controller;
 
 import java.util.Optional;
 
+import com.google.auth.oauth2.IdTokenProvider.Option;
+
 import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.exception.AuthenticationException;
@@ -69,6 +71,15 @@ public abstract class StalkerBaseController {
     protected Optional<String> authenticationProviderUserId(String accessToken) {
         try {
             return Optional.of(authenticationService.getUserId(accessToken));
+        } catch(AuthenticationException exc) {
+            System.out.println("Thrown AuthenticationException: " + exc.toString());
+            return Optional.empty();
+        }
+    }
+
+    protected Optional<String> authenticationProviderUserIdByEmail(String accessToken, String email) {
+        try {
+            return authenticationService.getUserIdByEmail(accessToken, email);
         } catch(AuthenticationException exc) {
             System.out.println("Thrown AuthenticationException: " + exc.toString());
             return Optional.empty();

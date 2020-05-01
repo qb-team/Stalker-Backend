@@ -232,6 +232,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Permission"
+        "400":
+          description: Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -1154,6 +1156,10 @@ components:
         orgAuthServerId:
           type: string
           description: Administrator unique identifier from the authentication server of the organization.
+        mail:
+          type: string
+          format: email
+          description: Administrator's e-mail address.
         permission:
           type: integer
           format: int32

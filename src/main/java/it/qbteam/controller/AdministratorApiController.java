@@ -24,9 +24,10 @@ public class AdministratorApiController extends StalkerBaseController implements
     private OrganizationService organizationService;
 
     @Autowired
-    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService) {
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService, OrganizationService organizationService) {
         super(request, service);
         this.adminService = admininistratorService;
+        this.organizationService = organizationService;
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
@@ -46,6 +47,7 @@ public class AdministratorApiController extends StalkerBaseController implements
      *
      * @param permission (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
+     * or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      * or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
@@ -53,19 +55,29 @@ public class AdministratorApiController extends StalkerBaseController implements
     @Override
     public ResponseEntity<Permission> bindAdministratorToOrganization(@Valid Permission permission) {
         if(!getAccessToken().isPresent()) {
-            return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
+
+        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent() || !authenticationProviderUserIdByEmail(getAccessToken().get(), permission.getMail()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        } else {
+            permission.setAdministratorId(authenticationProviderUserIdByEmail(getAccessToken().get(), permission.getMail()).get());
+        }
+
         Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 2) { // 2 is Manager level
-            return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        if(checkPermission.get().getPermission() < permission.getPermission()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
         Optional<Permission> returnedPermission = adminService.bindAdministratorToOrganization(permission);
         if (returnedPermission.isPresent()){
-            return new ResponseEntity<Permission>(returnedPermission.get(), HttpStatus.OK); //201
+            return new ResponseEntity<>(returnedPermission.get(), HttpStatus.CREATED); //201
         }
         else
         {
-            return new ResponseEntity<Permission>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
     }
 
