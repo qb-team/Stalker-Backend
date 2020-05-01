@@ -2,8 +2,6 @@ package it.qbteam.controller;
 
 import java.util.Optional;
 
-import com.google.auth.oauth2.IdTokenProvider.Option;
-
 import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.exception.AuthenticationException;

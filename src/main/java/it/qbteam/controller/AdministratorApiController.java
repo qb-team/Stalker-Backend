@@ -129,19 +129,17 @@ public class AdministratorApiController extends StalkerBaseController implements
         if(!getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
+        if(!organizationService.getOrganization(organizationId).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
+
         Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), organizationId);
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
         List<Permission> returnedList = adminService.getAdministratorListOfOrganization(organizationId);
-        if(returnedList.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
-        }
-        else
-        {
-            return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //201
-        }
-
+        
+        return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //200
     }
 
     /**
