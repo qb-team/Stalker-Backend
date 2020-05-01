@@ -76,7 +76,6 @@ public class OrganizationApiController extends StalkerBaseController implements 
      * or List of all organizations is empty. Nothing gets returned. (status code 204)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or List of all organizations could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {

@@ -80,7 +80,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      * @param placeId ID of a place. (required)
      * @return Place successfully removed from the list of favorites. Nothing gets returned. (status code 205)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Administrators cannot have access. Nothing gets returned. (status code 403)
+     * or Users and administrators with viewer permissions cannot have access. Nothing gets returned. (status code 403)
      * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override

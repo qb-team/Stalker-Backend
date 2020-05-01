@@ -67,8 +67,7 @@ public interface OrganizationApi {
         @ApiResponse(code = 200, message = "List of all organizations is non-empty and gets returned successfully.", response = Organization.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of all organizations is empty. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "List of all organizations could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/organization",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

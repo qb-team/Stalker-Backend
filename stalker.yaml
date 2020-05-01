@@ -53,8 +53,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: List of all organizations could not be found. Nothing gets returned.
   "/organization/{organizationId}":
     get:
       tags:
@@ -610,7 +608,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Administrators cannot have access. Nothing gets returned.
+          description: Users and administrators with viewer permissions cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/movement/track/organization":
