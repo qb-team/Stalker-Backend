@@ -48,7 +48,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
             return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
         }
 
-        if(favoriteService.isPresent(favorite)){
+        if(favoriteService.getFavorite(favorite)){
             return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
         }
 
@@ -121,7 +121,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
         }
 
-        if (!favoriteService.isPresent(favorite)){
+        if (!favoriteService.getFavorite(favorite)){
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //404
         }
         

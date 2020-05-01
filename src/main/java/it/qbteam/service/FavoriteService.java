@@ -36,5 +36,12 @@ public interface FavoriteService {
      * @param favorite
      */
     void removeFavoriteOrganization(Favorite favorite);
-    boolean isPresent(Favorite favorite);
+
+    /**
+     * Description
+     * 
+     * @param favorite
+     * @return
+     */
+    Boolean getFavorite(Favorite favorite);
 }

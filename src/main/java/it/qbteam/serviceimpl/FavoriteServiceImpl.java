@@ -56,8 +56,9 @@ public class FavoriteServiceImpl implements FavoriteService {
         FavoriteId identificator= new FavoriteId(favorite.getUserId(), favorite.getOrganizationId());
         favoriteRepo.deleteById(identificator);
     }
+    
     @Override
-    public boolean isPresent(Favorite favorite){
+    public Boolean getFavorite(Favorite favorite){
         Iterable<Favorite> returnFavorite =favoriteRepo.isPresent(favorite.getUserId(), favorite.getOrganizationId());
         return returnFavorite.iterator().hasNext();
     }
