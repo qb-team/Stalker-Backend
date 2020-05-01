@@ -59,7 +59,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     
     @Override
     public Boolean getFavorite(Favorite favorite){
-        Iterable<Favorite> returnFavorite =favoriteRepo.isPresent(favorite.getUserId(), favorite.getOrganizationId());
-        return returnFavorite.iterator().hasNext();
+        return favoriteRepo.existsById(new FavoriteId(favorite.getUserId(), favorite.getOrganizationId()));
     }
 }
