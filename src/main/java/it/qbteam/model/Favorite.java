@@ -11,7 +11,9 @@ import javax.persistence.IdClass;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Link between the user and the organization: only the organization which users
@@ -50,6 +52,7 @@ public class Favorite {
   @ApiModelProperty(required = true, value = "Authentication service's user unique identifier.")
   @NotNull
 
+  @Size(max=256)
   public String getUserId() {
     return userId;
   }
@@ -71,6 +74,7 @@ public class Favorite {
   @ApiModelProperty(required = true, value = "Unique identifier of the organization the user sets as favorite.")
   @NotNull
 
+  @Min(1L)
   public Long getOrganizationId() {
     return organizationId;
   }
@@ -91,6 +95,7 @@ public class Favorite {
    */
   @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
 
+  @Size(max=256)
   public String getOrgAuthServerId() {
     return orgAuthServerId;
   }

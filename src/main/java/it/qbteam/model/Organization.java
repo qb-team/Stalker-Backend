@@ -11,7 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -126,7 +129,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "Unique identifier for an organization.")
   @NotNull
 
-
+  @Min(1L)
   public Long getId() {
     return id;
   }
@@ -147,7 +150,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "Name of the organization.")
   @NotNull
 
-
+  @Size(max=128)
   public String getName() {
     return name;
   }
@@ -167,7 +170,7 @@ public class Organization   {
   */
   @ApiModelProperty(value = "Small description of what the organization does.")
 
-
+  @Size(max=512)
   public String getDescription() {
     return description;
   }
@@ -187,7 +190,7 @@ public class Organization   {
   */
   @ApiModelProperty(value = "Image/logo for the organization which gets shown on the application.")
 
-
+  @Size(max=300)
   public String getImage() {
     return image;
   }
@@ -208,7 +211,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "The street where the organization is located.")
   @NotNull
 
-
+  @Size(max=256)
   public String getStreet() {
     return street;
   }
@@ -229,7 +232,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "The number in the street where the organization is located.")
   @NotNull
 
-
+  @Size(max=10)
   public String getNumber() {
     return number;
   }
@@ -250,6 +253,7 @@ public class Organization   {
   @ApiModelProperty(value = "The postcode where the organization is located.")
   @NotNull
 
+  @Min(0) @Max(99999)
   public Integer getPostCode() {
     return postCode;
   }
@@ -270,7 +274,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "The city where the organization is located.")
   @NotNull
 
-
+  @Size(max=100)
   public String getCity() {
     return city;
   }
@@ -291,7 +295,7 @@ public class Organization   {
   @ApiModelProperty(required = true, value = "The country where the organization is located.")
   @NotNull
 
-
+  @Size(max=100)
   public String getCountry() {
     return country;
   }
@@ -311,7 +315,7 @@ public class Organization   {
   */
   @ApiModelProperty(value = "URL or IP address of the authentication server of the organization. If it's required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.")
 
-
+  @Size(max=2048)
   public String getAuthenticationServerURL() {
     return authenticationServerURL;
   }

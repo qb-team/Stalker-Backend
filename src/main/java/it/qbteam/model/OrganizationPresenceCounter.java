@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -32,7 +33,7 @@ public class OrganizationPresenceCounter   {
   @ApiModelProperty(required = true, value = "Unique identifier of the organization.")
   @NotNull
 
-
+  @Min(1L)
   public Long getOrganizationId() {
     return organizationId;
   }
@@ -53,7 +54,7 @@ public class OrganizationPresenceCounter   {
   @ApiModelProperty(required = true, value = "Number of people currently inside the organization's trackingArea.")
   @NotNull
 
-
+  @Min(0)
   public Integer getCounter() {
     return counter;
   }

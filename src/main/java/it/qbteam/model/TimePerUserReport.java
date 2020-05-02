@@ -7,7 +7,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Represents a row in the report generated for an user by the viewer administrator.
@@ -36,7 +38,7 @@ public class TimePerUserReport   {
   @ApiModelProperty(required = true, value = "Unique identifier of the organization in which the user had access.")
   @NotNull
 
-
+  @Min(1L)
   public Long getOrganizationId() {
     return organizationId;
   }
@@ -57,7 +59,7 @@ public class TimePerUserReport   {
   @ApiModelProperty(required = true, value = "User unique identifier from the authentication server of the organization.")
   @NotNull
 
-
+  @Size(max=256)
   public String getOrgAuthServerId() {
     return orgAuthServerId;
   }

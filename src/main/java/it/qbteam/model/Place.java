@@ -10,7 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Area of an organization subjected to tracking.
@@ -45,7 +47,7 @@ public class Place   {
   @ApiModelProperty(required = true, value = "Unique identifier for a place of an organization.")
   @NotNull
 
-
+  @Min(1L)
   public Long getId() {
     return id;
   }
@@ -65,7 +67,7 @@ public class Place   {
   */
   @ApiModelProperty(value = "Name describing the place. If not set by user it gets automatically filled.")
 
-
+  @Size(max=128)
   public String getName() {
     return name;
   }
@@ -86,7 +88,7 @@ public class Place   {
   @ApiModelProperty(required = true, value = "Unique identifier of the organization the place is part of.")
   @NotNull
 
-
+  @Min(1L)
   public Long getOrganizationId() {
     return organizationId;
   }

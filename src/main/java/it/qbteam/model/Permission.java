@@ -10,10 +10,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Transient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.*;
 
 /**
  * What can or cannot do an organization&#39;s administrator.
@@ -58,7 +55,7 @@ public class Permission   {
   @ApiModelProperty(required = true, value = "Authentication service's administrator unique identifier.")
   @NotNull
 
-
+  @Size(max=256)
   public String getAdministratorId() {
     return administratorId;
   }
@@ -79,7 +76,7 @@ public class Permission   {
   @ApiModelProperty(required = true, value = "Unique identifier of the organization the administrator is part of.")
   @NotNull
 
-
+  @Min(1L)
   public Long getOrganizationId() {
     return organizationId;
   }
@@ -99,7 +96,7 @@ public class Permission   {
   */
   @ApiModelProperty(value = "Administrator unique identifier from the authentication server of the organization.")
 
-
+  @Size(max=256)
   public String getOrgAuthServerId() {
     return orgAuthServerId;
   }
@@ -119,7 +116,7 @@ public class Permission   {
   */
   @ApiModelProperty(value = "Administrator's e-mail address.")
 
-  @Email
+  @Size(max=254) @Email
   public String getMail() {
     return mail;
   }
@@ -162,7 +159,7 @@ public class Permission   {
   */
   @ApiModelProperty(value = "administratorId of the owner administrator who nominated the current administrator.")
 
-
+  @Size(max=256)
   public String getNominatedBy() {
     return nominatedBy;
   }
