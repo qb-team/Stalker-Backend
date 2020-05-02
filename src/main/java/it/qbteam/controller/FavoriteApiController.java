@@ -99,7 +99,7 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
         } else {
             return new ResponseEntity<>(returnList, HttpStatus.OK); // 200
         }
-        // 404 non fatto
+
     }
 
 

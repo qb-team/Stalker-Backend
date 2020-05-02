@@ -136,6 +136,9 @@ public class OrganizationApiController extends StalkerBaseController implements 
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         } else {
+
+            if(organization.getName())
+
             Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
             if(updatedOrganization.isPresent()) {
                 return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200

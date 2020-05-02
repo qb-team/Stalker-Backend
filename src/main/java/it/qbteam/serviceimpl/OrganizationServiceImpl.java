@@ -45,14 +45,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Optional<Organization> updateOrganization(Long organizationId, Organization organization) {
 
-        if(organizationId==organization.getId()){
-            return Optional.of(organizationRepo.save(organization));
-        }
-        else
-        {
+        if (organizationId != organization.getId()) {
             organization.setId(organizationId);
-            return Optional.of(organizationRepo.save(organization));
         }
+        return Optional.of(organizationRepo.save(organization));
 
     }
 

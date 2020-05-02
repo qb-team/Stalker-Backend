@@ -35,14 +35,10 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> updatePlace(Long placeId, Place place) {
-        if(placeId == place.getId()){
-            return Optional.of(placeRepo.save(place));
-        }
-        else
-        {
+        if (placeId != place.getId()) {
             place.setId(placeId);
-            return Optional.of(placeRepo.save(place));
         }
+        return Optional.of(placeRepo.save(place));
     }
 
     @Override
