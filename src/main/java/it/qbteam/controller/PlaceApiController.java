@@ -19,22 +19,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class PlaceApiController extends StalkerBaseController implements PlaceApi {
+public class PlaceApiController implements PlaceApi {
 
     private PlaceService placeService;
     
     private AdministratorService adminService;
+
+    private AuthenticationFacade authFacade;
     
     @Autowired
     public PlaceApiController(NativeWebRequest request, AuthenticationService service, PlaceService placeService, AdministratorService administratorService) {
-        super(request, service);
+        this.authFacade = new AuthenticationFacade(request, service);
         this.placeService = placeService;
         this.adminService = administratorService;
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
             
@@ -56,10 +58,10 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Place> createNewPlace(@Valid Place place) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.getOrganizationId());
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -85,7 +87,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Void> deletePlace(@Min(1L) Long placeId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         Optional<Place> place = placeService.getPlace(placeId);
@@ -93,7 +95,7 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
         if(!place.isPresent())
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
 
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId());
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -117,12 +119,12 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<Place> updatePlace(@Min(1L) Long placeId, @Valid Place place) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         if(!placeService.getPlace(placeId).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
         }
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), place.getOrganizationId());
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -149,12 +151,12 @@ public class PlaceApiController extends StalkerBaseController implements PlaceAp
      */
     @Override
     public ResponseEntity<List<Place>> getPlaceListOfOrganization(@Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
-        if(isAppUser(getAccessToken().get()) || permission.isPresent()) { // 2 is Manager level
+        if(authFacade.isAppUser(authFacade.getAccessToken().get()) || permission.isPresent()) { // 2 is Manager level
             List<Place> places = placeService.getPlaceListOfOrganization(organizationId);
             if(!places.isEmpty()) {
                 return new ResponseEntity<>(places, HttpStatus.OK); // 200

@@ -17,13 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
+public class FavoriteApiController implements FavoriteApi {
 
     private FavoriteService favoriteService;
 
+    private AuthenticationFacade authFacade;
+
     @Autowired
     public FavoriteApiController(NativeWebRequest request, AuthenticationService authenticationService, FavoriteService favoriteService) {
-        super(request, authenticationService);
+        this.authFacade = new AuthenticationFacade(request, authenticationService);
         this.favoriteService = favoriteService;
     }
 
@@ -40,11 +42,11 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<Favorite> addFavoriteOrganization(@Valid Favorite favorite) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
         }
 
-        if(isWebAppAdministrator(getAccessToken().get())){
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
         }
 
@@ -78,15 +80,15 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<List<Organization>> getFavoriteOrganizationList(String userId) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
         
-        if(isWebAppAdministrator(getAccessToken().get())){
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
 
-        if(!authenticationProviderUserId(getAccessToken().get()).get().equals(userId)){
+        if(!authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(userId)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
 
@@ -113,11 +115,11 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<Void> removeFavoriteOrganization(@Valid Favorite favorite) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED); //401
         }
 
-        if(isWebAppAdministrator(getAccessToken().get())){
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
         }
 

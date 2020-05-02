@@ -7,7 +7,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.service.AuthenticationService;
 
-public abstract class StalkerBaseController {
+class AuthenticationFacade {
     /**
      * Access point for accessing HTTP request related information.
      * Used for accessing HTTP headers.
@@ -17,7 +17,7 @@ public abstract class StalkerBaseController {
     private final AuthenticationService authenticationService;
     
 
-    public StalkerBaseController(NativeWebRequest request, AuthenticationService service) {
+    public AuthenticationFacade(NativeWebRequest request, AuthenticationService service) {
         this.request = request;
         this.authenticationService = service;
     }
@@ -31,7 +31,7 @@ public abstract class StalkerBaseController {
         return Optional.ofNullable(request);
     }
 
-    protected Optional<String> getAccessToken() {
+    public Optional<String> getAccessToken() {
         if(!getRequest().isPresent())
             return Optional.empty();
         
@@ -48,7 +48,7 @@ public abstract class StalkerBaseController {
         }
     }
 
-    protected Boolean isAppUser(String accessToken) {
+    public Boolean isAppUser(String accessToken) {
         try {
             return authenticationService.isAppUser(accessToken);
         } catch(AuthenticationException exc) {
@@ -57,7 +57,7 @@ public abstract class StalkerBaseController {
         }
     }
     
-    protected Boolean isWebAppAdministrator(String accessToken) {
+    public Boolean isWebAppAdministrator(String accessToken) {
         try {
             return authenticationService.isWebAppAdministrator(accessToken);
         } catch(AuthenticationException exc) {
@@ -66,7 +66,7 @@ public abstract class StalkerBaseController {
         }
     }
 
-    protected Optional<String> authenticationProviderUserId(String accessToken) {
+    public Optional<String> authenticationProviderUserId(String accessToken) {
         try {
             return Optional.of(authenticationService.getUserId(accessToken));
         } catch(AuthenticationException exc) {
@@ -75,7 +75,7 @@ public abstract class StalkerBaseController {
         }
     }
 
-    protected Optional<String> authenticationProviderUserIdByEmail(String accessToken, String email) {
+    public Optional<String> authenticationProviderUserIdByEmail(String accessToken, String email) {
         try {
             return authenticationService.getUserIdByEmail(accessToken, email);
         } catch(AuthenticationException exc) {

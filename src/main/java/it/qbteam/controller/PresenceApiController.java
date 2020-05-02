@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class PresenceApiController extends StalkerBaseController implements PresenceApi {
+public class PresenceApiController implements PresenceApi {
 
     private OrganizationService orgService;
 
@@ -34,9 +34,11 @@ public class PresenceApiController extends StalkerBaseController implements Pres
 
     private PresenceService presenceService;
 
+    private AuthenticationFacade authFacade;
+
     @Autowired
     public PresenceApiController(NativeWebRequest request, AuthenticationService authenticationService, AdministratorService administratorService, PresenceService presenceService, OrganizationService organizationService, PlaceService placeService) {
-        super(request, authenticationService);
+        this.authFacade = new AuthenticationFacade(request, authenticationService);
         this.adminService = administratorService;
         this.presenceService = presenceService;
         this.placeService = placeService;
@@ -44,8 +46,8 @@ public class PresenceApiController extends StalkerBaseController implements Pres
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
             
@@ -67,14 +69,14 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getOrganizationPresenceList(@Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         if(!orgService.getOrganization(organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
+        if(!permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -99,14 +101,14 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getPlacePresenceList(@Min(1L) Long placeId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         if(!placeService.getPlace(placeId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
+        if(!permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -130,14 +132,14 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         if(!orgService.getOrganization(organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
+        if(!permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -161,14 +163,14 @@ public class PresenceApiController extends StalkerBaseController implements Pres
      */
     @Override
     public ResponseEntity<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         if(!placeService.getPlace(placeId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
+        if(!permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
