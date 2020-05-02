@@ -157,7 +157,8 @@ public class Permission   {
    * administratorId of the owner administrator who nominated the current administrator.
    * @return nominatedBy
   */
-  @ApiModelProperty(value = "administratorId of the owner administrator who nominated the current administrator.")
+  @ApiModelProperty(required = true, value = "administratorId of the owner administrator who nominated the current administrators. If this field is equal to administratorId then this administrator is the original owner of the organization (i.e. the one whose account was created during the creation of the organization by Stalker administrators).")
+  @NotNull
 
   @Size(max=256)
   public String getNominatedBy() {

@@ -250,7 +250,7 @@ public class Organization   {
    * The postcode where the organization is located.
    * @return postCode
   */
-  @ApiModelProperty(value = "The postcode where the organization is located.")
+  @ApiModelProperty(required = true, value = "The postcode where the organization is located.")
   @NotNull
 
   @Min(0) @Max(99999)
@@ -355,7 +355,7 @@ public class Organization   {
    * When the organization parameters were last changed.
    * @return lastChangeDate
   */
-  @ApiModelProperty(value = "When the organization parameters were last changed.")
+  @ApiModelProperty(required = true, value = "When the organization parameters were last changed.")
   @NotNull
   @Valid
 

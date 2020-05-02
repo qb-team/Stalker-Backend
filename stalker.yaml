@@ -1149,6 +1149,46 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
+    AdministratorBindingRequest:
+      type: object
+      description: Request object for creating a new administrator account and binding it to the organization or just binding an already existent administrator.
+      additionalProperties: false
+      required:
+        - administratorId
+        - organizationId
+        - permission
+        - mail
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Unique identifier of the organization the administrator is part of.
+        orgAuthServerId:
+          type: string
+          maxLength: 256
+          description: Administrator unique identifier from the authentication server of the organization.
+        mail:
+          type: string
+          format: email
+          maxLength: 254
+          description: Administrator's e-mail address.
+        password:
+          type: string
+          format: password
+          minLength: 6
+          description: Administrator's new password.
+        permission:
+          type: integer
+          minimum: 1
+          maximum: 3
+          format: int32
+          description: >-
+            What can or cannot do an organization's administrator.
+            The permission levels are:
+            - Owner: 3 (higher level)
+            - Manager: 2
+            - Viewer: 1 (lowest level)
     Permission:
       type: object
       description: What can or cannot do an organization's administrator.
@@ -1157,6 +1197,7 @@ components:
         - administratorId
         - organizationId
         - permission
+        - nominatedBy
       properties:
         administratorId:
           type: string
@@ -1190,7 +1231,10 @@ components:
         nominatedBy:
           type: string
           maxLength: 256
-          description: administratorId of the owner administrator who nominated the current administrator.
+          description: >-
+            administratorId of the owner administrator who nominated the current administrators.
+            If this field is equal to administratorId then this administrator is the original owner of the organization
+            (i.e. the one whose account was created during the creation of the organization by Stalker administrators).
     Favorite:
       type: object
       description: >-
