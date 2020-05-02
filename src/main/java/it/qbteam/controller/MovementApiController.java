@@ -3,8 +3,6 @@ package it.qbteam.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,11 +14,13 @@ import it.qbteam.model.PlaceMovement;
 import it.qbteam.service.AuthenticationService;
 
 @Controller
-public class MovementApiController extends StalkerBaseController implements MovementApi {
+public class MovementApiController implements MovementApi {
     
+    private AuthenticationFacade authFacade;
+
     @Autowired
     public MovementApiController(NativeWebRequest request, AuthenticationService service) {
-        super(request, service);
+        this.authFacade = new AuthenticationFacade(request, service);
     }
     
     /**

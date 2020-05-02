@@ -53,8 +53,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: List of all organizations could not be found. Nothing gets returned.
   "/organization/{organizationId}":
     get:
       tags:
@@ -204,14 +202,12 @@ paths:
       responses:
         "205":
           description: Organization successfully removed from the list of favorites.
-        "400":
-          description: The organization is not part of the list of favorite organizations.
         "401":
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.
+          description: The favorite was not found, hence it was not removed. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -234,6 +230,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Permission"
+        "400":
+          description: Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned.
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
@@ -610,7 +608,7 @@ paths:
         "401":
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
-          description: Administrators cannot have access. Nothing gets returned.
+          description: Users and administrators with viewer permissions cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
   "/movement/track/organization":
@@ -1156,6 +1154,10 @@ components:
         orgAuthServerId:
           type: string
           description: Administrator unique identifier from the authentication server of the organization.
+        mail:
+          type: string
+          format: email
+          description: Administrator's e-mail address.
         permission:
           type: integer
           format: int32

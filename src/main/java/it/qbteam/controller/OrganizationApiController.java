@@ -20,22 +20,24 @@ import it.qbteam.model.Organization;
 import it.qbteam.model.Permission;
 
 @Controller
-public class OrganizationApiController extends StalkerBaseController implements OrganizationApi {
+public class OrganizationApiController implements OrganizationApi {
 
     private OrganizationService orgService;
 
     private AdministratorService adminService;
+
+    private AuthenticationFacade authFacade;
     
     @Autowired
     public OrganizationApiController(NativeWebRequest request, AuthenticationService authenticationService, OrganizationService organizationService, AdministratorService administratorService) {
-        super(request, authenticationService);
+        this.authFacade = new AuthenticationFacade(request, authenticationService);
         this.orgService = organizationService;
         this.adminService = administratorService;
     }
     
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
             
@@ -56,7 +58,7 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> getOrganization(@Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<Organization>(HttpStatus.UNAUTHORIZED); //401
         
         Optional<Organization> organization = orgService.getOrganization(organizationId);
@@ -76,14 +78,13 @@ public class OrganizationApiController extends StalkerBaseController implements 
      * or List of all organizations is empty. Nothing gets returned. (status code 204)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or List of all organizations could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<Organization>> getOrganizationList() {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAppUser(getAccessToken().get())) {
+        if(authFacade.isAppUser(authFacade.getAccessToken().get())) {
             List<Organization> orgList = orgService.getOrganizationList();
             if(!orgList.isEmpty()) {
                 return new ResponseEntity<>(orgList, HttpStatus.OK); // 200
@@ -125,13 +126,13 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> updateOrganization(@Min(1L) Long organizationId, @Valid Organization organization) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
         if( !orgService.getOrganization(organizationId).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -162,12 +163,12 @@ public class OrganizationApiController extends StalkerBaseController implements 
      */
     @Override
     public ResponseEntity<Organization> updateOrganizationTrackingArea(@Min(1L) Long organizationId, String trackingArea) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         if(!orgService.getOrganization(organizationId).isPresent()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
-        Optional<Permission> permission = permissionInOrganization(getAccessToken().get(), organizationId);
+        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403

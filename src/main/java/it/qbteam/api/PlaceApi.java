@@ -6,7 +6,12 @@
 package it.qbteam.api;
 
 import it.qbteam.model.Place;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Validated
@@ -54,7 +59,7 @@ public interface PlaceApi {
      * @param placeId ID of a place. (required)
      * @return Place successfully removed from the list of places of the organization. Nothing gets returned. (status code 205)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     *         or Administrators cannot have access. Nothing gets returned. (status code 403)
+     *         or Users and administrators with viewer permissions cannot have access. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Deletes a place of an organization.", nickname = "deletePlace", notes = "Deletes a place of an organization. Only web-app administrators can access this end-point.", authorizations = {
@@ -63,7 +68,7 @@ public interface PlaceApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 205, message = "Place successfully removed from the list of places of the organization. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 403, message = "Users and administrators with viewer permissions cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/place/{placeId}",
         method = RequestMethod.DELETE)
@@ -78,6 +83,7 @@ public interface PlaceApi {
      * @return Place list of organization returned successfully. (status code 200)
      *         or Place list of organization is empty. Nothing gets returned. (status code 204)
      *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
+     *         or Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned. (status code 403)
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Returns the list of places of the organization.", nickname = "getPlaceListOfOrganization", notes = "Returns the list of places of the organization. Both app users and web-app administrators can access this end-point.", response = Place.class, responseContainer = "List", authorizations = {
@@ -102,7 +108,7 @@ public interface PlaceApi {
      * @param placeId ID of a place. (required)
      * @param place  (required)
      * @return Place updated successfully. The updated place gets returned. (status code 200)
-     *         or The new tracking area does not respect the area constraints for the organization. Nothing gets returned. (status code 400)
+     *         or The inserted data has some issues. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
      *         or Invalid place ID supplied. Nothing gets returned. (status code 404)

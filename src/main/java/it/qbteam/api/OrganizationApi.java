@@ -6,7 +6,12 @@
 package it.qbteam.api;
 
 import it.qbteam.model.Organization;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Validated
@@ -62,8 +67,7 @@ public interface OrganizationApi {
         @ApiResponse(code = 200, message = "List of all organizations is non-empty and gets returned successfully.", response = Organization.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of all organizations is empty. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "List of all organizations could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/organization",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

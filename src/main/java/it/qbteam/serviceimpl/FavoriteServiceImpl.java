@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.*;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -54,9 +56,9 @@ public class FavoriteServiceImpl implements FavoriteService {
         FavoriteId identificator= new FavoriteId(favorite.getUserId(), favorite.getOrganizationId());
         favoriteRepo.deleteById(identificator);
     }
+    
     @Override
-    public boolean isPresent(Favorite favorite){
-        Iterable<Favorite> returnFavorite =favoriteRepo.isPresent(favorite.getUserId(), favorite.getOrganizationId());
-        return returnFavorite.iterator().hasNext();
+    public Boolean getFavorite(Favorite favorite){
+        return favoriteRepo.existsById(new FavoriteId(favorite.getUserId(), favorite.getOrganizationId()));
     }
 }

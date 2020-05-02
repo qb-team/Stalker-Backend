@@ -6,7 +6,6 @@ import it.qbteam.model.Organization;
 import it.qbteam.service.AuthenticationService;
 
 import it.qbteam.service.FavoriteService;
-import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class FavoriteApiController extends StalkerBaseController implements FavoriteApi {
+public class FavoriteApiController implements FavoriteApi {
 
     private FavoriteService favoriteService;
 
+    private AuthenticationFacade authFacade;
 
     @Autowired
     public FavoriteApiController(NativeWebRequest request, AuthenticationService authenticationService, FavoriteService favoriteService) {
-        super(request, authenticationService);
+        this.authFacade = new AuthenticationFacade(request, authenticationService);
         this.favoriteService = favoriteService;
     }
 
@@ -42,15 +42,15 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<Favorite> addFavoriteOrganization(@Valid Favorite favorite) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
         }
-        
-        if(isWebAppAdministrator(getAccessToken().get())){
+
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
         }
 
-        if(favoriteService.isPresent(favorite)){
+        if(favoriteService.getFavorite(favorite)){
             return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
         }
 
@@ -80,15 +80,15 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      */
     @Override
     public ResponseEntity<List<Organization>> getFavoriteOrganizationList(String userId) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
         
-        if(isWebAppAdministrator(getAccessToken().get())){
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
 
-        if(!authenticationProviderUserId(getAccessToken().get()).get().equals(userId)){
+        if(!authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(userId)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
 
@@ -109,24 +109,26 @@ public class FavoriteApiController extends StalkerBaseController implements Favo
      *
      * @param favorite (required)
      * @return Organization successfully removed from the list of favorites. (status code 205)
-     * or The organization is not part of the list of favorite organizations. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
+     * or The favorite was not found, hence it was not removed. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<Void> removeFavoriteOrganization(@Valid Favorite favorite) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED); //401
         }
-        if (!favoriteService.isPresent(favorite)){
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //400 //404g
-        }
-        if(isWebAppAdministrator(getAccessToken().get())){
+
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
         }
+
+        if (!favoriteService.getFavorite(favorite)){
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //404
+        }
+        
         favoriteService.removeFavoriteOrganization(favorite);
-        return new ResponseEntity<Void>(HttpStatus.OK); //200
+        return new ResponseEntity<Void>(HttpStatus.RESET_CONTENT); //205
 
     }
 }

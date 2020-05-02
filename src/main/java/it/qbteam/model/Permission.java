@@ -7,9 +7,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Transient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Email;
 
 /**
  * What can or cannot do an organization&#39;s administrator.
@@ -26,6 +30,10 @@ public class Permission   {
   @Column(length = 256)
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
+
+  @JsonProperty("mail")
+  @Transient
+  private String mail;
 
   @Id
   @JsonProperty("organizationId")
@@ -100,6 +108,26 @@ public class Permission   {
     this.orgAuthServerId = orgAuthServerId;
   }
 
+  public Permission mail(String mail) {
+    this.mail = mail;
+    return this;
+  }
+
+  /**
+   * Administrator's e-mail address.
+   * @return mail
+  */
+  @ApiModelProperty(value = "Administrator's e-mail address.")
+
+  @Email
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
+  }
+
   public Permission permission(Integer permission) {
     this.permission = permission;
     return this;
@@ -114,7 +142,7 @@ public class Permission   {
   @ApiModelProperty(required = true, value = "What can or cannot do an organization's administrator. The permission levels are: - Owner: 3 (higher level) - Manager: 2 - Viewer: 1 (lowest level)")
   @NotNull
 
-@Min(1) @Max(3) 
+  @Min(1) @Max(3) 
   public Integer getPermission() {
     return permission;
   }
@@ -132,8 +160,7 @@ public class Permission   {
    * administratorId of the owner administrator who nominated the current administrator.
    * @return nominatedBy
   */
-  @ApiModelProperty(required = true, value = "administratorId of the owner administrator who nominated the current administrator.")
-  @NotNull
+  @ApiModelProperty(value = "administratorId of the owner administrator who nominated the current administrator.")
 
 
   public String getNominatedBy() {
@@ -157,13 +184,14 @@ public class Permission   {
     return Objects.equals(this.administratorId, permission.administratorId) &&
         Objects.equals(this.organizationId, permission.organizationId) &&
         Objects.equals(this.orgAuthServerId, permission.orgAuthServerId) &&
+        Objects.equals(this.mail, permission.mail) &&
         Objects.equals(this.permission, permission.permission) &&
         Objects.equals(this.nominatedBy, permission.nominatedBy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(administratorId, organizationId, orgAuthServerId, permission, nominatedBy);
+    return Objects.hash(administratorId, organizationId, orgAuthServerId, mail, permission, nominatedBy);
   }
 
   @Override
@@ -174,6 +202,7 @@ public class Permission   {
     sb.append("    administratorId: ").append(toIndentedString(administratorId)).append("\n");
     sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
     sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
+    sb.append("    mail: ").append(toIndentedString(mail)).append("\n");
     sb.append("    permission: ").append(toIndentedString(permission)).append("\n");
     sb.append("    nominatedBy: ").append(toIndentedString(nominatedBy)).append("\n");
     sb.append("}");
@@ -191,4 +220,3 @@ public class Permission   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

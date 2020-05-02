@@ -1,6 +1,5 @@
 package it.qbteam.service;
 
-import java.util.Map;
 import java.util.Optional;
 
 import it.qbteam.exception.AuthenticationException;

@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.redis.core.RedisHash;
 
 /**

@@ -11,7 +11,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Link between the user and the organization: only the organization which users

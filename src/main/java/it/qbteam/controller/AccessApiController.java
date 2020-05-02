@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class AccessApiController extends StalkerBaseController implements AccessApi {
+public class AccessApiController implements AccessApi {
 
     private AccessService accessService;
 
@@ -29,17 +29,19 @@ public class AccessApiController extends StalkerBaseController implements Access
 
     private PlaceService placeService;
 
+    private AuthenticationFacade authFacade;
+
     @Autowired
     public AccessApiController(NativeWebRequest request, AuthenticationService service, AccessService accessService, AdministratorService administratorService, PlaceService placeService) {
-        super(request, service);
+        this.authFacade = new AuthenticationFacade(request, service);
         this.accessService = accessService;
         this.adminService = administratorService;
         this.placeService = placeService;
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
             
@@ -63,10 +65,10 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAnonymousAccessListInOrganization(List<String> exitTokens, @Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAppUser(getAccessToken().get())) {
+        if(authFacade.isAppUser(authFacade.getAccessToken().get())) {
             List<OrganizationAccess> accessList = accessService.getAnonymousAccessListInOrganization(exitTokens, organizationId);
             if(!accessList.isEmpty()) {
                 return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
@@ -93,10 +95,10 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAnonymousAccessListInPlace(List<String> exitTokens, @Min(1L) Long placeId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAppUser(getAccessToken().get())) {
+        if(authFacade.isAppUser(authFacade.getAccessToken().get())) {
             List<PlaceAccess> accessList = accessService.getAnonymousAccessListInPlace(exitTokens, placeId);
             if(!accessList.isEmpty()) {
                 return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
@@ -123,14 +125,14 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, @Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAppUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+        if(authFacade.isAppUser(authFacade.getAccessToken().get()) && orgAuthServerIds.size() > 1) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
-        if(isWebAppAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), organizationId).isPresent()) {
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -157,10 +159,10 @@ public class AccessApiController extends StalkerBaseController implements Access
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, @Min(1L) Long placeId) {
-        if(!getAccessToken().isPresent())
+        if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if(isAppUser(getAccessToken().get()) && orgAuthServerIds.size() > 1) {
+        if(authFacade.isAppUser(authFacade.getAccessToken().get()) && orgAuthServerIds.size() > 1) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -170,7 +172,7 @@ public class AccessApiController extends StalkerBaseController implements Access
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if(isWebAppAdministrator(getAccessToken().get()) && !permissionInOrganization(getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 

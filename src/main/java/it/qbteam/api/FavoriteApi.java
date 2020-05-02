@@ -7,7 +7,12 @@ package it.qbteam.api;
 
 import it.qbteam.model.Favorite;
 import it.qbteam.model.Organization;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,26 +82,24 @@ public interface FavoriteApi {
     ResponseEntity<List<Organization>> getFavoriteOrganizationList(@ApiParam(value = "ID of the user. It must be the same of the userId of the authenticated user.",required=true) @PathVariable("userId") String userId);
 
 
-     /**
+    /**
      * POST /favorite/removefavorite : Removes the organization from the user&#39;s favorite organization list.
      * Removes the organization from the user&#39;s favorite organization list. Only app users can access this end-point.
      *
      * @param favorite  (required)
      * @return Organization successfully removed from the list of favorites. (status code 205)
-     *         or The organization is not part of the list of favorite organizations. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The favorite was not found, hence it was not removed. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Removes the organization from the user's favorite organization list.", nickname = "removeFavoriteOrganization", notes = "Removes the organization from the user's favorite organization list. Only app users can access this end-point.", authorizations = {
         @Authorization(value = "bearerAuth")
     }, tags={ "favorite", })
     @ApiResponses(value = { 
         @ApiResponse(code = 205, message = "Organization successfully removed from the list of favorites."),
-        @ApiResponse(code = 400, message = "The organization is not part of the list of favorite organizations."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 404, message = "The favorite was not found, hence it was not removed. Nothing gets returned.") })
     @RequestMapping(value = "/favorite/removefavorite",
         consumes = { "application/json" },
         method = RequestMethod.POST)

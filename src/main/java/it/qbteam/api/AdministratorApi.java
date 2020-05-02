@@ -6,7 +6,12 @@
 package it.qbteam.api;
 
 import it.qbteam.model.Permission;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Validated
@@ -28,6 +33,7 @@ public interface AdministratorApi {
      *
      * @param permission  (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
+     *         or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      *         or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
@@ -37,11 +43,10 @@ public interface AdministratorApi {
     }, tags={ "administrator", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Administrator bound successfully. The permission record gets returned.", response = Permission.class),
+        @ApiResponse(code = 400, message = "Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/bindadministrator",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -69,8 +74,6 @@ public interface AdministratorApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/createadministrator",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -96,8 +99,6 @@ public interface AdministratorApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -124,8 +125,6 @@ public interface AdministratorApi {
         @ApiResponse(code = 401, message = "The user or the administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "List of organizations could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/permission/{administratorId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -150,8 +149,6 @@ public interface AdministratorApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/unbindadministrator",
         consumes = { "application/json" },
         method = RequestMethod.POST)
@@ -178,8 +175,6 @@ public interface AdministratorApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
-    @ApiImplicitParams({
-    })
     @RequestMapping(value = "/administrator/updatepermission",
         produces = { "application/json" }, 
         consumes = { "application/json" },

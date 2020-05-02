@@ -18,20 +18,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class AdministratorApiController extends StalkerBaseController implements AdministratorApi {
+public class AdministratorApiController implements AdministratorApi {
 
     private AdministratorService adminService;
     private OrganizationService organizationService;
+    private AuthenticationFacade authFacade;
 
     @Autowired
-    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService) {
-        super(request, service);
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService, OrganizationService organizationService) {
+        this.authFacade = new AuthenticationFacade(request, service);
         this.adminService = admininistratorService;
+        this.organizationService = organizationService;
     }
 
     private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(isWebAppAdministrator(accessToken) && authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authenticationProviderUserId(accessToken).get());
+        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
+            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
 
@@ -46,26 +48,37 @@ public class AdministratorApiController extends StalkerBaseController implements
      *
      * @param permission (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
+     * or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
      * or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<Permission> bindAdministratorToOrganization(@Valid Permission permission) {
-        if(!getAccessToken().isPresent()) {
-            return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
+        if(!authFacade.getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+
+        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent() || !authFacade.authenticationProviderUserIdByEmail(authFacade.getAccessToken().get(), permission.getMail()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        } else {
+            permission.setAdministratorId(authFacade.authenticationProviderUserIdByEmail(authFacade.getAccessToken().get(), permission.getMail()).get());
+        }
+
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 2) { // 2 is Manager level
-            return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+        if(checkPermission.get().getPermission() < permission.getPermission()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
         Optional<Permission> returnedPermission = adminService.bindAdministratorToOrganization(permission);
         if (returnedPermission.isPresent()){
-            return new ResponseEntity<Permission>(returnedPermission.get(), HttpStatus.OK); //201
+            return new ResponseEntity<>(returnedPermission.get(), HttpStatus.CREATED); //201
         }
         else
         {
-            return new ResponseEntity<Permission>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
     }
 
@@ -82,13 +95,13 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid Permission permission) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
         }
         if(adminService.getAdministratorListOfOrganization(permission.getOrganizationId()).stream().filter(id -> id.getOrgAuthServerId().equals(permission.getOrgAuthServerId())).findAny().isPresent()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
-        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
         }
@@ -114,22 +127,20 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<List<Permission>> getAdministratorListOfOrganization(@Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), organizationId);
+        if(!organizationService.getOrganization(organizationId).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
+
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
         List<Permission> returnedList = adminService.getAdministratorListOfOrganization(organizationId);
-        if(returnedList.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
-        }
-        else
-        {
-            return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //201
-        }
-
+        
+        return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //200
     }
 
     /**
@@ -145,10 +156,10 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<List<Permission>> getPermissionList(String administratorId) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(!isWebAppAdministrator(getAccessToken().get()) && !authenticationProviderUserId(getAccessToken().get()).get().equals(administratorId)){
+        if(!authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(administratorId)){
 
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
@@ -173,10 +184,10 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Void> unbindAdministratorFromOrganization(@Valid Permission permission) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
@@ -200,10 +211,10 @@ public class AdministratorApiController extends StalkerBaseController implements
      */
     @Override
     public ResponseEntity<Permission> updateAdministratorPermission(@Valid Permission permission) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }

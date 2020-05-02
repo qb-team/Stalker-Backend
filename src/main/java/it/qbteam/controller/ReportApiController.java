@@ -16,14 +16,18 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @Controller
-public class ReportApiController extends StalkerBaseController implements ReportApi {
+public class ReportApiController implements ReportApi {
 
     private ReportService reportService;
     private OrganizationService organizationService;
 
+    private AuthenticationFacade authFacade;
+
     @Autowired
-    public ReportApiController(NativeWebRequest request, AuthenticationService service) {
-        super(request, service);
+    public ReportApiController(NativeWebRequest request, AuthenticationService service, ReportService reportService, OrganizationService organizationService) {
+        this.authFacade = new AuthenticationFacade(request, service);
+        this.reportService = reportService;
+        this.organizationService = organizationService;
     }
     /**
      * GET /report/organization/{organizationId} : Gets the report of total time spent per user inside the organization.
@@ -38,10 +42,10 @@ public class ReportApiController extends StalkerBaseController implements Report
      */
     @Override
     public ResponseEntity<List<TimePerUserReport>> getTimePerUserReport(@Min(1L) Long organizationId) {
-        if(!getAccessToken().isPresent()) {
+        if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(isAppUser(getAccessToken().get())){
+        if(authFacade.isAppUser(authFacade.getAccessToken().get())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
         if(!organizationService.getOrganization(organizationId).isPresent()){

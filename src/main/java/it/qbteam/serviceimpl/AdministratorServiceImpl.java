@@ -2,6 +2,7 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Permission;
 import it.qbteam.model.PermissionId;
+import it.qbteam.repository.sql.OrganizationRepository;
 import it.qbteam.repository.sql.PermissionRepository;
 import it.qbteam.service.AdministratorService;
 
@@ -17,14 +18,17 @@ public class AdministratorServiceImpl implements AdministratorService {
 
     private PermissionRepository permissionRepo;
 
+    private OrganizationRepository organizationRepo;
+    
     @Autowired
-    public AdministratorServiceImpl(PermissionRepository permissionRepository) {
+    public AdministratorServiceImpl(PermissionRepository permissionRepository, OrganizationRepository organizationRepository) {
         this.permissionRepo = permissionRepository;
+        this.organizationRepo = organizationRepository;
     }
 
     @Override
     public Optional<Permission> bindAdministratorToOrganization(Permission permission) {
-        if(permission == null)
+        if(permission == null || !organizationRepo.existsById(permission.getOrganizationId()))
             return Optional.empty();
         
         return Optional.of(permissionRepo.save(permission));
