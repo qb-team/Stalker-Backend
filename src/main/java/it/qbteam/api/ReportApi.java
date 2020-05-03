@@ -29,7 +29,7 @@ public interface ReportApi {
      * GET /report/place/{placeId} : Gets the report of total time spent per user inside the place of an organization.
      * Gets the report of total time spent per user inside the place of an organization. Only web-app administrators can access this end-point.
      *
-     * @param organizationId ID of the organization. The viewer administrator must have permissions for this organization. (required)
+     * @param placeId ID of the organization. The viewer administrator must have permissions for this organization. (required)
      * @return Report of time spent in the place per user returned successfully. (status code 200)
      *         or Report is empty. Nothing gets returned. (status code 204)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
