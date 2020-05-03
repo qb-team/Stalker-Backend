@@ -48,10 +48,18 @@ openapi-generator generate \
 --output generated-sources/typescript
 
 #
-# Generate Stalker API documentation
+# Generate Stalker API documentation (HTML)
 #
 openapi-generator generate \
 --input-spec stalker.yaml \
 --generator-name html \
 --config openapi-config/html.json \
 --output generated-sources/html
+
+#
+# Generate Stalker API documentation (Markdown)
+#
+openapi-generator generate \
+--input-spec stalker.yaml \
+--generator-name markdown \
+--output generated-sources/markdown

@@ -198,3 +198,5 @@ generated-sources/typescript/*
 !generated-sources/typescript/.gitkeep
 generated-sources/html/*
 !generated-sources/html/.gitkeep
+generated-sources/markdown/*
+!generated-sources/markdown/.gitkeep
