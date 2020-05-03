@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import it.qbteam.exception.AuthenticationException;
+import it.qbteam.model.AdministratorBindingRequest;
+import it.qbteam.model.Permission;
 import it.qbteam.service.AuthenticationService;
 
 class AuthenticationFacade {
@@ -75,12 +77,39 @@ class AuthenticationFacade {
         }
     }
 
-    public Optional<String> authenticationProviderUserIdByEmail(String accessToken, String email) {
+    private Optional<String> authenticationProviderUserIdByEmail(String accessToken, String email) {
         try {
             return authenticationService.getUserIdByEmail(accessToken, email);
         } catch(AuthenticationException exc) {
             System.out.println("Thrown AuthenticationException: " + exc.toString());
             return Optional.empty();
         }
+    }
+
+    public Optional<Permission> createPermissionFromRequest(String accessToken, AdministratorBindingRequest abr, String nominatedBy) {
+        Optional<String> administratorId = authenticationProviderUserIdByEmail(accessToken, abr.getMail());
+        
+        if(!authenticationProviderUserIdByEmail(accessToken, abr.getMail()).isPresent()) {
+            return Optional.empty();
+        }
+        
+        Permission permission = new Permission();
+        permission.setPermission(abr.getPermission());
+        permission.setOrgAuthServerId(abr.getOrgAuthServerId());
+        permission.setOrganizationId(abr.getOrganizationId());
+        permission.setNominatedBy(nominatedBy);
+        permission.setAdministratorId(administratorId.get());
+
+        return Optional.of(permission);
+    }
+
+    public Boolean createUserAccount(String accessToken, String mail, String password) {
+        try {
+            return authenticationService.createUser(accessToken, mail, password);
+        } catch(AuthenticationException exc) {
+            System.out.println("Thrown AuthenticationException: " + exc.toString());
+            return false;
+        }
+
     }
 }

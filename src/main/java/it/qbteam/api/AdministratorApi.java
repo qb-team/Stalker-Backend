@@ -5,6 +5,7 @@
  */
 package it.qbteam.api;
 
+import it.qbteam.model.AdministratorBindingRequest;
 import it.qbteam.model.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ public interface AdministratorApi {
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
      * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.
      *
-     * @param permission  (required)
+     * @param administratorBindingRequest  (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
      *         or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
@@ -39,26 +40,26 @@ public interface AdministratorApi {
      *         or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Bind an already existent administrator to the organization.", nickname = "bindAdministratorToOrganization", notes = "Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.", response = Permission.class, authorizations = {
-        @Authorization(value = "bearerAuth")
+            @Authorization(value = "bearerAuth")
     }, tags={ "administrator", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Administrator bound successfully. The permission record gets returned.", response = Permission.class),
-        @ApiResponse(code = 400, message = "Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned."),
-        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Administrator bound successfully. The permission record gets returned.", response = Permission.class),
+            @ApiResponse(code = 400, message = "Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned."),
+            @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+            @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
+            @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/administrator/bindadministrator",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Permission> bindAdministratorToOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Permission permission);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<Permission> bindAdministratorToOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AdministratorBindingRequest administratorBindingRequest);
 
 
     /**
      * POST /administrator/createadministrator : Creates and binds a new administrator to the organization.
      * Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point.
      *
-     * @param permission  (required)
+     * @param administratorBindingRequest  (required)
      * @return Administrator created and bound successfully. The permission record gets returned. (status code 201)
      *         or The administrator to be created has already an account. The process could not succeed. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
@@ -66,19 +67,19 @@ public interface AdministratorApi {
      *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Creates and binds a new administrator to the organization.", nickname = "createNewAdministratorInOrganization", notes = "Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point.", response = Permission.class, authorizations = {
-        @Authorization(value = "bearerAuth")
+            @Authorization(value = "bearerAuth")
     }, tags={ "administrator", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Administrator created and bound successfully. The permission record gets returned.", response = Permission.class),
-        @ApiResponse(code = 400, message = "The administrator to be created has already an account. The process could not succeed. Nothing gets returned."),
-        @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Administrator created and bound successfully. The permission record gets returned.", response = Permission.class),
+            @ApiResponse(code = 400, message = "The administrator to be created has already an account. The process could not succeed. Nothing gets returned."),
+            @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
+            @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
+            @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/administrator/createadministrator",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Permission> createNewAdministratorInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Permission permission);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<Permission> createNewAdministratorInOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody AdministratorBindingRequest administratorBindingRequest);
 
 
     /**

@@ -138,7 +138,7 @@ public class OrganizationApiController implements OrganizationApi {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         } else {
 
-            if(organization.getName())
+            // if(organization.getName())
 
             Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
             if(updatedOrganization.isPresent()) {

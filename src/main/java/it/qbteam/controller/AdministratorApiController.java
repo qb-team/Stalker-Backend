@@ -1,6 +1,7 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.AdministratorApi;
+import it.qbteam.model.AdministratorBindingRequest;
 import it.qbteam.model.Permission;
 import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
@@ -46,39 +47,46 @@ public class AdministratorApiController implements AdministratorApi {
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
      * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.
      *
-     * @param permission (required)
+     * @param administratorBindingRequest  (required)
      * @return Administrator bound successfully. The permission record gets returned. (status code 201)
-     * or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
-     * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
-     * or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
+     *         or Administrators cannot bind an administrator to an organization with permissions higher than theirs. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Permission> bindAdministratorToOrganization(@Valid Permission permission) {
+    public ResponseEntity<Permission> bindAdministratorToOrganization(@Valid AdministratorBindingRequest administratorBindingRequest) {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
 
-        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent() || !authFacade.authenticationProviderUserIdByEmail(authFacade.getAccessToken().get(), permission.getMail()).isPresent()) {
+        if(!organizationService.getOrganization(administratorBindingRequest.getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
-        } else {
-            permission.setAdministratorId(authFacade.authenticationProviderUserIdByEmail(authFacade.getAccessToken().get(), permission.getMail()).get());
         }
 
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        if(checkPermission.get().getPermission() < permission.getPermission()) {
+
+        if(checkPermission.get().getPermission() < administratorBindingRequest.getPermission()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
-        Optional<Permission> returnedPermission = adminService.bindAdministratorToOrganization(permission);
+
+        final String administratorWhoNominates = authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get();
+
+        Optional<Permission> permission = authFacade.createPermissionFromRequest(authFacade.getAccessToken().get(), administratorBindingRequest, administratorWhoNominates);
+        if(!permission.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
+
+        Optional<Permission> returnedPermission = adminService.bindAdministratorToOrganization(permission.get());
         if (returnedPermission.isPresent()){
-            return new ResponseEntity<>(returnedPermission.get(), HttpStatus.CREATED); //201
+            return new ResponseEntity<>(returnedPermission.get(), HttpStatus.CREATED); // 201
         }
         else
         {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
     }
 
@@ -86,32 +94,44 @@ public class AdministratorApiController implements AdministratorApi {
      * POST /administrator/createadministrator : Creates and binds a new administrator to the organization.
      * Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point.
      *
-     * @param permission (required)
+     * @param administratorBindingRequest  (required)
      * @return Administrator created and bound successfully. The permission record gets returned. (status code 201)
-     * or The administrator to be created has already an account. The process could not succeed. Nothing gets returned. (status code 400)
-     * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The administrator to be created has already an account. The process could not succeed. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid Permission permission) {
+    public ResponseEntity<Permission> createNewAdministratorInOrganization(@Valid AdministratorBindingRequest administratorBindingRequest) {
         if(!authFacade.getAccessToken().isPresent()) {
-            return new ResponseEntity<Permission>(HttpStatus.UNAUTHORIZED); // 401
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(adminService.getAdministratorListOfOrganization(permission.getOrganizationId()).stream().filter(id -> id.getOrgAuthServerId().equals(permission.getOrgAuthServerId())).findAny().isPresent()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
-        }
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
+
+        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
-            return new ResponseEntity<Permission>(HttpStatus.FORBIDDEN); // 403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        Optional<Permission> returnedCreation = adminService.createNewAdministratorToOrganization(permission);
+
+        final String administratorWhoNominates = authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get();
+
+        Boolean userCreated = authFacade.createUserAccount(authFacade.getAccessToken().get(), administratorBindingRequest.getMail(), administratorBindingRequest.getPassword());
+
+        if(!userCreated) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Permission> permission = authFacade.createPermissionFromRequest(authFacade.getAccessToken().get(), administratorBindingRequest, administratorWhoNominates);
+        if(!permission.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
+
+        Optional<Permission> returnedCreation = adminService.createNewAdministratorToOrganization(permission.get());
         if(returnedCreation.isPresent()){
-            return new ResponseEntity<Permission>(returnedCreation.get(), HttpStatus.OK); //201
+            return new ResponseEntity<>(returnedCreation.get(), HttpStatus.OK); //201
         }
         else
         {
-            return new ResponseEntity<Permission>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
     }
 
