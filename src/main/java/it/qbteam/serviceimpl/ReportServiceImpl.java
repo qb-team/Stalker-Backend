@@ -27,27 +27,34 @@ public class ReportServiceImpl implements ReportService {
         this.placeAccessRepo = placeAccessRepository;
     }
 
+    private Long getDuration(OffsetDateTime firstDate, OffsetDateTime lastDate) {
+        return lastDate.minusSeconds(firstDate.toInstant().toEpochMilli() * 1000).toInstant().toEpochMilli() * 1000;
+    }
+
     @Override
-    public List<TimePerUserReport> getTimePerUserReport(Long organizationId) {
+    public List<TimePerUserReport> getTimePerUserReport(Long placeId) {
+        final OffsetDateTime timeIdentity = OffsetDateTime.of(LocalDateTime.of(0, 00, 00, 00, 00), ZoneOffset.ofHoursMinutes(0, 0));
+        Iterable<PlaceAccess> allAccessOfSinglePlace = placeAccessRepo.findByPlaceId(placeId);
+        List<PlaceAccess> listOfAllAccessOnPlace = new ArrayList<>();
 
-        Iterable<PlaceAccess> allAccessOfSingleOrganization = placeAccessRepo.findByPlaceId(organizationId);
-        List<PlaceAccess> listOfAllAccessOnOrganization = new ArrayList<>();
+        allAccessOfSinglePlace.forEach(listOfAllAccessOnPlace::add);
 
-        allAccessOfSingleOrganization.forEach(listOfAllAccessOnOrganization::add);
+        Map<String, Long> mapUserIdWithTime = listOfAllAccessOnPlace.stream()
+                .filter(access -> access.getOrgAuthServerId() != null)
+                .collect(Collectors.groupingBy(PlaceAccess::getOrgAuthServerId, Collectors
+                        .summingLong(acc -> getDuration(acc.getEntranceTimestamp(), acc.getExitTimestamp()))));
 
-        Map<String, Long> mapUserIdWithTime = listOfAllAccessOnOrganization.stream().filter(access-> access.getOrgAuthServerId()!=null).collect(Collectors.groupingBy(PlaceAccess::getOrgAuthServerId, Collectors.summingLong(acc -> {
-           return acc.getExitTimestamp().minusSeconds(
-                    acc.getEntranceTimestamp()
-                            .toInstant()
-                            .toEpochMilli()*1000
-            ).toInstant().toEpochMilli()*1000;
-        })));
         List<TimePerUserReport> returnList = new LinkedList<>();
-        mapUserIdWithTime.forEach((id, time)-> returnList.add(new TimePerUserReport()
-                .totalTime(OffsetDateTime.of(LocalDateTime.of(0, 00, 00, 00, 00), ZoneOffset.ofHoursMinutes(0, 0)).plusSeconds(time))
-                .orgAuthServerId(id)
-                .organizationId(organizationId)));
+        mapUserIdWithTime.forEach((id, time) -> {
+            TimePerUserReport report = new TimePerUserReport();
+
+            report.setTotalTime(timeIdentity.plusSeconds(time));
+            report.setOrgAuthServerId(id);
+            report.setPlaceId(placeId);
+
+            returnList.add(report);
+        });
+
         return returnList;
     }
 }
-

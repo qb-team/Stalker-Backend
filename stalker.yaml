@@ -989,20 +989,20 @@ paths:
           description: Users cannot access this end-point. Nothing gets returned.
         "404":
           description: The place could not be found. Nothing gets returned.
-  "/report/organization/{organizationId}":
+  "/report/place/{placeId}":
     get:
       tags:
         - report
-      summary: Gets the report of total time spent per user inside the organization.
+      summary: Gets the report of total time spent per user inside the place of an organization.
       description: >-
-        Gets the report of total time spent by each user inside the organization.
+        Gets the report of total time spent by each user inside the place of an organization.
         Only web-app administrators can access this end-point.
       operationId: getTimePerUserReport
       parameters:
-        - name: organizationId
+        - name: placeId
           in: path
           description: >-
-            ID of the organization.
+            ID of the place.
             The viewer administrator must have permissions for this organization.
           required: true
           schema:
@@ -1011,7 +1011,7 @@ paths:
             minimum: 1
       responses:
         "200":
-          description: Report of time spent in the organization per user returned successfully.
+          description: Report of time spent in the place per user returned successfully.
           content:
             application/json:
               schema:
@@ -1449,15 +1449,15 @@ components:
       description: Represents a row in the report generated for an user by the viewer administrator.
       additionalProperties: false
       required:
-        - organizationId
+        - placeId
         - orgAuthServerId
         - totalTime
       properties:
-        organizationId:
+        placeId:
           type: integer
           format: int64
           minimum: 1
-          description: Unique identifier of the organization in which the user had access.
+          description: Unique identifier of the place in which the user had access.
         orgAuthServerId:
           type: string
           maxLength: 256

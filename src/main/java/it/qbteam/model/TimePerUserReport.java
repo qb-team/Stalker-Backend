@@ -17,8 +17,8 @@ import javax.validation.constraints.Size;
 @ApiModel(description = "Represents a row in the report generated for an user by the viewer administrator.")
 
 public class TimePerUserReport   {
-  @JsonProperty("organizationId")
-  private Long organizationId;
+  @JsonProperty("placeId")
+  private Long placeId;
 
   @JsonProperty("orgAuthServerId")
   private String orgAuthServerId;
@@ -26,25 +26,25 @@ public class TimePerUserReport   {
   @JsonProperty("totalTime")
   private OffsetDateTime totalTime;
 
-  public TimePerUserReport organizationId(Long organizationId) {
-    this.organizationId = organizationId;
+  public TimePerUserReport placeId(Long placeId) {
+    this.placeId = placeId;
     return this;
   }
 
   /**
-   * Unique identifier of the organization in which the user had access.
-   * @return organizationId
+   * Unique identifier of the place in which the user had access.
+   * @return placeId
   */
-  @ApiModelProperty(required = true, value = "Unique identifier of the organization in which the user had access.")
+  @ApiModelProperty(required = true, value = "Unique identifier of the place in which the user had access.")
   @NotNull
 
   @Min(1L)
-  public Long getOrganizationId() {
-    return organizationId;
+  public Long getPlaceId() {
+    return placeId;
   }
 
-  public void setOrganizationId(Long organizationId) {
-    this.organizationId = organizationId;
+  public void setPlaceId(Long placeId) {
+    this.placeId = placeId;
   }
 
   public TimePerUserReport orgAuthServerId(String orgAuthServerId) {
@@ -100,14 +100,14 @@ public class TimePerUserReport   {
       return false;
     }
     TimePerUserReport timePerUserReport = (TimePerUserReport) o;
-    return Objects.equals(this.organizationId, timePerUserReport.organizationId) &&
+    return Objects.equals(this.placeId, timePerUserReport.placeId) &&
         Objects.equals(this.orgAuthServerId, timePerUserReport.orgAuthServerId) &&
         Objects.equals(this.totalTime, timePerUserReport.totalTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(organizationId, orgAuthServerId, totalTime);
+    return Objects.hash(placeId, orgAuthServerId, totalTime);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class TimePerUserReport   {
     StringBuilder sb = new StringBuilder();
     sb.append("class TimePerUserReport {\n");
     
-    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+    sb.append("    placeId: ").append(toIndentedString(placeId)).append("\n");
     sb.append("    orgAuthServerId: ").append(toIndentedString(orgAuthServerId)).append("\n");
     sb.append("    totalTime: ").append(toIndentedString(totalTime)).append("\n");
     sb.append("}");
