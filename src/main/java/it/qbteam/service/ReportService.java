@@ -16,8 +16,8 @@ public interface ReportService {
     /**
      * Description
      * 
-     * @param organizationId
+     * @param placeId
      * @return
      */
-    List<TimePerUserReport> getTimePerUserReport(Long organizationId);
+    List<TimePerUserReport> getTimePerUserReport(Long placeId);
 }
