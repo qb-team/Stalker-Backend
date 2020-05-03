@@ -169,9 +169,9 @@ public class RedisConfig {
         final ChannelTopic topic
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-    	container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(connectionFactory);
         container.addMessageListener(listenerAdapter, topic);
         container.afterPropertiesSet();
-    	return container;
+        return container;
     }
 }
