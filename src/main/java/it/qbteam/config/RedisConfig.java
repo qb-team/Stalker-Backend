@@ -146,32 +146,32 @@ public class RedisConfig {
     }
 
     @Bean(name="organizationMovementSubscriberContainer")
-	public RedisMessageListenerContainer organizationMovementSubscriberContainer(
+    public RedisMessageListenerContainer organizationMovementSubscriberContainer(
         // final RedisConnectionFactory connectionFactory,
         // @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
         // @Qualifier("organizationMovementTopic") final ChannelTopic topic
     ) {
         return createContainer(connectionFactory(), organizationMovementSubscriber(), organizationMovementTopic());
     }
-    
+
     @Bean(name="placeMovementSubscriberContainer")
-	public RedisMessageListenerContainer placeMovementSubscriberContainer(
+    public RedisMessageListenerContainer placeMovementSubscriberContainer(
         // final RedisConnectionFactory connectionFactory,
         // @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
         // @Qualifier("placeMovementTopic") final ChannelTopic topic
     ) {
-		return createContainer(connectionFactory(), placeMovementSubscriber(), placeMovementTopic());
+        return createContainer(connectionFactory(), placeMovementSubscriber(), placeMovementTopic());
     }
-    
+
     private RedisMessageListenerContainer createContainer(
         final RedisConnectionFactory connectionFactory,
         final MessageListenerAdapter listenerAdapter,
         final ChannelTopic topic
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory);
+    	container.setConnectionFactory(connectionFactory);
         container.addMessageListener(listenerAdapter, topic);
         container.afterPropertiesSet();
-		return container;
+    	return container;
     }
 }
