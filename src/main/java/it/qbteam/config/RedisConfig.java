@@ -20,6 +20,8 @@ import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
 import it.qbteam.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
 import it.qbteam.movementtracker.subscriber.PlaceMovementRedisSubscriber;
+import it.qbteam.repository.OrganizationAccessRepository;
+import it.qbteam.repository.PlaceAccessRepository;
 
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
@@ -126,23 +128,23 @@ public class RedisConfig {
     }
     
     @Bean(name="organizationMovementSubscriber")
-    public MessageListenerAdapter organizationMovementSubscriber() {
-        return new MessageListenerAdapter(new OrganizationMovementRedisSubscriber(), "onMessage");
+    public MessageListenerAdapter organizationMovementSubscriber(OrganizationAccessRepository organizationAccessRepository) {
+        return new MessageListenerAdapter(new OrganizationMovementRedisSubscriber( organizationAccessRepository), "onMessage");
     }
 
     @Bean(name="placeMovementSubscriber")
-    public MessageListenerAdapter placeMovementSubscriber() {
-        return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(), "onMessage");
+    public MessageListenerAdapter placeMovementSubscriber(PlaceAccessRepository placeAccessRepository) {
+        return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(placeAccessRepository), "onMessage");
     }
 
     @Bean(name="organizationMovementSubscriberContainer")
-    public RedisMessageListenerContainer organizationMovementSubscriberContainer() {
-        return createContainer(connectionFactory(), organizationMovementSubscriber(), organizationMovementTopic());
+    public RedisMessageListenerContainer organizationMovementSubscriberContainer(OrganizationAccessRepository organizationAccessRepository) {
+        return createContainer(connectionFactory(), organizationMovementSubscriber(organizationAccessRepository), organizationMovementTopic());
     }
 
     @Bean(name="placeMovementSubscriberContainer")
-    public RedisMessageListenerContainer placeMovementSubscriberContainer() {
-        return createContainer(connectionFactory(), placeMovementSubscriber(), placeMovementTopic());
+    public RedisMessageListenerContainer placeMovementSubscriberContainer(PlaceAccessRepository placeAccessRepository) {
+        return createContainer(connectionFactory(), placeMovementSubscriber(placeAccessRepository), placeMovementTopic());
     }
 
     private RedisMessageListenerContainer createContainer(
