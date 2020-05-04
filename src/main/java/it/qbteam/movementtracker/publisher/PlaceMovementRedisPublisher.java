@@ -25,6 +25,7 @@ public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
 
     @Override
     public void publish(final PlaceMovement message) {
+        System.out.println(message);
         redisTemplate.convertAndSend(topic.getTopic(), message);
     }
 }

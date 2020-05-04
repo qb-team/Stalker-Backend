@@ -25,6 +25,7 @@ public class OrganizationMovementRedisPublisher extends OrganizationMovementPubl
 
     @Override
     public void publish(final OrganizationMovement message) {
+        System.out.println(message);
         redisTemplate.convertAndSend(topic.getTopic(), message);
     }
 }

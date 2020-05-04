@@ -1,5 +1,7 @@
 package it.qbteam.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +14,19 @@ import it.qbteam.api.MovementApi;
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
 import it.qbteam.service.AuthenticationService;
+import it.qbteam.service.MovementService;
 
 @Controller
 public class MovementApiController implements MovementApi {
     
     private AuthenticationFacade authFacade;
 
+    private MovementService movementService;
+
     @Autowired
-    public MovementApiController(NativeWebRequest request, AuthenticationService service) {
+    public MovementApiController(NativeWebRequest request, AuthenticationService service, MovementService movementService) {
         this.authFacade = new AuthenticationFacade(request, service);
+        this.movementService = movementService;
     }
     
     /**
@@ -36,7 +42,25 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<OrganizationMovement> trackMovementInOrganization(@Valid OrganizationMovement organizationMovement) {
-        return null;
+        if(!authFacade.getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
+
+        Optional<OrganizationMovement> movement = movementService.trackMovementInOrganization(organizationMovement);
+
+        if(movement.isPresent()) {
+            if(movement.get().getExitToken() == null) {
+                return new ResponseEntity<>(movement.get(), HttpStatus.CREATED); // 201
+            } else {
+                return new ResponseEntity<>(HttpStatus.ACCEPTED); // 202
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
+        }
     }
 
     /**
@@ -52,6 +76,24 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<PlaceMovement> trackMovementInPlace(@Valid PlaceMovement placeMovement) {
-        return null;
+        if(!authFacade.getAccessToken().isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
+        }
+
+        Optional<PlaceMovement> movement = movementService.trackMovementInPlace(placeMovement);
+
+        if(movement.isPresent()) {
+            if(movement.get().getExitToken() == null) {
+                return new ResponseEntity<>(movement.get(), HttpStatus.CREATED); // 201
+            } else {
+                return new ResponseEntity<>(HttpStatus.ACCEPTED); // 202
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
+        }
     }
 }
