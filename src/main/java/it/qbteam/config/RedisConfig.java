@@ -124,16 +124,6 @@ public class RedisConfig {
     public ChannelTopic placeMovementTopic() {
         return new ChannelTopic("stalker-backend-movement-place");
     }
-
-    // @Bean
-    // public MovementPublisher<String> organizationMovementPublisher(@Qualifier("organizationMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
-    //     return new OrganizationMovementRedisPublisher(template, channel);
-    // }
-
-    // @Bean
-    // public MovementPublisher<String> placeMovementPublisher(@Qualifier("placeMovementTemplate") final RedisTemplate<String, String> template, @Qualifier("organizationMovementTopic") final ChannelTopic channel) {
-    //     return new PlaceMovementRedisPublisher(template, channel);
-    // }
     
     @Bean(name="organizationMovementSubscriber")
     public MessageListenerAdapter organizationMovementSubscriber() {
@@ -146,20 +136,12 @@ public class RedisConfig {
     }
 
     @Bean(name="organizationMovementSubscriberContainer")
-    public RedisMessageListenerContainer organizationMovementSubscriberContainer(
-        // final RedisConnectionFactory connectionFactory,
-        // @Qualifier("organizationMovementSubscriber") final MessageListenerAdapter listenerAdapter,
-        // @Qualifier("organizationMovementTopic") final ChannelTopic topic
-    ) {
+    public RedisMessageListenerContainer organizationMovementSubscriberContainer() {
         return createContainer(connectionFactory(), organizationMovementSubscriber(), organizationMovementTopic());
     }
 
     @Bean(name="placeMovementSubscriberContainer")
-    public RedisMessageListenerContainer placeMovementSubscriberContainer(
-        // final RedisConnectionFactory connectionFactory,
-        // @Qualifier("placeMovementSubscriber") final MessageListenerAdapter listenerAdapter,
-        // @Qualifier("placeMovementTopic") final ChannelTopic topic
-    ) {
+    public RedisMessageListenerContainer placeMovementSubscriberContainer() {
         return createContainer(connectionFactory(), placeMovementSubscriber(), placeMovementTopic());
     }
 
