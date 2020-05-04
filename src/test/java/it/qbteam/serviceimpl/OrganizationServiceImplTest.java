@@ -1,7 +1,7 @@
 package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Organization;
-import it.qbteam.repository.sql.OrganizationRepository;
+import it.qbteam.repository.OrganizationRepository;
 import it.qbteam.service.OrganizationService;
 import org.junit.Before;
 import org.junit.Test;

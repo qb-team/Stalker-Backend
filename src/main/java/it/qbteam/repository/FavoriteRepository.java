@@ -1,4 +1,4 @@
-package it.qbteam.repository.sql;
+package it.qbteam.repository;
 
 import it.qbteam.model.Favorite;
 import it.qbteam.model.FavoriteId;

@@ -4,8 +4,8 @@ import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.OrganizationPresenceCounter;
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.PlacePresenceCounter;
-import it.qbteam.repository.sql.OrganizationAccessRepository;
-import it.qbteam.repository.sql.PlaceAccessRepository;
+import it.qbteam.repository.OrganizationAccessRepository;
+import it.qbteam.repository.PlaceAccessRepository;
 import it.qbteam.service.PresenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;

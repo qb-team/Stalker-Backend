@@ -2,7 +2,7 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.TimePerUserReport;
-import it.qbteam.repository.sql.PlaceAccessRepository;
+import it.qbteam.repository.PlaceAccessRepository;
 import it.qbteam.service.ReportService;
 
 import org.springframework.beans.factory.annotation.Autowired;

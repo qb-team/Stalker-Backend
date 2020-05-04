@@ -1,4 +1,4 @@
-package it.qbteam.repository.sql;
+package it.qbteam.repository;
 
 import it.qbteam.model.Place;
 import org.springframework.data.jpa.repository.Query;

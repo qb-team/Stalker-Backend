@@ -1,7 +1,7 @@
 package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Place;
-import it.qbteam.repository.sql.PlaceRepository;
+import it.qbteam.repository.PlaceRepository;
 import it.qbteam.service.PlaceService;
 
 import org.springframework.beans.factory.annotation.Autowired;

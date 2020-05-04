@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.exception.AuthenticationException;
-import it.qbteam.repository.sql.PermissionRepository;
+import it.qbteam.repository.PermissionRepository;
 
 @RunWith(SpringRunner.class)
 // @ExtendWith(SpringExtension.class)

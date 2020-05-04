@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
-import it.qbteam.repository.sql.OrganizationAccessRepository;
-import it.qbteam.repository.sql.PlaceAccessRepository;
+import it.qbteam.repository.OrganizationAccessRepository;
+import it.qbteam.repository.PlaceAccessRepository;
 
 @RunWith(SpringRunner.class)
 public class AccessServiceImplTest {

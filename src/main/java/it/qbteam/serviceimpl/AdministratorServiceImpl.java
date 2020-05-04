@@ -2,8 +2,8 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Permission;
 import it.qbteam.model.PermissionId;
-import it.qbteam.repository.sql.OrganizationRepository;
-import it.qbteam.repository.sql.PermissionRepository;
+import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.repository.PermissionRepository;
 import it.qbteam.service.AdministratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;

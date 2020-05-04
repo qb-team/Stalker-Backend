@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.model.Permission;
-import it.qbteam.repository.sql.PermissionRepository;
+import it.qbteam.repository.PermissionRepository;
 import it.qbteam.service.AuthenticationService;
 
 @Service
