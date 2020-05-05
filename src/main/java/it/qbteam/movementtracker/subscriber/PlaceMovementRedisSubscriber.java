@@ -22,25 +22,30 @@ public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
     public void onMessage(Message message, byte[] pattern) {
         System.out.println("REDIS MESSAGE: " + message.toString());
 
-        PlaceMovement placeMovementFromRedis = (PlaceMovement) redisSerializer.deserialize(message.getBody());
+        PlaceMovement movement = (PlaceMovement) redisSerializer.deserialize(message.getBody());
 
-        if (placeMovementFromRedis.getMovementType() == 1) { // ingresso
-            PlaceAccess placeAccessFromRedis = new PlaceAccess();
-            placeAccessFromRedis.setEntranceTimestamp(placeMovementFromRedis.getTimestamp());
-            placeAccessFromRedis.setOrgAuthServerId(placeAccessFromRedis.getOrgAuthServerId());
-            placeAccessFromRedis.setPlaceId(placeAccessFromRedis.getPlaceId());
+        System.out.println("PARSED OBJECT: " + movement);
+        
+        if (movement.getMovementType() == 1) { // ingresso
+            PlaceAccess newAccess = new PlaceAccess();
+            newAccess.setEntranceTimestamp(movement.getTimestamp());
+            newAccess.setExitToken(movement.getExitToken());
+            newAccess.setOrgAuthServerId(movement.getOrgAuthServerId());
+            newAccess.setPlaceId(movement.getPlaceId());
+            newAccess.setId(1L);
 
-            placeAccessRepository.save(placeAccessFromRedis);
-        } else if (placeMovementFromRedis.getMovementType() == -1) {
-            Iterable<PlaceAccess> placeAccessFromDB = placeAccessRepository.findByExitTokenAndPlaceId(
-                    placeMovementFromRedis.getExitToken(), placeMovementFromRedis.getPlaceId());
+            System.out.println(newAccess);
 
-            if (placeAccessFromDB.iterator().hasNext()) {
-                PlaceAccess placeAccess = placeAccessFromDB.iterator().next();
+            placeAccessRepository.save(newAccess);
+        } else if (movement.getMovementType() == -1) { // uscita
+            Iterable<PlaceAccess> dbAccess = placeAccessRepository.findByExitTokenAndPlaceId(movement.getExitToken(), movement.getPlaceId());
 
-                placeAccess.setExitTimestamp(placeMovementFromRedis.getTimestamp());
+            if (dbAccess.iterator().hasNext()) {
+                PlaceAccess organizationAccess = dbAccess.iterator().next();
 
-                placeAccessRepository.save(placeAccess);
+                organizationAccess.setExitTimestamp(movement.getTimestamp());
+
+                placeAccessRepository.save(organizationAccess);
 
             } else {
                 System.out.println("ACCESS NOT FOUND");

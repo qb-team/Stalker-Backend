@@ -22,24 +22,28 @@ public class OrganizationMovementRedisSubscriber extends OrganizationMovementSub
     public void onMessage(Message message, byte[] pattern) {
         System.out.println("REDIS MESSAGE: " + message.toString());
 
-        OrganizationMovement organizationMovementFromRedis = (OrganizationMovement) redisSerializer.deserialize(message.getBody());
+        OrganizationMovement movement = (OrganizationMovement) redisSerializer.deserialize(message.getBody());
+
+        System.out.println("PARSED OBJECT: " + movement);
         
-        if (organizationMovementFromRedis.getMovementType() == 1) { // ingresso
-            OrganizationAccess organizationAccessFromRedis = new OrganizationAccess();
-            organizationAccessFromRedis.setEntranceTimestamp(organizationMovementFromRedis.getTimestamp());
-            organizationAccessFromRedis.setOrgAuthServerId(organizationAccessFromRedis.getOrgAuthServerId());
-            organizationAccessFromRedis.setOrganizationId(organizationAccessFromRedis.getOrganizationId());
+        if (movement.getMovementType() == 1) { // ingresso
+            OrganizationAccess newAccess = new OrganizationAccess();
+            newAccess.setEntranceTimestamp(movement.getTimestamp());
+            newAccess.setExitToken(movement.getExitToken());
+            newAccess.setOrgAuthServerId(movement.getOrgAuthServerId());
+            newAccess.setOrganizationId(movement.getOrganizationId());
+            newAccess.setId(1L);
 
-            organizationAccessRepository.save(organizationAccessFromRedis);
-        } else if (organizationMovementFromRedis.getMovementType() == -1) {
-            Iterable<OrganizationAccess> organizationAccessFromDB = organizationAccessRepository
-                    .findByExitTokenAndOrganizationId(organizationMovementFromRedis.getExitToken(),
-                            organizationMovementFromRedis.getOrganizationId());
+            System.out.println(newAccess);
 
-            if (organizationAccessFromDB.iterator().hasNext()) {
-                OrganizationAccess organizationAccess = organizationAccessFromDB.iterator().next();
+            organizationAccessRepository.save(newAccess);
+        } else if (movement.getMovementType() == -1) { // uscita
+            Iterable<OrganizationAccess> dbAccess = organizationAccessRepository.findByExitTokenAndOrganizationId(movement.getExitToken(), movement.getOrganizationId());
 
-                organizationAccess.setExitTimestamp(organizationMovementFromRedis.getTimestamp());
+            if (dbAccess.iterator().hasNext()) {
+                OrganizationAccess organizationAccess = dbAccess.iterator().next();
+
+                organizationAccess.setExitTimestamp(movement.getTimestamp());
 
                 organizationAccessRepository.save(organizationAccess);
 

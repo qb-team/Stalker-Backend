@@ -25,7 +25,6 @@ public class OrganizationMovement   {
   private String exitToken;
 
   @JsonProperty("timestamp")
-  // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
   private OffsetDateTime timestamp;
 
   @JsonProperty("movementType")
