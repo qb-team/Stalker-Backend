@@ -2,7 +2,6 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.movementtracker.publisher.PlaceMovementPublisher;
 import it.qbteam.movementtracker.publisher.OrganizationMovementPublisher;
-import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
 import it.qbteam.service.MovementService;
@@ -10,6 +9,7 @@ import it.qbteam.service.MovementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.Random;
 
@@ -62,17 +62,18 @@ public class MovementServiceImpl implements MovementService {
     /**
      * Alphanumerical string token generator.
      * From https://www.baeldung.com/java-random-string
+     * and https://www.baeldung.com/java-secure-random.
      * 
      * @return randomly generated alphanumerical string
      */
     private String generateExitToken() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 8;
-        Random random = new Random();
+        int leftLimit = 48; // ASCII index for character '0'
+        int rightLimit = 122; // ASCII index for character 'z'
+        int targetStringLength = 16;
+        Random random = new SecureRandom();
      
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97)) // only characters in [0-9a-z]
           .limit(targetStringLength)
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
           .toString();
