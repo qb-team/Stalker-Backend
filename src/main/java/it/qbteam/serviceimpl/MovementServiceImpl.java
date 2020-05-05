@@ -27,14 +27,16 @@ public class MovementServiceImpl implements MovementService {
 
     @Override
     public Optional<OrganizationMovement> trackMovementInOrganization(OrganizationMovement organizationMovement) {
-        if(organizationMovement == null) {
+        if(organizationMovement == null || (organizationMovement.getMovementType() != -1 && organizationMovement.getMovementType() != 1)) {
+            return Optional.empty();
+        }
+
+        if(organizationMovement.getMovementType() == -1 && (organizationMovement.getExitToken() == null || organizationMovement.getExitToken().isEmpty())) {
             return Optional.empty();
         }
 
         if(organizationMovement.getMovementType() == 1) {
             organizationMovement.setExitToken(generateExitToken());
-        } else if(organizationMovement.getMovementType() != -1 || organizationMovement.getExitToken() == null) {
-            return Optional.empty();
         }
 
         organizationMovementPublisher.publish(organizationMovement);
@@ -44,16 +46,18 @@ public class MovementServiceImpl implements MovementService {
 
     @Override
     public Optional<PlaceMovement> trackMovementInPlace(PlaceMovement placeMovement) {
-        if(placeMovement == null) {
+        if(placeMovement == null || (placeMovement.getMovementType() != -1 && placeMovement.getMovementType() != 1)) {
+            return Optional.empty();
+        }
+
+        if(placeMovement.getMovementType() == -1 && (placeMovement.getExitToken() == null || placeMovement.getExitToken().isEmpty())) {
             return Optional.empty();
         }
 
         if(placeMovement.getMovementType() == 1) {
             placeMovement.setExitToken(generateExitToken());
-        } else if(placeMovement.getMovementType() != -1 || placeMovement.getExitToken() == null) {
-            return Optional.empty();
         }
-        
+
         placeMovementPublisher.publish(placeMovement);
 
         return Optional.of(placeMovement);

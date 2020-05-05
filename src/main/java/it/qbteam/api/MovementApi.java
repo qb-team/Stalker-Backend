@@ -31,7 +31,7 @@ public interface MovementApi {
      *
      * @param organizationMovement  (required)
      * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
-     *         or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     *         or Exit movement successfully tracked. The movement gets returned. (status code 202)
      *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
@@ -41,7 +41,7 @@ public interface MovementApi {
     }, tags={ "movement", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = OrganizationMovement.class),
-        @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),
+        @ApiResponse(code = 202, message = "Exit movement successfully tracked. The movement gets returned.", response = OrganizationMovement.class),
         @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
@@ -58,7 +58,7 @@ public interface MovementApi {
      *
      * @param placeMovement  (required)
      * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
-     *         or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     *         or Exit movement successfully tracked. The movement gets returned. (status code 202)
      *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
@@ -68,7 +68,7 @@ public interface MovementApi {
     }, tags={ "movement", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Entrance movement successfully tracked. The movement with the exitToken gets returned.", response = PlaceMovement.class),
-        @ApiResponse(code = 202, message = "Exit movement successfully tracked. Nothing gets returned."),
+        @ApiResponse(code = 202, message = "Exit movement successfully tracked. The movement gets returned.", response = PlaceMovement.class),
         @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })

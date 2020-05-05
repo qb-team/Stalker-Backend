@@ -35,7 +35,7 @@ public class MovementApiController implements MovementApi {
      *
      * @param organizationMovement (required)
      * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
-     * or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     * or Exit movement successfully tracked. The movement gets returned. (status code 202)
      * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
@@ -53,10 +53,10 @@ public class MovementApiController implements MovementApi {
         Optional<OrganizationMovement> movement = movementService.trackMovementInOrganization(organizationMovement);
 
         if(movement.isPresent()) {
-            if(movement.get().getExitToken() == null) {
+            if(movement.get().getMovementType() == 1) {
                 return new ResponseEntity<>(movement.get(), HttpStatus.CREATED); // 201
             } else {
-                return new ResponseEntity<>(HttpStatus.ACCEPTED); // 202
+                return new ResponseEntity<>(movement.get(), HttpStatus.ACCEPTED); // 202
             }
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
@@ -69,7 +69,7 @@ public class MovementApiController implements MovementApi {
      *
      * @param placeMovement (required)
      * @return Entrance movement successfully tracked. The movement with the exitToken gets returned. (status code 201)
-     * or Exit movement successfully tracked. Nothing gets returned. (status code 202)
+     * or Exit movement successfully tracked. The movement gets returned. (status code 202)
      * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
@@ -87,10 +87,10 @@ public class MovementApiController implements MovementApi {
         Optional<PlaceMovement> movement = movementService.trackMovementInPlace(placeMovement);
 
         if(movement.isPresent()) {
-            if(movement.get().getExitToken() == null) {
+            if(movement.get().getMovementType() == 1) {
                 return new ResponseEntity<>(movement.get(), HttpStatus.CREATED); // 201
             } else {
-                return new ResponseEntity<>(HttpStatus.ACCEPTED); // 202
+                return new ResponseEntity<>(movement.get(), HttpStatus.ACCEPTED); // 202
             }
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400

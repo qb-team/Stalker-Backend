@@ -21,6 +21,7 @@
 		<swagger.annotation.version>1.6.0</swagger.annotation.version>
 		<lombok.version>1.18.12</lombok.version>
 		<jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
+		<jackson-datatype-jsr310.version>2.11.0</jackson-datatype-jsr310.version>
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<junit.version>4.13</junit.version>
 		<surefire.version>3.0.0-M4</surefire.version>
@@ -124,7 +125,8 @@
 		<!-- Aggiunge la serializzazione di date -->
 		<dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson-datatype-jsr310.version}</version>
         </dependency>
 	</dependencies>
 	<build>

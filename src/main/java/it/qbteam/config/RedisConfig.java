@@ -1,5 +1,16 @@
 package it.qbteam.config;
 
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,6 +24,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
@@ -43,7 +55,7 @@ public class RedisConfig {
 
     @Value("${spring.redis.database}")
     private int redisDatabase;
-    
+
     @Value("${spring.redis.password}")
     private String redisPassword;
 
@@ -70,7 +82,7 @@ public class RedisConfig {
         connFactory.afterPropertiesSet();
         return connFactory;
     }
-    
+
     /**
      * Creates a Redis template for writing and reading with Redis value operations.
      * @param connectionFactory active connection
@@ -88,14 +100,16 @@ public class RedisConfig {
 
         return redisTemplate;
     }
-    
+
     @Bean(name="organizationMovementTemplate")
     public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate() {
         RedisTemplate<String,OrganizationMovement> redisTemplate = new RedisTemplate<>();
+        Jackson2JsonRedisSerializer<OrganizationMovement> serializer = new Jackson2JsonRedisSerializer<>(OrganizationMovement.class);
+        serializer.setObjectMapper(jackson2ObjectMapperBuilder().build());
 
         redisTemplate.setConnectionFactory(connectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<OrganizationMovement>(OrganizationMovement.class));
+        redisTemplate.setValueSerializer(serializer);
 
         return redisTemplate;
     }
@@ -103,10 +117,12 @@ public class RedisConfig {
     @Bean(name="placeMovementTemplate")
     public RedisTemplate<String,PlaceMovement> placeMovementTemplate() {
         RedisTemplate<String,PlaceMovement> redisTemplate = new RedisTemplate<>();
+        Jackson2JsonRedisSerializer<PlaceMovement> serializer = new Jackson2JsonRedisSerializer<>(PlaceMovement.class);
+        serializer.setObjectMapper(jackson2ObjectMapperBuilder().build());
 
         redisTemplate.setConnectionFactory(connectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<PlaceMovement>(PlaceMovement.class));
+        redisTemplate.setValueSerializer(serializer);
 
         return redisTemplate;
     }
@@ -120,7 +136,7 @@ public class RedisConfig {
     public ChannelTopic placeMovementTopic() {
         return new ChannelTopic("stalker-backend-movement-place");
     }
-    
+
     @Bean(name="organizationMovementSubscriber")
     public MessageListenerAdapter organizationMovementSubscriber(OrganizationAccessRepository organizationAccessRepository) {
         RedisSerializer<?> serializer = organizationMovementTemplate().getValueSerializer();
@@ -155,5 +171,19 @@ public class RedisConfig {
         container.addMessageListener(listenerAdapter, topic);
         container.afterPropertiesSet();
         return container;
+    }
+
+    private Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
+        JavaTimeModule module = new JavaTimeModule();
+
+        module.addSerializer(OffsetDateTime.class, new JsonSerializer<OffsetDateTime>() {
+            @Override
+            public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+                jsonGenerator.writeString(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime));
+            }
+        });
+
+        return new Jackson2ObjectMapperBuilder().featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .findModulesViaServiceLoader(true).modulesToInstall(module);
     }
 }
