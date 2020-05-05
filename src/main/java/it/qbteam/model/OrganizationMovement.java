@@ -1,6 +1,8 @@
 package it.qbteam.model;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,6 +26,7 @@ public class OrganizationMovement   {
   private String exitToken;
 
   @JsonProperty("timestamp")
+  // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
   private OffsetDateTime timestamp;
 
   @JsonProperty("movementType")

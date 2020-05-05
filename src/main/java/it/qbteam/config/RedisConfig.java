@@ -5,15 +5,13 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.dao.RecoverableDataAccessException;
-import org.springframework.dao.TransientDataAccessException;
-import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import it.qbteam.model.OrganizationMovement;
@@ -79,7 +77,7 @@ public class RedisConfig {
      * @return template for reading/writing with redis value operations
      */
     @Bean(name="presenceCounterTemplate")
-    public RedisTemplate<String,Integer> presenceCounterTemplate(/*final RedisConnectionFactory connectionFactory*/) {
+    public RedisTemplate<String,Integer> presenceCounterTemplate() {
         RedisTemplate<String,Integer> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setConnectionFactory(connectionFactory());
@@ -88,17 +86,14 @@ public class RedisConfig {
         // value values will be integers
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
 
-        // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        // redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<Integer>(Integer.class));
         return redisTemplate;
     }
     
     @Bean(name="organizationMovementTemplate")
-    public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate(/*final RedisConnectionFactory connectionFactory*/) {
+    public RedisTemplate<String,OrganizationMovement> organizationMovementTemplate() {
         RedisTemplate<String,OrganizationMovement> redisTemplate = new RedisTemplate<>();
+
         redisTemplate.setConnectionFactory(connectionFactory());
-        // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<OrganizationMovement>(OrganizationMovement.class));
 
@@ -106,11 +101,10 @@ public class RedisConfig {
     }
 
     @Bean(name="placeMovementTemplate")
-    public RedisTemplate<String,PlaceMovement> placeMovementTemplate(/*final RedisConnectionFactory connectionFactory*/) {
+    public RedisTemplate<String,PlaceMovement> placeMovementTemplate() {
         RedisTemplate<String,PlaceMovement> redisTemplate = new RedisTemplate<>();
+
         redisTemplate.setConnectionFactory(connectionFactory());
-        // redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        // redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<PlaceMovement>(PlaceMovement.class));
 
@@ -129,12 +123,16 @@ public class RedisConfig {
     
     @Bean(name="organizationMovementSubscriber")
     public MessageListenerAdapter organizationMovementSubscriber(OrganizationAccessRepository organizationAccessRepository) {
-        return new MessageListenerAdapter(new OrganizationMovementRedisSubscriber( organizationAccessRepository), "onMessage");
+        RedisSerializer<?> serializer = organizationMovementTemplate().getValueSerializer();
+
+        return new MessageListenerAdapter(new OrganizationMovementRedisSubscriber(organizationAccessRepository, serializer), "onMessage");
     }
 
     @Bean(name="placeMovementSubscriber")
     public MessageListenerAdapter placeMovementSubscriber(PlaceAccessRepository placeAccessRepository) {
-        return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(placeAccessRepository), "onMessage");
+        RedisSerializer<?> serializer = placeMovementTemplate().getValueSerializer();
+
+        return new MessageListenerAdapter(new PlaceMovementRedisSubscriber(placeAccessRepository, serializer), "onMessage");
     }
 
     @Bean(name="organizationMovementSubscriberContainer")

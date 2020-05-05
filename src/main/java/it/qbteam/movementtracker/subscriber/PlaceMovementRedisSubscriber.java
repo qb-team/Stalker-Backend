@@ -1,27 +1,29 @@
 package it.qbteam.movementtracker.subscriber;
 
 import org.springframework.data.redis.connection.Message;
-
-import org.springframework.stereotype.Service;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.PlaceMovement;
 import it.qbteam.repository.PlaceAccessRepository;
 
-@Service
 public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
 
     private PlaceAccessRepository placeAccessRepository;
 
-    public PlaceMovementRedisSubscriber(PlaceAccessRepository place) {
+    private RedisSerializer<?> redisSerializer;
+
+    public PlaceMovementRedisSubscriber(PlaceAccessRepository place, RedisSerializer<?> redisSerializer) {
         this.placeAccessRepository = place;
+        this.redisSerializer = redisSerializer;
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         System.out.println("REDIS MESSAGE: " + message.toString());
 
-        PlaceMovement placeMovementFromRedis = new PlaceMovement();
+        PlaceMovement placeMovementFromRedis = (PlaceMovement) redisSerializer.deserialize(message.getBody());
+
         if (placeMovementFromRedis.getMovementType() == 1) { // ingresso
             PlaceAccess placeAccessFromRedis = new PlaceAccess();
             placeAccessFromRedis.setEntranceTimestamp(placeMovementFromRedis.getTimestamp());
