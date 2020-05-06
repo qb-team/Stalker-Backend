@@ -73,7 +73,6 @@ public class RedisConfig {
  
     /**
      * Creates an active Redis connection.
-     * @param redisConfig Redis configuration object given by {@link #redisConfiguration()}
      * @return active Redis connection factory
      */
     @Bean
@@ -85,7 +84,6 @@ public class RedisConfig {
 
     /**
      * Creates a Redis template for writing and reading with Redis value operations.
-     * @param connectionFactory active connection
      * @return template for reading/writing with redis value operations
      */
     @Bean(name="presenceCounterTemplate")

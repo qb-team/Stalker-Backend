@@ -10,22 +10,31 @@ import it.qbteam.model.OrganizationMovement;
 
 @Service
 public class OrganizationMovementRedisPublisher extends OrganizationMovementPublisher {
-    private RedisTemplate<String, OrganizationMovement> redisTemplate;
+    private RedisTemplate<String, OrganizationMovement> movementTemplate;
+
+    private RedisTemplate<String, Integer> counterTemplate;
 
     private ChannelTopic topic;
 
     @Autowired
     public OrganizationMovementRedisPublisher(
+        @Qualifier("presenceCounterTemplate") RedisTemplate<String, Integer> presenceCounterTemplate,
         @Qualifier("organizationMovementTemplate") final RedisTemplate<String, OrganizationMovement> redisTemplate,
         @Qualifier("organizationMovementTopic") final ChannelTopic topic
     ) {
-        this.redisTemplate = redisTemplate;
+        this.counterTemplate = presenceCounterTemplate;
+        this.movementTemplate = redisTemplate;
         this.topic = topic;
     }
 
     @Override
     public void publish(final OrganizationMovement message) {
         System.out.println(message);
-        redisTemplate.convertAndSend(topic.getTopic(), message);
+        movementTemplate.convertAndSend(topic.getTopic(), message);
+        if(message.getMovementType() == 1) {
+            counterTemplate.opsForValue().increment("organization:" + message.getOrganizationId());
+        } else if(message.getMovementType() == -1) {
+            counterTemplate.opsForValue().decrement("organization:" + message.getOrganizationId());
+        }
     }
 }

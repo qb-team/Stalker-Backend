@@ -10,22 +10,31 @@ import it.qbteam.model.PlaceMovement;
 
 @Service
 public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
-    private RedisTemplate<String, PlaceMovement> redisTemplate;
+    private RedisTemplate<String, PlaceMovement> movementTemplate;
+
+    private RedisTemplate<String, Integer> counterTemplate;
 
     private ChannelTopic topic;
 
     @Autowired
     public PlaceMovementRedisPublisher(
-        @Qualifier("placeMovementTemplate") RedisTemplate<String, PlaceMovement> redisTemplate,
+        @Qualifier("presenceCounterTemplate") RedisTemplate<String, Integer> presenceCounterTemplate,
+        @Qualifier("placeMovementTemplate") RedisTemplate<String, PlaceMovement> placeMovementTemplate,
         @Qualifier("placeMovementTopic") ChannelTopic topic
     ) {
-        this.redisTemplate = redisTemplate;
+        this.counterTemplate = presenceCounterTemplate;
+        this.movementTemplate = placeMovementTemplate;
         this.topic = topic;
     }
 
     @Override
     public void publish(final PlaceMovement message) {
         System.out.println(message);
-        redisTemplate.convertAndSend(topic.getTopic(), message);
+        movementTemplate.convertAndSend(topic.getTopic(), message);
+        if(message.getMovementType() == 1) {
+            counterTemplate.opsForValue().increment("place:" + message.getPlaceId());
+        } else if(message.getMovementType() == -1) {
+            counterTemplate.opsForValue().decrement("place:" + message.getPlaceId());
+        }
     }
 }
