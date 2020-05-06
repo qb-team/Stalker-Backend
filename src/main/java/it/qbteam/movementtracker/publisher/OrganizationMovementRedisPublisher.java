@@ -19,11 +19,11 @@ public class OrganizationMovementRedisPublisher extends OrganizationMovementPubl
     @Autowired
     public OrganizationMovementRedisPublisher(
         @Qualifier("presenceCounterTemplate") RedisTemplate<String, Integer> presenceCounterTemplate,
-        @Qualifier("organizationMovementTemplate") final RedisTemplate<String, OrganizationMovement> redisTemplate,
-        @Qualifier("organizationMovementTopic") final ChannelTopic topic
+        @Qualifier("organizationMovementTemplate") RedisTemplate<String, OrganizationMovement> placeMovementTemplate,
+        @Qualifier("organizationMovementTopic") ChannelTopic topic
     ) {
         this.counterTemplate = presenceCounterTemplate;
-        this.movementTemplate = redisTemplate;
+        this.movementTemplate = placeMovementTemplate;
         this.topic = topic;
     }
 
