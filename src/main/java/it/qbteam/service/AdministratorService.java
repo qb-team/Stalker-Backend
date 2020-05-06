@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface AdministratorService {
     Optional<Permission> bindAdministratorToOrganization(Permission permission);
 
-    Optional<Permission> createNewAdministratorToOrganization(Permission permission);
+    Optional<Permission> createNewAdministratorInOrganization(Permission permission);
 
     List<Permission> getAdministratorListOfOrganization(Long organizationId);
 

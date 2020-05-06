@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FavoriteRepository extends CrudRepository<Favorite, FavoriteId> {
     @Query("from Favorite where userId=:searchedUser ")
-    public Iterable<Favorite> findAllFavoriteOfOneUserId(@Param("searchedUser") String userId);
+    Iterable<Favorite> findAllFavoriteOfOneUserId(@Param("searchedUser") String userId);
     @Query("from Favorite where userId=:searchedUser and organizationId=:searchedOrg")
-    public Iterable<Favorite> isPresent (@Param("searchedUser") String userId, @Param("searchedOrg") Long orgId);
+    Iterable<Favorite> isPresent (@Param("searchedUser") String userId, @Param("searchedOrg") Long orgId);
 
 }

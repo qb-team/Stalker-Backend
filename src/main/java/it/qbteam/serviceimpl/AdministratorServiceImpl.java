@@ -35,7 +35,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public Optional<Permission> createNewAdministratorToOrganization(Permission permission) {
+    public Optional<Permission> createNewAdministratorInOrganization(Permission permission) {
         if(permission != null)
             return Optional.empty();
         

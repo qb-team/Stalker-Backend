@@ -125,7 +125,7 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        Optional<Permission> returnedCreation = adminService.createNewAdministratorToOrganization(permission.get());
+        Optional<Permission> returnedCreation = adminService.createNewAdministratorInOrganization(permission.get());
         if(returnedCreation.isPresent()){
             return new ResponseEntity<>(returnedCreation.get(), HttpStatus.OK); //201
         }

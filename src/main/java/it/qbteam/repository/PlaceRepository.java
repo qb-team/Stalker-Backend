@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaceRepository extends CrudRepository<Place, Long> {
     @Query("from Place where organizationId=:searchedOrganization")
-    public Iterable<Place> findAllPlacesOfAnOrganization(@Param("searchedOrganization") Long organizationId);
+    Iterable<Place> findAllPlacesOfAnOrganization(@Param("searchedOrganization") Long organizationId);
 }
