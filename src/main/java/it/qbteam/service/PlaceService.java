@@ -31,11 +31,10 @@ public interface PlaceService {
     /**
      * Description
      * 
-     * @param placeId
      * @param place
      * @return
      */
-    Optional<Place> updatePlace(Long placeId, Place place);
+    Optional<Place> updatePlace(Place place);
     
     /**
      * Description

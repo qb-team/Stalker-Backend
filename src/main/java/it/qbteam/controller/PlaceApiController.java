@@ -92,22 +92,21 @@ public class PlaceApiController implements PlaceApi {
     }
 
     /**
-     * PUT /place/{placeId} : Updates one or more properties of a place of an organization.
+     * PUT /place : Updates one or more properties of a place of an organization.
      * Updates one or more properties of a place of an organization. Only web-app administrators can access this end-point.
      *
-     * @param placeId ID of a place. (required)
-     * @param place   (required)
+     * @param place  (required)
      * @return Place updated successfully. The updated place gets returned. (status code 200)
-     * or The inserted data has some issues. Nothing gets returned. (status code 400)
-     * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
-     * or Invalid place ID supplied. Nothing gets returned. (status code 404)
+     *         or The inserted data has some issues. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
+     *         or Invalid place ID supplied. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Place> updatePlace(@Min(1L) Long placeId, @Valid Place place) {
+    public ResponseEntity<Place> updatePlace(@Valid Place place) {
         if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-        if(!placeService.getPlace(placeId).isPresent()){
+        if(!placeService.getPlace(place.getId()).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
         }
         Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
@@ -115,7 +114,7 @@ public class PlaceApiController implements PlaceApi {
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         } else {
-            Optional<Place> updatedPlace = placeService.updatePlace(placeId, place);
+            Optional<Place> updatedPlace = placeService.updatePlace(place);
             if(updatedPlace.isPresent()) {
                 return new ResponseEntity<>(updatedPlace.get(), HttpStatus.OK); // 200
             } else {

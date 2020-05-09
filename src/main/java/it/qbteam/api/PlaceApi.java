@@ -104,10 +104,9 @@ public interface PlaceApi {
 
 
     /**
-     * PUT /place/{placeId} : Updates one or more properties of a place of an organization.
+     * PUT /place : Updates one or more properties of a place of an organization.
      * Updates one or more properties of a place of an organization. Only web-app administrators can access this end-point.
      *
-     * @param placeId ID of a place. (required)
      * @param place  (required)
      * @return Place updated successfully. The updated place gets returned. (status code 200)
      *         or The inserted data has some issues. Nothing gets returned. (status code 400)
@@ -124,10 +123,10 @@ public interface PlaceApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer permission cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "Invalid place ID supplied. Nothing gets returned.") })
-    @RequestMapping(value = "/place/{placeId}",
+    @RequestMapping(value = "/place",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Place> updatePlace(@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Place place);
+    ResponseEntity<Place> updatePlace(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Place place);
 
 }

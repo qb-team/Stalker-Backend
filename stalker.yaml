@@ -544,7 +544,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Place"
-  "/place/{placeId}":
     put:
       tags:
         - place
@@ -553,15 +552,6 @@ paths:
         Updates one or more properties of a place of an organization.
         Only web-app administrators can access this end-point.
       operationId: updatePlace
-      parameters:
-        - name: placeId
-          in: path
-          description: ID of a place.
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
       responses:
         "200":
           description: Place updated successfully. The updated place gets returned.
@@ -583,6 +573,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Place"
+  "/place/{placeId}":
     delete:
       tags:
         - place
