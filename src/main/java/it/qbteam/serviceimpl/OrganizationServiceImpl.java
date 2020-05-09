@@ -17,7 +17,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationRepository organizationRepo;
 
     @Autowired
-    public OrganizationServiceImpl( OrganizationRepository organizationRepository){
+    public OrganizationServiceImpl(OrganizationRepository organizationRepository){
         this.organizationRepo= organizationRepository;
     }
 
@@ -43,13 +43,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Optional<Organization> updateOrganization(Long organizationId, Organization organization) {
-
-        if (organizationId != organization.getId()) {
-            organization.setId(organizationId);
-        }
+    public Optional<Organization> updateOrganization(Organization organization) {
         return Optional.of(organizationRepo.save(organization));
-
     }
 
     @Override

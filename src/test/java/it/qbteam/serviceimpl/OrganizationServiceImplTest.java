@@ -105,7 +105,7 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(anyLong(), orgWithChanges);
+        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
         Organization returnedObject= optionalReturnedObject.get();
 
         assertEquals(orgWithChanges, returnedObject);
@@ -116,7 +116,7 @@ public class OrganizationServiceImplTest {
         Organization orgWithChanges = new Organization();
         orgWithChanges.setId(1l);
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(anyLong(), orgWithChanges);
+        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
         Organization returnedObject= optionalReturnedObject.get();
 
         assertNotEquals(orgWithChanges.getId(), returnedObject.getId());
@@ -134,14 +134,14 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setCountry(new String(new char[101]).replace('\0', 'a'));
         orgWithChanges.setAuthenticationServerURL(new String(new char[2049]).replace('\0', 'a'));
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(anyLong(), orgWithChanges);
+        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
     }
     @Test
     public void testUpdateOrganizationTrackingArea() {
         Organization orgWithChanges = new Organization();
         orgWithChanges.setTrackingArea("new tracking area");
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(anyLong(), orgWithChanges);
+        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
         Organization returnedObject= optionalReturnedObject.get();
         assertEquals(orgWithChanges.getTrackingArea(), returnedObject.getTrackingArea());
 

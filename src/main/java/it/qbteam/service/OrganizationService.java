@@ -39,11 +39,10 @@ public interface OrganizationService {
     /**
      * Description
      * 
-     * @param organizationId
      * @param organization
      * @return
      */
-    Optional<Organization> updateOrganization(Long organizationId, Organization organization);
+    Optional<Organization> updateOrganization(Organization organization);
 
     /**
      * Description

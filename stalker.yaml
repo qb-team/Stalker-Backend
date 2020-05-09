@@ -53,6 +53,35 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
+    put:
+      tags:
+        - organization
+      summary: Updates one or more properties of an organization.
+      description: >-
+        Updates one or more properties of an organization. 
+        Only web-app administrators (if they have the correct access rights) can access this end-point.
+      operationId: updateOrganization
+      responses:
+        "200":
+          description: Organization updated successfully. The updated organization gets returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400":
+          description: The inserted data has some issues. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
   "/organization/{organizationId}":
     get:
       tags:
@@ -84,44 +113,6 @@ paths:
           description: The user or the administrator is not authenticated. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-    put:
-      tags:
-        - organization
-      summary: Updates one or more properties of an organization.
-      description: >-
-        Updates one or more properties of an organization. 
-        Only web-app administrators (if they have the correct access rights) can access this end-point.
-      operationId: updateOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: ID of an organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
-      responses:
-        "200":
-          description: Organization updated successfully. The updated organization gets returned.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Organization"
-        "400":
-          description: The inserted data has some issues. Nothing gets returned.
-        "401":
-          description: The administrator is not authenticated. Nothing gets returned.
-        "403":
-          description: Users and administrators who do not own the organization cannot have access. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Organization"
   "/favorite/{userId}":
     get:
       tags:

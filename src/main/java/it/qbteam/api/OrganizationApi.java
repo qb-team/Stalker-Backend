@@ -99,11 +99,10 @@ public interface OrganizationApi {
     ResponseEntity<Void> requestDeletionOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least owner permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "Request reason for the deletion request.", required=true) @RequestParam(value="requestReason", required=true)  String requestReason);
 
 
-    /**
-     * PUT /organization/{organizationId} : Updates one or more properties of an organization.
+     /**
+     * PUT /organization : Updates one or more properties of an organization.
      * Updates one or more properties of an organization.  Only web-app administrators (if they have the correct access rights) can access this end-point.
      *
-     * @param organizationId ID of an organization. (required)
      * @param organization  (required)
      * @return Organization updated successfully. The updated organization gets returned. (status code 200)
      *         or The inserted data has some issues. Nothing gets returned. (status code 400)
@@ -120,11 +119,11 @@ public interface OrganizationApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users and administrators who do not own the organization cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @RequestMapping(value = "/organization/{organizationId}",
+    @RequestMapping(value = "/organization",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Organization> updateOrganization(@Min(1L)@ApiParam(value = "ID of an organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "" ,required=true )  @Valid @RequestBody Organization organization);
+    ResponseEntity<Organization> updateOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Organization organization);
 
 
     /**

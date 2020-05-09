@@ -98,26 +98,25 @@ public class OrganizationApiController implements OrganizationApi {
     }
 
     /**
-     * PUT /organization/{organizationId} : Updates one or more properties of an organization.
+     * PUT /organization : Updates one or more properties of an organization.
      * Updates one or more properties of an organization.  Only web-app administrators (if they have the correct access rights) can access this end-point.
      *
-     * @param organizationId ID of an organization. (required)
-     * @param organization   (required)
+     * @param organization  (required)
      * @return Organization updated successfully. The updated organization gets returned. (status code 200)
-     * or The inserted data has some issues. Nothing gets returned. (status code 400)
-     * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The inserted data has some issues. Nothing gets returned. (status code 400)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
-    public ResponseEntity<Organization> updateOrganization(@Min(1L) Long organizationId, @Valid Organization organization) {
+    public ResponseEntity<Organization> updateOrganization(@Valid Organization organization) {
         if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        if( !orgService.getOrganization(organizationId).isPresent()){
+        if( !orgService.getOrganization(organization.getId()).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
-        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organization.getId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -125,7 +124,7 @@ public class OrganizationApiController implements OrganizationApi {
 
             // if(organization.getName())
 
-            Optional<Organization> updatedOrganization = orgService.updateOrganization(organizationId, organization);
+            Optional<Organization> updatedOrganization = orgService.updateOrganization(organization);
             if(updatedOrganization.isPresent()) {
                 return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
             } else {
