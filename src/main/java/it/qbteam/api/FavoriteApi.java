@@ -64,7 +64,6 @@ public interface FavoriteApi {
      *         or The supplied userId is incorrect. Nothing gets returned. (status code 400)
      *         or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or List of organizations could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Gets the list of favorite organizations of a user.", nickname = "getFavoriteOrganizationList", notes = "Gets the list of favorite organizations of a user.  Only app users can access this end-point.", response = Organization.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
@@ -74,8 +73,7 @@ public interface FavoriteApi {
         @ApiResponse(code = 204, message = "List of favorite organizations is empty. Nothing gets returned."),
         @ApiResponse(code = 400, message = "The supplied userId is incorrect. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user or the administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "List of organizations could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/favorite/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

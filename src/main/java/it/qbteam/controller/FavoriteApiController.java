@@ -76,7 +76,6 @@ public class FavoriteApiController implements FavoriteApi {
      * or The supplied userId is incorrect. Nothing gets returned. (status code 400)
      * or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or List of organizations could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<Organization>> getFavoriteOrganizationList(String userId) {

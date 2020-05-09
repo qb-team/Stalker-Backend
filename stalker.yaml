@@ -155,8 +155,6 @@ paths:
           description: The user or the administrator is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: List of organizations could not be found. Nothing gets returned.
   "/favorite/addfavorite":
     post:
       tags:
