@@ -1,11 +1,8 @@
 package it.qbteam.service;
 
-import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.OrganizationPresenceCounter;
-import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.PlacePresenceCounter;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,24 +24,8 @@ public interface PresenceService {
     /**
      * Description
      * 
-     * @param organizationId
-     * @return
-     */
-    List<OrganizationAccess> getOrganizationPresenceList(Long organizationId);
-
-    /**
-     * Description
-     * 
      * @param placeId
      * @return
      */
     Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId);
-
-    /**
-     * Description
-     * 
-     * @param placeId
-     * @return
-     */
-    List<PlaceAccess> getPlacePresenceList(Long placeId);
 }
