@@ -36,6 +36,7 @@ public interface PlaceApi {
      *         or The new tracking area does not respect the area constraints for the organization. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. The place cannot be added. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Creates a new place for an organization.", nickname = "createNewPlace", notes = "Creates a new place for an organization. Only web-app administrators can access this end-point.", response = Place.class, authorizations = {
         @Authorization(value = "bearerAuth")
@@ -44,7 +45,8 @@ public interface PlaceApi {
         @ApiResponse(code = 201, message = "The new place of the organization was created. The place gets returned.", response = Place.class),
         @ApiResponse(code = 400, message = "The new tracking area does not respect the area constraints for the organization. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Users or administrator with viewer permission cannot have access. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Users or administrator with viewer permission cannot have access. Nothing gets returned."),
+        @ApiResponse(code = 404, message = "The organization could not be found. The place cannot be added. Nothing gets returned.") })
     @RequestMapping(value = "/place",
         produces = { "application/json" }, 
         consumes = { "application/json" },
