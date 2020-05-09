@@ -69,7 +69,7 @@ public class PlaceApiController implements PlaceApi {
      * @return Place successfully removed from the list of favorites. Nothing gets returned. (status code 205)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users and administrators with viewer permissions cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
+     * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<Void> deletePlace(@Min(1L) Long placeId) {

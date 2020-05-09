@@ -608,7 +608,7 @@ paths:
         "403":
           description: Users and administrators with viewer permissions cannot have access. Nothing gets returned.
         "404":
-          description: The organization could not be found. Nothing gets returned.
+          description: The place could not be found. Nothing gets returned.
   "/movement/track/organization":
     post:
       tags:

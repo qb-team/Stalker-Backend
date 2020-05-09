@@ -62,7 +62,7 @@ public interface PlaceApi {
      * @return Place successfully removed from the list of places of the organization. Nothing gets returned. (status code 205)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users and administrators with viewer permissions cannot have access. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The place could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Deletes a place of an organization.", nickname = "deletePlace", notes = "Deletes a place of an organization. Only web-app administrators can access this end-point.", authorizations = {
         @Authorization(value = "bearerAuth")
@@ -71,7 +71,7 @@ public interface PlaceApi {
         @ApiResponse(code = 205, message = "Place successfully removed from the list of places of the organization. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users and administrators with viewer permissions cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/place/{placeId}",
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deletePlace(@Min(1L)@ApiParam(value = "ID of a place.",required=true) @PathVariable("placeId") Long placeId);

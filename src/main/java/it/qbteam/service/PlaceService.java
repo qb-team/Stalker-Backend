@@ -24,9 +24,9 @@ public interface PlaceService {
     /**
      * Description
      * 
-     * @param placeId
+     * @param place
      */
-    void deletePlace(Place placeId);
+    void deletePlace(Place place);
 
     /**
      * Description

@@ -28,8 +28,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void deletePlace(Place placeId) {
-        placeRepo.delete(placeId);
+    public void deletePlace(Place place) {
+        placeRepo.delete(place);
     }
 
     @Override
