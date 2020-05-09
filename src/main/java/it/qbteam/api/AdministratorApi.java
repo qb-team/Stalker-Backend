@@ -115,7 +115,6 @@ public interface AdministratorApi {
      *         or List of permissions is empty. Nothing gets returned. (status code 204)
      *         or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or List of organizations could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Gets the list of permission that an administrator has permissions to view/manage/own.", nickname = "getPermissionList", notes = "Gets the list of organizations that an administrator has permissions to view/manage/own. Only web-app administrators can access this end-point.", response = Permission.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
@@ -124,8 +123,7 @@ public interface AdministratorApi {
         @ApiResponse(code = 200, message = "List of permissions returned successfully.", response = Permission.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "List of permissions is empty. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user or the administrator is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "List of organizations could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/administrator/permission/{administratorId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

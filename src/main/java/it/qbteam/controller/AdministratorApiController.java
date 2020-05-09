@@ -161,7 +161,6 @@ public class AdministratorApiController implements AdministratorApi {
      * or List of permissions is empty. Nothing gets returned. (status code 204)
      * or The user or the administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or List of organizations could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<Permission>> getPermissionList(String administratorId) {
@@ -173,12 +172,7 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
         List<Permission> returnedListOfPermission = adminService.getPermissionList(administratorId);
-        if (returnedListOfPermission.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
-        }
-        else {
-            return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
-        }
+        return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
     }
 
     /**
