@@ -26,23 +26,12 @@ public class AdministratorApiController implements AdministratorApi {
     private AuthenticationFacade authFacade;
 
     @Autowired
-    public AdministratorApiController(NativeWebRequest request, AuthenticationService service, AdministratorService admininistratorService, OrganizationService organizationService) {
-        this.authFacade = new AuthenticationFacade(request, service);
-        this.adminService = admininistratorService;
+    public AdministratorApiController(NativeWebRequest request, AuthenticationService authenticationService, AdministratorService admininistratorService, OrganizationService organizationService) {
+        this.authFacade = new AuthenticationFacade(request, authenticationService, admininistratorService);
         this.organizationService = organizationService;
+        this.adminService = admininistratorService;
     }
 
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-
-            return permission;
-        } else {
-            return Optional.empty();
-        }
-    }
     /**
      * POST /administrator/bindadministrator : Bind an already existent administrator to the organization.
      * Bind an already existent administrator to the organization. Only web-app administrators can access this end-point.
@@ -64,7 +53,7 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
+        Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
@@ -107,7 +96,7 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
 
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
+        Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
@@ -154,7 +143,7 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
+        Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
@@ -207,7 +196,7 @@ public class AdministratorApiController implements AdministratorApi {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
@@ -234,7 +223,7 @@ public class AdministratorApiController implements AdministratorApi {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        Optional<Permission> checkPermission = permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
+        Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }

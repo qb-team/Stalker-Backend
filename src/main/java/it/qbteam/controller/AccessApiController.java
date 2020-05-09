@@ -2,7 +2,6 @@ package it.qbteam.controller;
 
 import it.qbteam.api.AccessApi;
 import it.qbteam.model.OrganizationAccess;
-import it.qbteam.model.Permission;
 import it.qbteam.model.Place;
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.service.AccessService;
@@ -25,30 +24,15 @@ public class AccessApiController implements AccessApi {
 
     private AccessService accessService;
 
-    private AdministratorService adminService;
-
     private PlaceService placeService;
 
     private AuthenticationFacade authFacade;
 
     @Autowired
-    public AccessApiController(NativeWebRequest request, AuthenticationService service, AccessService accessService, AdministratorService administratorService, PlaceService placeService) {
-        this.authFacade = new AuthenticationFacade(request, service);
+    public AccessApiController(NativeWebRequest request, AuthenticationService authenticationService, AccessService accessService, AdministratorService administratorService, PlaceService placeService) {
+        this.authFacade = new AuthenticationFacade(request, authenticationService, administratorService);
         this.accessService = accessService;
-        this.adminService = administratorService;
         this.placeService = placeService;
-    }
-
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-            
-            return permission;
-        } else {
-            return Optional.empty();
-        }
     }
     
     /**
@@ -132,7 +116,7 @@ public class AccessApiController implements AccessApi {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
-        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -172,7 +156,7 @@ public class AccessApiController implements AccessApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
+        if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 

@@ -1,6 +1,8 @@
 package it.qbteam.controller;
 
 import it.qbteam.api.ReportApi;
+import it.qbteam.model.Place;
+import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.model.TimePerUserReport;
 
@@ -14,6 +16,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ReportApiController implements ReportApi {
@@ -24,8 +27,8 @@ public class ReportApiController implements ReportApi {
     private AuthenticationFacade authFacade;
 
     @Autowired
-    public ReportApiController(NativeWebRequest request, AuthenticationService service, ReportService reportService, PlaceService placeService) {
-        this.authFacade = new AuthenticationFacade(request, service);
+    public ReportApiController(NativeWebRequest request, AuthenticationService authenticationService, ReportService reportService, PlaceService placeService, AdministratorService administratorService) {
+        this.authFacade = new AuthenticationFacade(request, authenticationService, administratorService);
         this.reportService = reportService;
         this.placeService = placeService;
     }
@@ -45,12 +48,16 @@ public class ReportApiController implements ReportApi {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(authFacade.isAppUser(authFacade.getAccessToken().get())){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
-        }
-        if(!placeService.getPlace(placeId).isPresent()){
+        Optional<Place> place = placeService.getPlace(placeId);
+
+        if(!place.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
+
+        if(!authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        }
+
         List<TimePerUserReport> returnedList= reportService.getTimePerUserReport(placeId);
         if (returnedList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204

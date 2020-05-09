@@ -22,28 +22,13 @@ import java.util.Optional;
 public class PlaceApiController implements PlaceApi {
 
     private PlaceService placeService;
-    
-    private AdministratorService adminService;
 
     private AuthenticationFacade authFacade;
     
     @Autowired
-    public PlaceApiController(NativeWebRequest request, AuthenticationService service, PlaceService placeService, AdministratorService administratorService) {
-        this.authFacade = new AuthenticationFacade(request, service);
+    public PlaceApiController(NativeWebRequest request, AuthenticationService authenticationService, PlaceService placeService, AdministratorService administratorService) {
+        this.authFacade = new AuthenticationFacade(request, authenticationService, administratorService);
         this.placeService = placeService;
-        this.adminService = administratorService;
-    }
-
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-            
-            return permission;
-        } else {
-            return Optional.empty();
-        }
     }
 
     /**
@@ -61,7 +46,7 @@ public class PlaceApiController implements PlaceApi {
         if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -95,7 +80,7 @@ public class PlaceApiController implements PlaceApi {
         if(!place.isPresent())
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
 
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId());
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -124,7 +109,7 @@ public class PlaceApiController implements PlaceApi {
         if(!placeService.getPlace(placeId).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
         }
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.getOrganizationId());
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -154,7 +139,7 @@ public class PlaceApiController implements PlaceApi {
         if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
         if(authFacade.isAppUser(authFacade.getAccessToken().get()) || permission.isPresent()) { // 2 is Manager level
             List<Place> places = placeService.getPlaceListOfOrganization(organizationId);

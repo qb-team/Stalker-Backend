@@ -24,27 +24,12 @@ public class OrganizationApiController implements OrganizationApi {
 
     private OrganizationService orgService;
 
-    private AdministratorService adminService;
-
     private AuthenticationFacade authFacade;
     
     @Autowired
     public OrganizationApiController(NativeWebRequest request, AuthenticationService authenticationService, OrganizationService organizationService, AdministratorService administratorService) {
-        this.authFacade = new AuthenticationFacade(request, authenticationService);
+        this.authFacade = new AuthenticationFacade(request, authenticationService, administratorService);
         this.orgService = organizationService;
-        this.adminService = administratorService;
-    }
-    
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-            
-            return permission;
-        } else {
-            return Optional.empty();
-        }
     }
 
     /**
@@ -132,7 +117,7 @@ public class OrganizationApiController implements OrganizationApi {
         if( !orgService.getOrganization(organizationId).isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -168,7 +153,7 @@ public class OrganizationApiController implements OrganizationApi {
         if(!orgService.getOrganization(organizationId).isPresent()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
-        Optional<Permission> permission = permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
         if(!permission.isPresent() || permission.get().getPermission() < 2) { // 2 is Manager level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403

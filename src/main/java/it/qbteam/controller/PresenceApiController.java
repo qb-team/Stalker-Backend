@@ -15,7 +15,6 @@ import it.qbteam.service.OrganizationService;
 import it.qbteam.service.PlaceService;
 import it.qbteam.service.PresenceService;
 import it.qbteam.model.OrganizationPresenceCounter;
-import it.qbteam.model.Permission;
 import it.qbteam.model.PlacePresenceCounter;
 
 import javax.validation.constraints.Min;
@@ -30,31 +29,16 @@ public class PresenceApiController implements PresenceApi {
 
     private PlaceService placeService;
 
-    private AdministratorService adminService;
-
     private PresenceService presenceService;
 
     private AuthenticationFacade authFacade;
 
     @Autowired
     public PresenceApiController(NativeWebRequest request, AuthenticationService authenticationService, AdministratorService administratorService, PresenceService presenceService, OrganizationService organizationService, PlaceService placeService) {
-        this.authFacade = new AuthenticationFacade(request, authenticationService);
-        this.adminService = administratorService;
+        this.authFacade = new AuthenticationFacade(request, authenticationService, administratorService);
         this.presenceService = presenceService;
         this.placeService = placeService;
         this.orgService = organizationService;
-    }
-
-    private Optional<Permission> permissionInOrganization(String accessToken, Long organizationId) {
-        if(authFacade.isWebAppAdministrator(accessToken) && authFacade.authenticationProviderUserId(accessToken).isPresent()) {
-            List<Permission> adminPermissions = adminService.getPermissionList(authFacade.authenticationProviderUserId(accessToken).get());
-
-            Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-            
-            return permission;
-        } else {
-            return Optional.empty();
-        }
     }
 
     /**
@@ -76,7 +60,7 @@ public class PresenceApiController implements PresenceApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
+        if(!authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -108,7 +92,7 @@ public class PresenceApiController implements PresenceApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
+        if(!authFacade.permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -139,7 +123,7 @@ public class PresenceApiController implements PresenceApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
+        if(!authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
@@ -170,7 +154,7 @@ public class PresenceApiController implements PresenceApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
         }
 
-        if(!permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
+        if(!authFacade.permissionInOrganization(authFacade.getAccessToken().get(), placeService.getPlace(placeId).get().getOrganizationId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
