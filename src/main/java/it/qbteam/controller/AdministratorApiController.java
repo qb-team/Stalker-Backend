@@ -183,7 +183,7 @@ public class AdministratorApiController implements AdministratorApi {
      * @return Administrator unbound successfully. Nothing gets returned. (status code 204)
      * or The administrator is not authenticated. Nothing gets returned. (status code 401)
      * or Users or administrator with viewer or manager permission cannot have access. Nothing gets returned. (status code 403)
-     * or The organization or the administrator could not be found. Nothing gets returned. (status code 404)
+     * or The permission record could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<Void> unbindAdministratorFromOrganization(@Valid Permission permission) {
@@ -194,7 +194,7 @@ public class AdministratorApiController implements AdministratorApi {
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent() || adminService.getPermissionList(permission.getAdministratorId()).isEmpty()){
+        if(!adminService.getPermissionList(permission.getAdministratorId()).contains(permission)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         adminService.unbindAdministratorFromOrganization(permission);

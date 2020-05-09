@@ -147,7 +147,7 @@ public interface AdministratorApi {
         @ApiResponse(code = 204, message = "Administrator unbound successfully. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users or administrator with viewer or manager permission cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization or the administrator could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 404, message = "The permission record could not be found. Nothing gets returned.") })
     @RequestMapping(value = "/administrator/unbindadministrator",
         consumes = { "application/json" },
         method = RequestMethod.POST)

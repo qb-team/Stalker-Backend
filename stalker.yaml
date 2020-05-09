@@ -259,7 +259,7 @@ paths:
         "403":
           description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
-          description: The organization or the administrator could not be found. Nothing gets returned.
+          description: The permission record could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
