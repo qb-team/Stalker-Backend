@@ -64,18 +64,4 @@ public class AccessServiceImplTest {
 
         Assert.assertEquals(outputList, accessService.getAuthenticatedAccessListInPlace(ids, 1L));
     }
-
-    @Test
-    public void testGetAuthenticatedAccessListInOrganizationAccessesNotFoundReturnEmptyList() {
-        List<OrganizationAccess> outputList = new LinkedList<>();
-        List<String> ids = new LinkedList<>();
-
-        outputList.add(new OrganizationAccess().orgAuthServerId("idtest1"));
-        
-        ids.add("different_id");
-
-        Mockito.when(organizationAccessRepository.findByOrgAuthServerIdAndOrganizationId("orgAuthServerId", 1L)).thenReturn(outputList);
-
-        Assert.assertEquals(outputList, accessService.getAuthenticatedAccessListInOrganization(ids, 1L));        
-    }
 }

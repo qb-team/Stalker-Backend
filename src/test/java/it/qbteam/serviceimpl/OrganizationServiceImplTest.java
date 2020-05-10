@@ -2,7 +2,6 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Organization;
 import it.qbteam.repository.OrganizationRepository;
-import it.qbteam.service.OrganizationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 public class OrganizationServiceImplTest {
@@ -33,18 +31,19 @@ public class OrganizationServiceImplTest {
     @TestConfiguration
     static class OrganizationServiceImplConfiguration{
         @Bean
-        public OrganizationService organizationService(OrganizationRepository organizationRepository) {
+        public OrganizationServiceImpl organizationService(OrganizationRepository organizationRepository) {
             return new OrganizationServiceImpl(organizationRepository);
         }
 
     }
     @Autowired
-    private OrganizationService organizationService;
+    private OrganizationServiceImpl organizationService;
 
 
     @Before
     public void setUp(){
         Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
+
     }
 
     @Test
@@ -105,47 +104,26 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
 
+        Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+
         Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
         Organization returnedObject= optionalReturnedObject.get();
 
         assertEquals(orgWithChanges, returnedObject);
     }
-    @Test
-    public void testUpdateOrganizationNotChangingId(){
 
-        Organization orgWithChanges = new Organization();
-        orgWithChanges.setId(1l);
-
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
-        Organization returnedObject= optionalReturnedObject.get();
-
-        assertNotEquals(orgWithChanges.getId(), returnedObject.getId());
-        assertEquals(null, returnedObject.getId());
-    }
-    @Test
-    public void testUpdateOrganizationWithInvalidInput() {
-        Organization orgWithChanges = new Organization();
-        orgWithChanges.setName(new String(new char[129]).replace('\0', 'a'));
-        orgWithChanges.setDescription(new String(new char[513]).replace('\0', 'a'));
-        orgWithChanges.setImage(new String(new char[301]).replace('\0', 'a'));
-        orgWithChanges.setStreet(new String(new char[257]).replace('\0', 'a'));
-        orgWithChanges.setName(new String(new char[11]).replace('\0', 'a'));
-        orgWithChanges.setCity(new String(new char[101]).replace('\0', 'a'));
-        orgWithChanges.setCountry(new String(new char[101]).replace('\0', 'a'));
-        orgWithChanges.setAuthenticationServerURL(new String(new char[2049]).replace('\0', 'a'));
-
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
-    }
     @Test
     public void testUpdateOrganizationTrackingArea() {
         Organization orgWithChanges = new Organization();
+        orgWithChanges.setId(1L);
         orgWithChanges.setTrackingArea("new tracking area");
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
+        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
+        Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+
+        Optional<Organization> optionalReturnedObject = organizationService.updateOrganizationTrackingArea(orgWithChanges.getId(), "new tracking area");
         Organization returnedObject= optionalReturnedObject.get();
         assertEquals(orgWithChanges.getTrackingArea(), returnedObject.getTrackingArea());
-
-
     }
 
 
