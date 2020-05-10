@@ -20,7 +20,7 @@ public interface AccessService {
      * @param organizationId
      * @return
      */
-    public List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId);
+    List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId);
 
     /**
      * Description
@@ -29,7 +29,7 @@ public interface AccessService {
      * @param placeId
      * @return
      */
-    public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId);
+    List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId);
 
     /**
      * Description
@@ -38,7 +38,7 @@ public interface AccessService {
      * @param organizationId
      * @return
      */
-    public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId);
+    List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId);
 
     /**
      * Description
@@ -47,5 +47,5 @@ public interface AccessService {
      * @param placeId
      * @return
      */
-    public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId);
+    List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId);
 }

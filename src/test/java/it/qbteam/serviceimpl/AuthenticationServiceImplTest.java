@@ -1,11 +1,5 @@
 package it.qbteam.serviceimpl;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,30 +8,22 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-// import org.springframework.test.context.ContextConfiguration;
-// import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.repository.PermissionRepository;
 
 @RunWith(SpringRunner.class)
-// @ExtendWith(SpringExtension.class)
-// @ContextConfiguration(classes = AuthenticationServiceImplTest.AuthenticationServiceConfiguration.class)
-// @SpringBootTest
 public class AuthenticationServiceImplTest {
     @MockBean
     private FirebaseAuth firebaseAuth;
@@ -91,23 +77,17 @@ public class AuthenticationServiceImplTest {
     }
     
     @Test(expected = AuthenticationException.class)
-    // @Test
     public void testCreateUserThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        // Assertions.assertThrows(AuthenticationException.class, () -> {
             final String token = ""; // token can also be null
             // expected can either be true or false
-            Assertions.assertEquals(false, authenticationService.createUser(token, "email", "password"));
-        // } );
+            Assert.assertEquals(false, authenticationService.createUser(token, "email", "password"));
     }
 
     @Test(expected = AuthenticationException.class)
-    // @Test
     public void testGetUserIdByEmailThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-        // Assertions.assertThrows(AuthenticationException.class, () -> {
             final String token = ""; // token can also be null
             // expected can be whatever string
-            Assertions.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
-        // });
+            Assert.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
     }
 
     @Test
@@ -115,7 +95,7 @@ public class AuthenticationServiceImplTest {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(validRequest)).thenReturn(userRecord);
         
-        Assertions.assertEquals(true, authenticationService.createUser(randomToken, "email@email.it", "password"));
+        Assert.assertEquals(true, authenticationService.createUser(randomToken, "email@email.it", "password"));
     }
 
     @Test
@@ -123,7 +103,7 @@ public class AuthenticationServiceImplTest {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(invalidRequest)).thenReturn(userRecord);
 
-        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email", "password"));
+        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email", "password"));
     }
 
     @Test
@@ -131,7 +111,7 @@ public class AuthenticationServiceImplTest {
         // Mocking FirebaseAuth#createUser
         Mockito.when(firebaseAuth.createUser(validRequest)).thenReturn(userRecord);
 
-        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "psw"));
+        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "psw"));
     }
 
     @Test
@@ -140,9 +120,9 @@ public class AuthenticationServiceImplTest {
 
         // Mockito.doThrow(FirebaseAuthException.class).when(firebaseAuth).createUser(null);
 
-        // Mockito.doThrow(FirebaseAuthException.class).when(firebaseAuth.createUser(invalidRequest));>
+        // Mockito.doThrow(FirebaseAuthException.class).when(firebaseAuth.createUser(invalidRequest));
 
-        Assertions.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "password"));
+        Assert.assertEquals(false, authenticationService.createUser(randomToken, "email@email.it", "password"));
     }
 
     @Test
@@ -150,23 +130,23 @@ public class AuthenticationServiceImplTest {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
         Mockito.when(userRecord.getUid()).thenReturn("uid");
 
-        Assertions.assertEquals(true, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
-        Assertions.assertEquals("uid", authenticationService.getUserIdByEmail(randomToken, "email@email.it").get());
+        Assert.assertEquals(true, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
+        Assert.assertEquals("uid", authenticationService.getUserIdByEmail(randomToken, "email@email.it").get());
     }
 
     @Test
     public void testGetUserIdByEmailNotValidRequest() throws AuthenticationException, FirebaseAuthException {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenThrow(FirebaseAuthException.class);
 
-        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
+        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email@email.it").isPresent());
     }
 
     @Test
     public void testGetUserIdByEmailNullOrEmptyMail() throws AuthenticationException, FirebaseAuthException {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
 
-        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "").isPresent());
-        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, null).isPresent());
+        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "").isPresent());
+        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, null).isPresent());
     }
 
     @Test
@@ -174,6 +154,6 @@ public class AuthenticationServiceImplTest {
         Mockito.when(firebaseAuth.getUserByEmail("email@email.it")).thenReturn(userRecord);
         Mockito.when(userRecord.getUid()).thenReturn("uid");
 
-        Assertions.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email").isPresent());
+        Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "email").isPresent());
     }
 }

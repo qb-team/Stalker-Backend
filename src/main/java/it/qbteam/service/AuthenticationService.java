@@ -19,7 +19,7 @@ public interface AuthenticationService {
      *                    the client application
      * @return true if the user is a web-app administrator., false otherwise
      */
-    public Boolean isWebAppAdministrator(String accessToken) throws AuthenticationException;
+    Boolean isWebAppAdministrator(String accessToken) throws AuthenticationException;
 
     /**
      * Returns true if the user is an app user.
@@ -28,7 +28,7 @@ public interface AuthenticationService {
      *                    the client application
      * @return true if the user is an app user, false otherwise
      */
-    public Boolean isAppUser(String accessToken) throws AuthenticationException;
+    Boolean isAppUser(String accessToken) throws AuthenticationException;
 
     /**
      * Creates a new user on the system with the given email and password. Depending
@@ -42,7 +42,7 @@ public interface AuthenticationService {
      * @return Boolean {@code true} if the user account got created, {@code false}
      *         if it was not
      */
-    public Boolean createUser(String accessToken, String email, String password) throws AuthenticationException;
+    Boolean createUser(String accessToken, String email, String password) throws AuthenticationException;
 
     /**
      * Returns the userId related to the email address.
@@ -52,15 +52,14 @@ public interface AuthenticationService {
      * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
-    public Optional<String> getUserIdByEmail(String accessToken, String email) throws AuthenticationException;
+    Optional<String> getUserIdByEmail(String accessToken, String email) throws AuthenticationException;
 
     /**
      * Returns the userId related to the current user.
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
-    public String getUserId(String accessToken) throws AuthenticationException;
+    String getUserId(String accessToken) throws AuthenticationException;
 }

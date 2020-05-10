@@ -64,7 +64,7 @@ public class ReportApiController implements ReportApi {
         }
         else
         {
-            return new ResponseEntity<List<TimePerUserReport>>(returnedList, HttpStatus.OK); // 201
+            return new ResponseEntity<>(returnedList, HttpStatus.OK); // 201
         }
     }
 }

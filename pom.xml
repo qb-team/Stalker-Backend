@@ -24,7 +24,7 @@
 		<jackson-datatype-jsr310.version>2.11.0</jackson-datatype-jsr310.version>
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<junit.version>4.13</junit.version>
-		<surefire.version>3.0.0-M4</surefire.version>
+		<surefire.version>2.22.1</surefire.version>
 		<openapi-generator.version>4.2.3</openapi-generator.version>
 		<checkstyle.version>3.1.1</checkstyle.version>
 		<firebase-admin.version>6.12.2</firebase-admin.version>
@@ -135,11 +135,26 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>${surefire.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<forkCount>3</forkCount>
+					<reuseForks>true</reuseForks>
+					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+				</configuration>
 			</plugin>
 
 			<plugin>
