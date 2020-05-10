@@ -17,8 +17,8 @@ script:
   # Checking OpenAPI file
   - openapi-generator validate --input-spec stalker.yaml
   # Installing Backend
-  - mvn clean install
+  - mvn clean compile
 
 after_success:
   # Testing Backend
-  - mvn clean test coveralls:report -DrepoToken=$COVERALLSTOKEN
+  - mvn clean test jacoco:report coveralls:report -DrepoToken=$COVERALLSTOKEN
