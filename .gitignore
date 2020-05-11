@@ -189,6 +189,7 @@ containers/redis-container/data/*
 
 ### Firebase ###
 firebase*.json
+!postman-collections/FirebaseAuthentication.postman_collection.json
 
 ### OpenAPI Generator ###
 generated-sources/java/*

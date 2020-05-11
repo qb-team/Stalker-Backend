@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "3a22fae4-923f-46bf-9655-eede85b91ded",
+		"name": "Presence",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getOrganizationPresenceCounter",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/presence/organization/{{organizationId}}/counter",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"presence",
+						"organization",
+						"{{organizationId}}",
+						"counter"
+					]
+				},
+				"description": "Gets the number of people currently inside the organization&#39;s trackingArea. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getPlacePresenceCounter",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/presence/place/{{placeId}}/counter",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"presence",
+						"place",
+						"{{placeId}}",
+						"counter"
+					]
+				},
+				"description": "Gets the number of people currently inside the place&#39;s trackingArea. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"protocolProfileBehavior": {}
+}

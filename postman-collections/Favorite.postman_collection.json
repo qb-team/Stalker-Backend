@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "833dfbe5-8dc7-48ab-86fe-faf4a69b3924",
+		"name": "Favorite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getFavoriteOrganizationList",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/favorite/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"favorite",
+						"{{userId}}"
+					]
+				},
+				"description": "Gets the list of favorite organizations of a user. \r\nOnly app users can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "addFavoriteOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : \"{{organizationId}}\",\r\n  \"orgAuthServerId\" : null,\r\n  \"creationDate\" : \"2020-01-23T04:56:07.000+00:00\",\r\n  \"userId\" : \"NKeHzKc6UIXddIJtDSd1AGoefaf2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/favorite/addfavorite",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"favorite",
+						"addfavorite"
+					]
+				},
+				"description": "Adds a new organization to the user's favorite organization list.\r\nIf the organization has trackingMode: authenticated, then the user account of the organization must be linked to Stalker's account.\r\nOnly app users can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "removeFavoriteOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : \"{{organizationId}}\",\r\n  \"orgAuthServerId\" : null,\r\n  \"creationDate\" : \"2020-01-23T04:56:07.000+00:00\",\r\n  \"userId\" : \"NKeHzKc6UIXddIJtDSd1AGoefaf2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/favorite/removefavorite",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"favorite",
+						"removefavorite"
+					]
+				},
+				"description": "Removes the organization from the user's favorite organization list.\r\nOnly app users can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b061fa9e-528e-457c-b06c-61ba55e99b88",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d59dfcca-71f6-42f7-83a7-1d0b92c58fa8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
