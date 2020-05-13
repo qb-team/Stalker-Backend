@@ -147,9 +147,17 @@ public class AdministratorApiController implements AdministratorApi {
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        List<Permission> returnedList = adminService.getAdministratorListOfOrganization(organizationId);
         
-        return new ResponseEntity<List<Permission>>(returnedList, HttpStatus.OK); //200
+        List<Permission> adminList = adminService.getAdministratorListOfOrganization(organizationId);
+
+        adminList.forEach((admin) -> {
+            Optional<String> email = authFacade.authenticationProviderEmailByUserId(authFacade.getAccessToken().get(), admin.getAdministratorId());
+            if(email.isPresent()) {
+                admin.setMail(email.get());
+            }
+        });
+        
+        return new ResponseEntity<List<Permission>>(adminList, HttpStatus.OK); //200
     }
 
     /**

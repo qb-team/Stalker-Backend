@@ -180,4 +180,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+	@Override
+	public Optional<String> getEmailByUserId(String accessToken, String userId) throws AuthenticationException {
+        if (!checkToken(accessToken))
+        throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+
+        if (userId == null || userId.isEmpty())
+            return Optional.empty();
+
+        try {
+            final UserRecord userRecord = firebaseAdaptee.getUser(userId);
+            return Optional.of(userRecord.getEmail());
+        } catch (FirebaseAuthException | IllegalArgumentException exception) {
+            return Optional.empty();
+        }
+	}
+
+    
+
 }

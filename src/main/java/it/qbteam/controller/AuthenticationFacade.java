@@ -134,6 +134,25 @@ class AuthenticationFacade {
     }
 
     /**
+     * Returns the e-mail from the authentication provider given the userId of the user.
+     * 
+     * @param accessToken the accessToken provided by the authentication provider
+     * @return the e-mail address, if the accessToken is valid, wrapped in Optional, otherwise Optional.empty()
+     */
+    public Optional<String> authenticationProviderEmailByUserId(String accessToken, String userId) {
+        try {
+            Optional<String> email = authenticationService.getEmailByUserId(accessToken, userId);
+            if(email.isPresent()) {
+                return Optional.of(email.get());
+            }
+        } catch(AuthenticationException exc) {
+            System.out.println("Thrown AuthenticationException: " + exc.toString());
+        }
+        
+        return Optional.empty();
+    }
+
+    /**
      * Returns the userId from the authentication provider given the e-mail address of the user.
      * 
      * @param accessToken the accessToken provided by the authentication provider
