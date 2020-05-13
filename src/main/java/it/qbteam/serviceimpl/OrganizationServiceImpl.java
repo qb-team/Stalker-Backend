@@ -44,6 +44,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Optional<Organization> updateOrganization(Organization organization) {
+        if(organizationRepo.findByName(organization.getName()).iterator().hasNext()) {
+            return Optional.empty();
+        }
+        
         return Optional.of(organizationRepo.save(organization));
     }
 
