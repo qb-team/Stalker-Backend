@@ -45,7 +45,6 @@ public class Place   {
    * @return id
   */
   @ApiModelProperty(required = true, value = "Unique identifier for a place of an organization.")
-  @NotNull
 
   @Min(1L)
   public Long getId() {

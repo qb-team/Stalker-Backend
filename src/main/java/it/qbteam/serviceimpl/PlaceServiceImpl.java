@@ -23,7 +23,8 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Optional<Place> createNewPlace(Place place) {
-
+        // for safety purposes: removing the id, because it does not count as the repository assigns 
+        place.setId(null);
         return Optional.of(placeRepo.save(place));
     }
 
