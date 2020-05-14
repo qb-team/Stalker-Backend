@@ -106,7 +106,7 @@ public class AdministratorApiController implements AdministratorApi {
         Boolean userCreated = authFacade.createUserAccount(authFacade.getAccessToken().get(), administratorBindingRequest.getMail(), administratorBindingRequest.getPassword());
 
         if(!userCreated) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400  
         }
 
         Optional<Permission> permission = authFacade.createPermissionFromRequest(authFacade.getAccessToken().get(), administratorBindingRequest, administratorWhoNominates);
