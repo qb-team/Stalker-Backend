@@ -355,7 +355,7 @@ paths:
           description: Users or administrator with viewer or manager permission cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
-  "/organization/{organizationId}/requestdeletion":
+  "/organization/requestdeletion":
     post:
       tags:
         - organization
@@ -365,17 +365,6 @@ paths:
         The request will be examined by Stalker administrators.
         Only web-app administrators can access this end-point.
       operationId: requestDeletionOfOrganization
-      parameters:
-        - name: organizationId
-          in: path
-          description: >-
-            ID of an organization.
-            The administrator must have at least owner permission to the organization.
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
       responses:
         "204":
           description: Request sent successfully. Nothing gets returned.
@@ -388,14 +377,9 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              required:
-                - requestReason
-              properties:
-                requestReason:
-                  type: string
-                  description: Request reason for the deletion request.
+              $ref: "#/components/schemas/OrganizationDeletionRequest"
   "/organization/{organizationId}/trackingArea":
     patch:
       tags:
@@ -1072,6 +1056,27 @@ components:
             Area subjected to movement tracking of people.
             It is a collection of (longitude, latitude) pairs consisting in a polygon.
             The string is expressed in JSON format.
+    OrganizationDeletionRequest:
+      type: object
+      description: Request object for creating a new deletion request for the organization. The request will be analyzed by a Stalker administrator.
+      additionalProperties: false
+      required:
+        - organizationId
+        - requestReason
+      properties:
+        organizationId:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Unique identifier of the organization.
+        requestReason:
+          type: string
+          maxLength: 512
+          description: Request reason for the deletion request.
+        administratorId:
+          type: string
+          maxLength: 256
+          description: Authentication service's administrator unique identifier.
     AdministratorBindingRequest:
       type: object
       description: Request object for creating a new administrator account and binding it to the organization or just binding an already existent administrator.

@@ -1,6 +1,8 @@
 package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationDeletionRequest;
+import it.qbteam.repository.OrganizationDeletionRequestRepository;
 import it.qbteam.repository.OrganizationRepository;
 import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private OrganizationRepository organizationRepo;
 
+    private OrganizationDeletionRequestRepository orgDelReqRepo;
+
     @Autowired
-    public OrganizationServiceImpl(OrganizationRepository organizationRepository){
-        this.organizationRepo= organizationRepository;
+    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationDeletionRequestRepository organizationDeletionRequestRepository){
+        this.organizationRepo = organizationRepository;
+        this.orgDelReqRepo = organizationDeletionRequestRepository;
     }
 
     @Override
@@ -38,8 +43,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public void requestDeletionOfOrganization(Long organizationId, String requestReason) {
-
+    public void requestDeletionOfOrganization(OrganizationDeletionRequest organizationDeletionRequest) {
+        orgDelReqRepo.save(organizationDeletionRequest);
     }
 
     @Override

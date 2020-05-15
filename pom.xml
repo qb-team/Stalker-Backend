@@ -30,6 +30,7 @@
 		<firebase-admin.version>6.12.2</firebase-admin.version>
 		<maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
 		<validation-api.version>2.0.1.Final</validation-api.version>
+		<mysql-connector-java.version>8.0.20</mysql-connector-java.version>
 	</properties>
 
 	<dependencies>
@@ -62,6 +63,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -83,21 +85,6 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>${validation-api.version}</version>
-		</dependency>
-
-		<!-- Generatore automatico di risorse, come ad esempio getter, setter, metodi equals, hashCode e toString, ecc. -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Genera i file .yaml di Swagger (da sorgente a yaml) -->
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-core</artifactId>
-			<version>${swagger.core.version}</version>
 		</dependency>
 
 		<!-- Aggiunge annotazioni extra a quelle di Swagger Core di default -->
@@ -151,9 +138,9 @@
 					<includes>
 						<include>**/*.java</include>
 					</includes>
-					<!-- <forkCount>3</forkCount>
-					<reuseForks>true</reuseForks>
-					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine> -->
+					<printSummary>false</printSummary> <!-- commentare in caso di errori con i test -->
+					<forkCount>0.5C</forkCount> <!-- Un processo della JVM ogni due core nel PC per eseguire i test -->
+					<reuseForks>true</reuseForks> <!-- Riutilizzati i processi per eseguire i test -->
 				</configuration>
 			</plugin>
 

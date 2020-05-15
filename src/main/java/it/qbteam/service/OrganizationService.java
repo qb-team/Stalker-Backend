@@ -1,6 +1,7 @@
 package it.qbteam.service;
 
 import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationDeletionRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,10 +32,9 @@ public interface OrganizationService {
     /**
      * Description
      * 
-     * @param organizationId
-     * @param requestReason
+     * @param organizationDeletionRequest
      */
-    void requestDeletionOfOrganization(Long organizationId, String requestReason);
+    void requestDeletionOfOrganization(OrganizationDeletionRequest organizationDeletionRequest);
 
     /**
      * Description

@@ -17,6 +17,7 @@ import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.service.OrganizationService;
 import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationDeletionRequest;
 import it.qbteam.model.Permission;
 
 @Controller
@@ -82,19 +83,30 @@ public class OrganizationApiController implements OrganizationApi {
     }
 
     /**
-     * POST /organization/{organizationId}/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
+     * POST /organization/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
      * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.
      *
-     * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
-     * @param requestReason  Request reason for the deletion request. (required)
+     * @param organizationDeletionRequest  (required)
      * @return Request sent successfully. Nothing gets returned. (status code 204)
-     * or The administrator is not authenticated. Nothing gets returned. (status code 401)
-     * or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
+     *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
+     *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
+     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
-    @Override
-    public ResponseEntity<Void> requestDeletionOfOrganization(@Min(1L) Long organizationId, String requestReason) {
-        return null;
+    public ResponseEntity<Void> requestDeletionOfOrganization(@Valid OrganizationDeletionRequest organizationDeletionRequest) {
+        if(!authFacade.getAccessToken().isPresent())
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+
+        if(!orgService.getOrganization(organizationDeletionRequest.getOrganizationId()).isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+        }
+        Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationDeletionRequest.getOrganizationId());
+
+        if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
+        } else {
+            orgService.requestDeletionOfOrganization(organizationDeletionRequest);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+        }
     }
 
     /**
@@ -121,9 +133,6 @@ public class OrganizationApiController implements OrganizationApi {
         if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         } else {
-
-            // if(organization.getName())
-
             Optional<Organization> updatedOrganization = orgService.updateOrganization(organization);
             if(updatedOrganization.isPresent()) {
                 return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200

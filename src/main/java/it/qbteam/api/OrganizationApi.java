@@ -6,6 +6,7 @@
 package it.qbteam.api;
 
 import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationDeletionRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -74,12 +75,11 @@ public interface OrganizationApi {
     ResponseEntity<List<Organization>> getOrganizationList();
 
 
-    /**
-     * POST /organization/{organizationId}/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
+/**
+     * POST /organization/requestdeletion : Sends a deletion request to the system. The request will be examined by Stalker administrators.
      * Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point.
      *
-     * @param organizationId ID of an organization. The administrator must have at least owner permission to the organization. (required)
-     * @param requestReason Request reason for the deletion request. (required)
+     * @param organizationDeletionRequest  (required)
      * @return Request sent successfully. Nothing gets returned. (status code 204)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users and administrators who do not own the organization cannot have access. Nothing gets returned. (status code 403)
@@ -93,10 +93,10 @@ public interface OrganizationApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users and administrators who do not own the organization cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @RequestMapping(value = "/organization/{organizationId}/requestdeletion",
-        consumes = { "application/x-www-form-urlencoded" },
+    @RequestMapping(value = "/organization/requestdeletion",
+        consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> requestDeletionOfOrganization(@Min(1L)@ApiParam(value = "ID of an organization. The administrator must have at least owner permission to the organization.",required=true) @PathVariable("organizationId") Long organizationId,@ApiParam(value = "Request reason for the deletion request.", required=true) @RequestParam(value="requestReason", required=true)  String requestReason);
+    ResponseEntity<Void> requestDeletionOfOrganization(@ApiParam(value = "" ,required=true )  @Valid @RequestBody OrganizationDeletionRequest organizationDeletionRequest);
 
 
      /**

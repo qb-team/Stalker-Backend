@@ -1,6 +1,7 @@
 package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Organization;
+import it.qbteam.repository.OrganizationDeletionRequestRepository;
 import it.qbteam.repository.OrganizationRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,11 +29,17 @@ public class OrganizationServiceImplTest {
     @MockBean
     private OrganizationRepository organizationRepository;
 
+    @MockBean
+    private OrganizationDeletionRequestRepository organizationDeletionRequestRepository;
+
     @TestConfiguration
     static class OrganizationServiceImplConfiguration{
         @Bean
-        public OrganizationServiceImpl organizationService(OrganizationRepository organizationRepository) {
-            return new OrganizationServiceImpl(organizationRepository);
+        public OrganizationServiceImpl organizationService(
+            OrganizationRepository organizationRepository,
+            OrganizationDeletionRequestRepository organizationDeletionRequestRepository
+        ) {
+            return new OrganizationServiceImpl(organizationRepository, organizationDeletionRequestRepository);
         }
 
     }
