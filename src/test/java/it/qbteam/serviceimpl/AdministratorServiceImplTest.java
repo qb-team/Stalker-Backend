@@ -2,6 +2,7 @@ package it.qbteam.serviceimpl;
 
 
 import it.qbteam.model.Permission;
+import it.qbteam.model.PermissionId;
 import it.qbteam.repository.OrganizationRepository;
 import it.qbteam.repository.PermissionRepository;
 import org.junit.Assert;
@@ -55,7 +56,7 @@ public class AdministratorServiceImplTest {
     }
 
     @Test
-    public void testBindAdministratorToOrganizationReturnOptionaEmptyWithNullPermission() {
+    public void testBindAdministratorToOrganizationReturnOptionalEmptyWithNullPermission() {
 
         Assert.assertEquals(empty, administratorService.bindAdministratorToOrganization(null));
 
@@ -117,6 +118,19 @@ public class AdministratorServiceImplTest {
 
     @Test
     public void testUnbindAdministratorFromOrganizationPerformDeleteGivenValidPermission(){
+       PermissionId returnType = new PermissionId();
+       Mockito.doNothing().when(permissionRepository).deleteById(any(PermissionId.class));
 
+       administratorService.unbindAdministratorFromOrganization(testPermission);
+       Mockito.verify(permissionRepository, Mockito.times(1)).deleteById(returnType);
+
+    }
+    @Test
+    public void testUnbindAdministratorFromOrganizationDoNotPerformDeleteOperationGivenNullInput() {
+        PermissionId returnType = new PermissionId();
+        Mockito.doNothing().when(permissionRepository).deleteById(any(PermissionId.class));
+
+        administratorService.unbindAdministratorFromOrganization(null);
+        Mockito.verify(permissionRepository, Mockito.times(0)).deleteById(returnType);
     }
 }
