@@ -43,6 +43,7 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<OrganizationMovement> trackMovementInOrganization(@Valid OrganizationMovement organizationMovement) {
+        System.out.println("[MovementApiController] trackMovementInOrganization");
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
@@ -78,6 +79,7 @@ public class MovementApiController implements MovementApi {
      */
     @Override
     public ResponseEntity<PlaceMovement> trackMovementInPlace(@Valid PlaceMovement placeMovement) {
+        System.out.println("[MovementApiController] trackMovementInPlace");
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }

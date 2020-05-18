@@ -29,7 +29,8 @@ public class OrganizationMovementRedisPublisher extends OrganizationMovementPubl
 
     @Override
     public void publish(final OrganizationMovement message) {
-        System.out.println(message);
+        System.out.println("[OrganizationMovementRedisPublisher] publish");
+        System.out.println("Message published:\n" + message + "\n");
         movementTemplate.convertAndSend(topic.getTopic(), message);
         if(message.getMovementType() == 1) {
             counterTemplate.opsForValue().increment("organization:" + message.getOrganizationId());

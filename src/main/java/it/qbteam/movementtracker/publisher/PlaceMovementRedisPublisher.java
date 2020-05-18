@@ -29,7 +29,8 @@ public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
 
     @Override
     public void publish(final PlaceMovement message) {
-        System.out.println(message);
+        System.out.println("[PlaceMovementRedisPublisher] publish");
+        System.out.println("Message published:\n" + message + "\n");
         movementTemplate.convertAndSend(topic.getTopic(), message);
         if(message.getMovementType() == 1) {
             counterTemplate.opsForValue().increment("place:" + message.getPlaceId());

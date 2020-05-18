@@ -20,14 +20,14 @@ public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println("REDIS MESSAGE: " + message.toString());
+        System.out.println("[PlaceMovementRedisSubscriber] onMessage");
 
         PlaceMovement movement = (PlaceMovement) redisSerializer.deserialize(message.getBody());
 
-        System.out.println("PARSED OBJECT: " + movement);
+        System.out.println("Message received:\n" + movement + "\n");
         
         if (movement.getMovementType() == 1) { // ingresso
-            System.out.println("Entrance place");
+            System.out.println("Movement type is ENTRANCE to a PLACE");
             PlaceAccess newAccess = new PlaceAccess();
             newAccess.setEntranceTimestamp(movement.getTimestamp());
             newAccess.setExitToken(movement.getExitToken());
@@ -39,7 +39,7 @@ public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
 
             placeAccessRepository.save(newAccess);
         } else if (movement.getMovementType() == -1) { // uscita
-            System.out.println("Exit place");
+            System.out.println("Movement type is EXIT from a PLACE");
             Iterable<PlaceAccess> dbAccess = placeAccessRepository.findByExitTokenAndPlaceId(movement.getExitToken(), movement.getPlaceId());
 
             if (dbAccess.iterator().hasNext()) {

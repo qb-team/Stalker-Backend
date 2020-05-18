@@ -20,14 +20,14 @@ public class OrganizationMovementRedisSubscriber extends OrganizationMovementSub
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println("REDIS MESSAGE: " + message.toString());
+        System.out.println("[OrganizationMovementRedisSubscriber] onMessage");
 
         OrganizationMovement movement = (OrganizationMovement) redisSerializer.deserialize(message.getBody());
 
-        System.out.println("PARSED OBJECT: " + movement);
+        System.out.println("Message received:\n" + movement + "\n");
         
         if (movement.getMovementType() == 1) { // ingresso
-            System.out.println("Entrance organization");
+            System.out.println("Movement type is ENTRANCE to an ORGANIZATION");
             OrganizationAccess newAccess = new OrganizationAccess();
             newAccess.setEntranceTimestamp(movement.getTimestamp());
             newAccess.setExitToken(movement.getExitToken());
@@ -39,7 +39,7 @@ public class OrganizationMovementRedisSubscriber extends OrganizationMovementSub
 
             organizationAccessRepository.save(newAccess);
         } else if (movement.getMovementType() == -1) { // uscita
-            System.out.println("Exit organization");
+            System.out.println("Movement type is EXIT from an ORGANIZATION");
             Iterable<OrganizationAccess> dbAccess = organizationAccessRepository.findByExitTokenAndOrganizationId(movement.getExitToken(), movement.getOrganizationId());
 
             if (dbAccess.iterator().hasNext()) {
