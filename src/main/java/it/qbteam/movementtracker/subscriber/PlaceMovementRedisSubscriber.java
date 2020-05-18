@@ -27,6 +27,7 @@ public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
         System.out.println("PARSED OBJECT: " + movement);
         
         if (movement.getMovementType() == 1) { // ingresso
+            System.out.println("Entrance place");
             PlaceAccess newAccess = new PlaceAccess();
             newAccess.setEntranceTimestamp(movement.getTimestamp());
             newAccess.setExitToken(movement.getExitToken());
@@ -38,6 +39,7 @@ public class PlaceMovementRedisSubscriber extends PlaceMovementSubscriber {
 
             placeAccessRepository.save(newAccess);
         } else if (movement.getMovementType() == -1) { // uscita
+            System.out.println("Exit place");
             Iterable<PlaceAccess> dbAccess = placeAccessRepository.findByExitTokenAndPlaceId(movement.getExitToken(), movement.getPlaceId());
 
             if (dbAccess.iterator().hasNext()) {

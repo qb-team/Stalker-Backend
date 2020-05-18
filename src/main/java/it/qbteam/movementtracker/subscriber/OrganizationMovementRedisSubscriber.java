@@ -27,6 +27,7 @@ public class OrganizationMovementRedisSubscriber extends OrganizationMovementSub
         System.out.println("PARSED OBJECT: " + movement);
         
         if (movement.getMovementType() == 1) { // ingresso
+            System.out.println("Entrance organization");
             OrganizationAccess newAccess = new OrganizationAccess();
             newAccess.setEntranceTimestamp(movement.getTimestamp());
             newAccess.setExitToken(movement.getExitToken());
@@ -38,6 +39,7 @@ public class OrganizationMovementRedisSubscriber extends OrganizationMovementSub
 
             organizationAccessRepository.save(newAccess);
         } else if (movement.getMovementType() == -1) { // uscita
+            System.out.println("Exit organization");
             Iterable<OrganizationAccess> dbAccess = organizationAccessRepository.findByExitTokenAndOrganizationId(movement.getExitToken(), movement.getOrganizationId());
 
             if (dbAccess.iterator().hasNext()) {
