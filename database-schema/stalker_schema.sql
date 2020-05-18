@@ -44,6 +44,12 @@ CREATE TABLE `OrganizationAccess` (
   `orgAuthServerId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'User unique identifier from the authentication server of the organization.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Access to an organization.';
 
+CREATE TABLE `OrganizationDeletionRequest` (
+  `organizationId` bigint NOT NULL COMMENT 'Unique identifier of the organization.',
+  `requestReason` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Request reason for the deletion request.',
+  `administratorId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Authentication service''s administrator unique identifier.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Request object for creating a new deletion request for the organization. The request will be analyzed by a Stalker administrator.';
+
 CREATE TABLE `Permission` (
   `administratorId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Authentication service''s administrator unique identifier.',
   `organizationId` bigint NOT NULL COMMENT 'Unique identifier of the organization the administrator is part of.',
@@ -80,6 +86,9 @@ ALTER TABLE `OrganizationAccess`
   ADD PRIMARY KEY (`id`),
   ADD KEY `organizationId` (`organizationId`);
 
+ALTER TABLE `OrganizationDeletionRequest`
+  ADD PRIMARY KEY (`organizationId`);
+
 ALTER TABLE `Permission`
   ADD PRIMARY KEY (`administratorId`,`organizationId`),
   ADD KEY `organizationId` (`organizationId`);
@@ -99,6 +108,9 @@ ALTER TABLE `Organization`
 ALTER TABLE `OrganizationAccess`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `OrganizationDeletionRequest`
+  MODIFY `organizationId` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier of the organization.';
+
 ALTER TABLE `Place`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for a place of an organization.';
 
@@ -111,6 +123,9 @@ ALTER TABLE `Favorite`
 
 ALTER TABLE `OrganizationAccess`
   ADD CONSTRAINT `OrganizationAccess_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `OrganizationDeletionRequest`
+  ADD CONSTRAINT `OrganizationDeletionRequest_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `Permission`
   ADD CONSTRAINT `Permission_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

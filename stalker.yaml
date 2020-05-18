@@ -1071,6 +1071,7 @@ components:
           description: Unique identifier of the organization.
         requestReason:
           type: string
+          minLength: 100
           maxLength: 512
           description: Request reason for the deletion request.
         administratorId:

@@ -67,7 +67,7 @@ public class OrganizationDeletionRequest   {
   @ApiModelProperty(required = true, value = "Request reason for the deletion request.")
   @NotNull
 
-  @Size(max=512)
+  @Size(min=100, max=512)
   public String getRequestReason() {
     return requestReason;
   }
