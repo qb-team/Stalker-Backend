@@ -12,12 +12,13 @@ services:
       - ./containers/mysql-container/data:/var/lib/mysql
     ports:
       - "${MYSQL_PRT}:3306"
+    # networks:
+    #   - stalker
   phpmyadmin:
     container_name: stalker-gui-for-rdbms
     depends_on:
       - mysql_engine
     image: phpmyadmin/phpmyadmin
-    restart: always
     ports:
       - "5000:80"
     env_file:
@@ -25,6 +26,8 @@ services:
     environment:
       PMA_HOST: mysql_engine
       MYSQL_ROOT_PASSWORD: ${MYSQL_RPW}
+    # networks:
+    #   - stalker
   redis_engine:
     container_name: stalker-nosql
     image: redis:5.0.9
@@ -34,3 +37,22 @@ services:
     volumes:
       - ./containers/redis-container/redis.conf:/usr/local/etc/redis/redis.conf
       - ./containers/redis-container/data:/data
+    # networks:
+    #   - stalker
+  # Comment or decomment when needed
+  # spring:
+  #   container_name: stalker-rest-api
+  #   depends_on:
+  #     - mysql_engine
+  #     - redis_engine
+  #   build: .
+  #   ports:
+  #     - "${SERVER_PRT}:${SERVER_PRT}"
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - stalker
+  #   volumes:
+  #     - ./firebase.json:/firebase.json
+networks:
+  stalker:

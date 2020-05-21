@@ -1,7 +1,7 @@
 package it.qbteam.config;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -23,7 +23,7 @@ public class FirebaseAdminConfig {
 
     @Bean
     FirebaseApp createFirebaseApp() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream(serviceAccountKeyFile);
+        InputStream serviceAccount = getClass().getResourceAsStream(serviceAccountKeyFile);
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
