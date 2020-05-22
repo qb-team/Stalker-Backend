@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 @Configuration
 public class FirebaseAdminConfig {
@@ -23,7 +25,8 @@ public class FirebaseAdminConfig {
 
     @Bean
     FirebaseApp createFirebaseApp() throws IOException {
-        InputStream serviceAccount = getClass().getResourceAsStream(serviceAccountKeyFile);
+        Resource firebaseConfigFile = new ClassPathResource(serviceAccountKeyFile);
+        InputStream serviceAccount = firebaseConfigFile.getInputStream();
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
