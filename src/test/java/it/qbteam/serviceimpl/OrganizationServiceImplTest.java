@@ -55,8 +55,8 @@ public class OrganizationServiceImplTest {
 
     @Test
     public void TestGetOrganizationListReturnEmptyList(){
-        Iterable<Organization> iterarableList= new ArrayList<>();
-        Mockito.when(organizationRepository.findAll()).thenReturn(iterarableList);
+        Iterable<Organization> iterableList= new ArrayList<>();
+        Mockito.when(organizationRepository.findAll()).thenReturn(iterableList);
 
         List<Organization> expectedList = new ArrayList<>();
 
@@ -66,9 +66,9 @@ public class OrganizationServiceImplTest {
     public void testGetOrganizationListReturnArrayListNotEmpty() {
         List<Organization> lista = new LinkedList<>();
         lista.add(new Organization());
-        Iterable<Organization> iterarableList = lista;
+        Iterable<Organization> iterableList = lista;
 
-        Mockito.when(organizationRepository.findAll()).thenReturn(iterarableList);
+        Mockito.when(organizationRepository.findAll()).thenReturn(iterableList);
 
         List<Organization> expectedList = new ArrayList<>();
         expectedList.add(new Organization());

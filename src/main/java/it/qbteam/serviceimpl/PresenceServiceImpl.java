@@ -37,10 +37,10 @@ public class PresenceServiceImpl implements PresenceService {
     @Override
     public Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
         Integer currentCounter = presenceCounterTemplate.opsForValue().get("place:"+placeId);
-        
+
         PlacePresenceCounter placePresenceCounter = new PlacePresenceCounter().placeId(placeId);
         placePresenceCounter = placePresenceCounter.counter(currentCounter == null ? 0 : currentCounter);
-        
+
         return Optional.of(placePresenceCounter);
     }
 }
