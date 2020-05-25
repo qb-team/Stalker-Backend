@@ -28,12 +28,12 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private Long getDuration(OffsetDateTime firstDate, OffsetDateTime lastDate) {
-        return lastDate.minusSeconds(firstDate.toInstant().toEpochMilli() * 1000).toInstant().toEpochMilli() * 1000;
+        return lastDate.minusSeconds(firstDate.toInstant().toEpochMilli()/1000).toInstant().toEpochMilli()/1000;
     }
 
     @Override
     public List<TimePerUserReport> getTimePerUserReport(Long placeId) {
-        final OffsetDateTime timeIdentity = OffsetDateTime.of(LocalDateTime.of(0, 00, 00, 00, 00), ZoneOffset.ofHoursMinutes(0, 0));
+        final OffsetDateTime timeIdentity = OffsetDateTime.of(LocalDateTime.of(1970, 1, 1, 00, 00), ZoneOffset.ofHoursMinutes(0, 0));
         Iterable<PlaceAccess> allAccessOfSinglePlace = placeAccessRepo.findByPlaceId(placeId);
         List<PlaceAccess> listOfAllAccessOnPlace = new ArrayList<>();
 
