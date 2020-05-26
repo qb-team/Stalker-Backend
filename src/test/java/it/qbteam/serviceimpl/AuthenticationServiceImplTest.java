@@ -1,5 +1,10 @@
 package it.qbteam.serviceimpl;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.exception.AuthenticationException;
+import it.qbteam.model.Permission;
 import it.qbteam.repository.PermissionRepository;
 
 @RunWith(SpringRunner.class)
@@ -47,15 +54,15 @@ public class AuthenticationServiceImplTest {
 
     private String randomToken;
 
+    @Mock
     private CreateRequest validRequest;
 
+    @Mock
     private CreateRequest invalidRequest;
 
+    @Mock
     private UserRecord userRecord;
 
-    public AuthenticationServiceImplTest() {}
-
-    // @BeforeEach
     @Before
     public void setUp() throws FirebaseAuthException {
         MockitoAnnotations.initMocks(this);
@@ -69,25 +76,49 @@ public class AuthenticationServiceImplTest {
         Mockito.when(firebaseAuth.verifyIdToken(null)).thenThrow(FirebaseAuthException.class); // 1, 4
         Mockito.when(firebaseAuth.verifyIdToken("")).thenThrow(FirebaseAuthException.class); // 2, 4
         Mockito.when(firebaseAuth.verifyIdToken(randomToken)).thenReturn(firebaseToken); // 3
-
-        // Mocking FirebaseAuth#createUser
-        validRequest = Mockito.mock(UserRecord.CreateRequest.class);
-        invalidRequest = Mockito.mock(UserRecord.CreateRequest.class);
-        userRecord = Mockito.mock(UserRecord.class);
     }
     
     @Test(expected = AuthenticationException.class)
     public void testCreateUserThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-            final String token = ""; // token can also be null
-            // expected can either be true or false
-            Assert.assertEquals(false, authenticationService.createUser(token, "email", "password"));
+        final String token = ""; // token can also be null
+        // expected can either be true or false
+        Assert.assertEquals(false, authenticationService.createUser(token, "email", "password"));
     }
 
     @Test(expected = AuthenticationException.class)
     public void testGetUserIdByEmailThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
-            final String token = ""; // token can also be null
-            // expected can be whatever string
-            Assert.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
+        final String token = ""; // token can also be null
+        // expected can be whatever string
+        Assert.assertEquals("test@test.it", authenticationService.getUserIdByEmail(token, "email"));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testIsWebAppAdministratorThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
+        final String token = ""; // token can also be null
+        // expected can be whatever string
+        Assert.assertEquals("test@test.it", authenticationService.isWebAppAdministrator(token));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testIsAppUserThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
+        final String token = ""; // token can also be null
+        // expected can be whatever string
+        Assert.assertEquals("test@test.it", authenticationService.isAppUser(token));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testGetUserIdThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
+        final String token = ""; // token can also be null
+        // expected can be whatever string
+        Assert.assertEquals("test@test.it", authenticationService.getUserId(token));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testGetEmailByUserIdThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
+        final String token = ""; // token can also be null
+        // expected can be whatever string
+        // instead of "uid" there could be whatever string
+        Assert.assertEquals("test@test.it", authenticationService.getEmailByUserId(token, "uid"));
     }
 
     @Test
@@ -136,5 +167,14 @@ public class AuthenticationServiceImplTest {
 
         Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, "").isPresent());
         Assert.assertEquals(false, authenticationService.getUserIdByEmail(randomToken, null).isPresent());
+    }
+
+    @Test
+    public void testIsWebAppAdministratorReturnsTrueIfThereArePermissions() throws AuthenticationException {
+        List<Permission> permList = new LinkedList<>();
+        permList.add(new Permission());
+        Mockito.when(permissionRepo.findByAdministratorId(anyString())).thenReturn(permList);
+
+        //Assert.assertEquals(true, authenticationService.isWebAppAdministrator(randomToken));
     }
 }
