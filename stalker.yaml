@@ -933,6 +933,38 @@ paths:
           description: Users cannot have access. Nothing gets returned.
         "404":
           description: The organization could not be found. Nothing gets returned.
+  "/authenticationserver/userinformation":
+    post:
+      tags:
+        - authenticationserver
+      summary: Gets the information on users given their identifier on the organization's authentication server.
+      description: >-
+        Gets the information on users given their identifier on the organization's authentication server.
+        Only web-app administrators can access this end-point.
+      operationId: getUserInfoFromAuthServer
+      responses:
+        "200":
+          description: Users' information returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationAuthenticationServerInformation"
+        "204":
+          description: No information was found. Nothing gets returned.
+        "401":
+          description: The administrator is not authenticated. Nothing gets returned.
+        "403":
+          description: Users cannot have access. Nothing gets returned.
+        "404":
+          description: The organization could not be found. Nothing gets returned.
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationAuthenticationServerRequest"
 components:
   securitySchemes:
     bearerAuth:
@@ -943,6 +975,61 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    OrganizationAuthenticationServerRequest:
+      type: object
+      additionalProperties: false
+      description: >-
+        Data for requesting information about users of an organization.
+      required:
+        - organizationCredentials
+        - organizationId
+        - orgAuthServerIds
+      properties:
+        organizationCredentials:
+          $ref: "#/components/schemas/OrganizationAuthenticationServerCredentials"
+        organizationId:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Unique identifier of an organization.
+        orgAuthServerIds:
+          type: array
+          items:
+            type: string
+          minLength: 1
+          description: List of ids of users to get their information.
+    OrganizationAuthenticationServerCredentials:
+      type: object
+      additionalProperties: false
+      description: >-
+        Credentials for authenticating to the organizations's authentication server.
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          maxLength: 256
+          description: Username of the administrator account in the organizations's authentication server.
+        password:
+          type: string
+          format: password
+          description: Password of the administrator account in the organizations's authentication server.
+    OrganizationAuthenticationServerInformation:
+      type: object
+      additionalProperties: false
+      description: >-
+        Information of a user of an organizations.
+      required:
+        - name
+        - surname
+      properties:
+        name:
+          type: string
+          description: Name of the user.
+        surname:
+          type: string
+          description: Surname of the user.
     Organization:
       type: object
       additionalProperties: false
