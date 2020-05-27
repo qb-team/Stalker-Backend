@@ -4,9 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,7 +22,7 @@ public class TimePerUserReport   {
   private String orgAuthServerId;
 
   @JsonProperty("totalTime")
-  private OffsetDateTime totalTime;
+  private Long totalTime;
 
   public TimePerUserReport placeId(Long placeId) {
     this.placeId = placeId;
@@ -33,6 +31,7 @@ public class TimePerUserReport   {
 
   /**
    * Unique identifier of the place in which the user had access.
+   * minimum: 1
    * @return placeId
   */
   @ApiModelProperty(required = true, value = "Unique identifier of the place in which the user had access.")
@@ -59,7 +58,7 @@ public class TimePerUserReport   {
   @ApiModelProperty(required = true, value = "User unique identifier from the authentication server of the organization.")
   @NotNull
 
-  @Size(max=256)
+  @Size(max=256) 
   public String getOrgAuthServerId() {
     return orgAuthServerId;
   }
@@ -68,25 +67,24 @@ public class TimePerUserReport   {
     this.orgAuthServerId = orgAuthServerId;
   }
 
-  public TimePerUserReport totalTime(OffsetDateTime totalTime) {
+  public TimePerUserReport totalTime(Long totalTime) {
     this.totalTime = totalTime;
     return this;
   }
 
   /**
-   * Total amount of time spent inside the organization by the user.
+   * Total amount of time (in seconds) spent inside the organization by the user.
    * @return totalTime
   */
-  @ApiModelProperty(required = true, value = "Total amount of time spent inside the organization by the user.")
+  @ApiModelProperty(required = true, value = "Total amount of time (in seconds) spent inside the organization by the user.")
   @NotNull
 
-  @Valid
 
-  public OffsetDateTime getTotalTime() {
+  public Long getTotalTime() {
     return totalTime;
   }
 
-  public void setTotalTime(OffsetDateTime totalTime) {
+  public void setTotalTime(Long totalTime) {
     this.totalTime = totalTime;
   }
 

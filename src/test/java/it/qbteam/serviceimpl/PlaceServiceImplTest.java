@@ -1,6 +1,5 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.model.FavoriteId;
 import it.qbteam.model.Place;
 import it.qbteam.repository.PlaceRepository;
 import org.junit.Assert;
@@ -12,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
