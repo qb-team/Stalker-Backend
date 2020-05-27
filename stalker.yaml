@@ -1021,9 +1021,14 @@ components:
       description: >-
         Information of a user of an organizations.
       required:
+        - orgAuthServerId
         - name
         - surname
       properties:
+        orgAuthServerId:
+          type: string
+          maxLength: 256
+          description: User unique identifier from the authentication server of the organization.
         name:
           type: string
           description: Name of the user.
