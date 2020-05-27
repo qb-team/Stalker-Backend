@@ -8,9 +8,7 @@ import it.qbteam.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -33,7 +31,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<TimePerUserReport> getTimePerUserReport(Long placeId) {
-        final OffsetDateTime timeIdentity = OffsetDateTime.of(LocalDateTime.of(1970, 1, 1, 00, 00), ZoneOffset.ofHoursMinutes(0, 0));
         Iterable<PlaceAccess> allAccessOfSinglePlace = placeAccessRepo.findByPlaceId(placeId);
         List<PlaceAccess> listOfAllAccessOnPlace = new ArrayList<>();
 
@@ -48,7 +45,7 @@ public class ReportServiceImpl implements ReportService {
         mapUserIdWithTime.forEach((id, time) -> {
             TimePerUserReport report = new TimePerUserReport();
 
-            report.setTotalTime(timeIdentity.plusSeconds(time));
+            report.setTotalTime(time);
             report.setOrgAuthServerId(id);
             report.setPlaceId(placeId);
 

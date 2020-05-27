@@ -42,7 +42,7 @@ public class ReportServiceImplTest {
     private Iterable<PlaceAccess> iterablePlaceAccess = new ArrayList<>();
     private List<PlaceAccess> listPlaceAccess = new ArrayList<>();
     private PlaceAccess testPlaceAccess = new PlaceAccess().placeId(1l).id(1l);
-    private TimePerUserReport test1HourTestPerUserReport = new TimePerUserReport().totalTime(OffsetDateTime.of(LocalDateTime.of(1970, 1, 1, 1, 00), ZoneOffset.ofHoursMinutes(0, 0)));
+    private TimePerUserReport test1HourTestPerUserReport = new TimePerUserReport().totalTime(3600L);
     private List<TimePerUserReport> returnList = new LinkedList<>();
     private Iterable<PlaceAccess> nullIterableList = new ArrayList<>();
     @Before

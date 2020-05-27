@@ -1484,8 +1484,8 @@ components:
           maxLength: 256
           description: User unique identifier from the authentication server of the organization.
         totalTime:
-          type: string
-          format: date-time
-          description: Total amount of time spent inside the organization by the user.
+          type: integer
+          format: int64
+          description: Total amount of time (in seconds) spent inside the organization by the user.
 security:
   - bearerAuth: []
