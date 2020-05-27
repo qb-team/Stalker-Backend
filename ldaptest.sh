@@ -10,4 +10,4 @@ docker run --name qbteam-ldap-server-test --hostname qbteam-ldap-server-test --e
 #
 # LDAP Client (for configuration and settings management purposes)
 #
-docker run -p 6443:443 -p 6080:80 --name qbteam-ldap-client-test --hostname qbteam-ldap-client-test --link qbteam-ldap-server-test:ldap-host --env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.7.2
+docker run -p 6443:443 -p 6080:80 --name qbteam-ldap-client-test --hostname qbteam-ldap-client-test --link qbteam-ldap-server-test:ldap-host --env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.9.0
