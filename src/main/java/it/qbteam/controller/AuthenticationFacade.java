@@ -72,9 +72,9 @@ class AuthenticationFacade {
      * @return the token of the user
      */
     public Optional<String> getAccessToken() {
-        if(!getRequest().isPresent())
+        if(!getRequest().isPresent()) {
             return Optional.empty();
-        
+        }
         final NativeWebRequest request = getRequest().get();
 
         // checking for header "Authorization: Bearer <token>"
