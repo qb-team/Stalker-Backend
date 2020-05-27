@@ -4,16 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import com.unboundid.ldap.sdk.LDAPConnection;
-import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.LDAPSearchException;
-import com.unboundid.ldap.sdk.SearchRequest;
-import com.unboundid.ldap.sdk.SearchResult;
-import com.unboundid.ldap.sdk.SearchScope;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.qbteam.authenticationserver.AuthenticationServerConnector;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationAuthenticationServerCredentials;
 import it.qbteam.model.OrganizationAuthenticationServerInformation;
@@ -26,9 +20,12 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
 
     private OrganizationRepository orgRepo;
 
+    private AuthenticationServerConnector authServerConn;
+
     @Autowired
-    public AuthenticationServerServiceImpl(OrganizationRepository organizationRepository) {
+    public AuthenticationServerServiceImpl(OrganizationRepository organizationRepository, AuthenticationServerConnector authServerConnector) {
         this.orgRepo = organizationRepository;
+        this.authServerConn = authServerConnector;
     }
 
 
@@ -47,57 +44,21 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
             return infos;
         }
 
-        String ldapServer;
-        int ldapPort = 389; 
-
-        if(organization.getAuthenticationServerURL().contains(":")) {
-            String[] ldapUrl = organization.getAuthenticationServerURL().split(":");
-            ldapServer = ldapUrl[0];
-            try {
-                ldapPort = Integer.parseInt(ldapUrl[1]);
-            } catch(NumberFormatException exc) {
-                ldapPort = 389;
-            }
-        } else {
-            ldapServer = organization.getAuthenticationServerURL();
-        }
-
-        //System.out.println(ldapServer + ":" + ldapPort);
-        
-        try(LDAPConnection ldapConnection = new LDAPConnection(ldapServer, ldapPort);) {
+        if(authServerConn.openConnection(organization.getAuthenticationServerURL())) {
             OrganizationAuthenticationServerCredentials credentials = organizationAuthenticationServerRequest.getOrganizationCredentials();
-            
-            String baseDN = credentials.getUsername().substring(credentials.getUsername().indexOf("dc="));
 
-            ldapConnection.bind(credentials.getUsername(), credentials.getPassword());
-
-            //System.out.println("baseDN: " + baseDN);
-
-            for(String uid: organizationAuthenticationServerRequest.getOrgAuthServerIds()) {
-                SearchRequest searchRequest = new SearchRequest(baseDN, SearchScope.SUB, "(uidNumber=" + uid + ")", "givenName", "sn");
-                System.out.println(searchRequest.toString());
-                SearchResult searchResult = ldapConnection.search(searchRequest);
-                
-                searchResult.getSearchEntries().forEach((ldapEntry) -> {
-                    OrganizationAuthenticationServerInformation orgAuthServerInfo = new OrganizationAuthenticationServerInformation();
+            if(authServerConn.login(credentials.getUsername(), credentials.getPassword())) {
+                for(String uid: organizationAuthenticationServerRequest.getOrgAuthServerIds()) {
+                    Optional<OrganizationAuthenticationServerInformation> orgAuthServerInfo = authServerConn.searchByIdentifier(uid);
                     
-                    orgAuthServerInfo.setOrgAuthServerId(uid);
-                    orgAuthServerInfo.setName(ldapEntry.getAttribute("givenName").getValue());
-                    orgAuthServerInfo.setSurname(ldapEntry.getAttribute("sn").getValue());
-
-                    infos.add(orgAuthServerInfo);
-                });
+                    if(orgAuthServerInfo.isPresent()) {
+                        infos.add(orgAuthServerInfo.get());
+                    }
+                }
             }
-        } catch(LDAPSearchException sExc) {
-            System.out.println(sExc);
-            System.out.println(sExc.getDiagnosticMessage());
-            System.out.println("The search request could not be performed.");   
-        }    
-        catch(LDAPException exc) {
-            System.out.println(exc);
-            System.out.println(exc.getDiagnosticMessage());
-            System.out.println("A connection to the LDAP server could not be established.");
         }
+
+        authServerConn.closeConnection();
 
         return infos;
     }
