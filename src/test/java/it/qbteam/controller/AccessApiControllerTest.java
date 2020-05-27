@@ -69,7 +69,7 @@ public class AccessApiControllerTest {
     public void setUp(){
 
         testListToken.add("prova");
-        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
+
 
     }
 
@@ -82,6 +82,7 @@ public class AccessApiControllerTest {
     public void testGetAnonymousAccessListInOrganizationReturnForbiddenGivenAdministratorToken() throws AuthenticationException {
         Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
         Mockito.when(authFacade.isAppUser("prova")).thenReturn(false);
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(false);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), accessApiController.getAnonymousAccessListInOrganization(testListToken, 1l));
     }
@@ -89,6 +90,7 @@ public class AccessApiControllerTest {
     public void testGetAnonymousAccessListInOrganizationReturnNo_ContentGivenEmptyAccessList() throws AuthenticationException {
         Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
         Mockito.when(authFacade.isAppUser("prova")).thenReturn(true);
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(true);
         Mockito.when(accessService.getAnonymousAccessListInOrganization(testListToken, 1l)).thenReturn(testOrganizationAccessList);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), accessApiController.getAnonymousAccessListInOrganization(testListToken, 1l));
@@ -98,6 +100,7 @@ public class AccessApiControllerTest {
         Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
         Mockito.when(authFacade.isAppUser("prova")).thenReturn(true);
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(true);
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         testOrganizationAccessList.add(new OrganizationAccess().exitToken("prova"));
         Mockito.when(accessService.getAnonymousAccessListInOrganization(testListToken, 1l)).thenReturn(testOrganizationAccessList);
         Assert.assertEquals(new ResponseEntity<>(testOrganizationAccessList, HttpStatus.OK), accessApiController.getAnonymousAccessListInOrganization(testListToken, 1l));
