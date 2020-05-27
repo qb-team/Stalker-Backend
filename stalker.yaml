@@ -9,9 +9,6 @@ info:
     email: "qbteamswe@gmail.com"
 # Server attualmente localhost
 servers:
-# Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/qbteam/stalker-api/1.0.0
   - description: Server attualmente localhost
     url: http://localhost:8080/
 tags:
@@ -31,6 +28,8 @@ tags:
     description: End-points for retrieving reports of organizations and places.
   - name: administrator
     description: End-points for retrieving, adding and removing permissions, retrieving, adding, binding and unbinding administrators.
+  - name: authenticationserver
+    description: End-points for retrieving information from the authentication server of an organization.
 paths:
   "/organization":
     get:
