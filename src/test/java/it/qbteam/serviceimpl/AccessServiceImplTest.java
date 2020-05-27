@@ -17,7 +17,6 @@ import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.repository.OrganizationAccessRepository;
 import it.qbteam.repository.PlaceAccessRepository;
-import sun.awt.image.ImageWatched;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;

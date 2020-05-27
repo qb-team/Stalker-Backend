@@ -68,7 +68,6 @@ public class AdministratorServiceImplTest {
     @Test
     public void testBindAdministratorToOrganizationReturnValidOptionalWithValidPermissionInput(){
         testPermission.setOrganizationId(1L);
-        Optional<Permission> validPermission = Optional.of(testPermission);
 
         Mockito.when(organizationRepository.existsById(anyLong())).thenReturn(true);
         Mockito.when(permissionRepository.save(any(Permission.class))).thenReturn(testPermission);
