@@ -50,7 +50,6 @@ class AuthenticationFacade {
             List<Permission> adminPermissions = administratorService.getPermissionList(authenticationProviderUserId(accessToken).get());
 
             Optional<Permission> permission = adminPermissions.stream().filter((perm) -> perm.getOrganizationId().equals(organizationId)).findAny();
-
             return permission;
         } else {
             return Optional.empty();

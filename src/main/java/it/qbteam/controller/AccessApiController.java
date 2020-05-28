@@ -153,7 +153,7 @@ public class AccessApiController implements AccessApi {
         Optional<Place> place = placeService.getPlace(placeId);
 
         if(!place.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
         }
 
         if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !authFacade.permissionInOrganization(authFacade.getAccessToken().get(), place.get().getOrganizationId()).isPresent()) {
@@ -166,6 +166,6 @@ public class AccessApiController implements AccessApi {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
         }
-        // manca 404
+
     }
 }
