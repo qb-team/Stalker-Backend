@@ -24,8 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 public class AdministratorApiControllerTest {
@@ -117,7 +116,66 @@ public class AdministratorApiControllerTest {
         //quarto if
         administratorBindingRequest.setPermission(4);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), administratorApiController.bindAdministratorToOrganization(administratorBindingRequest));
+    }
+    @Test
+    public void testBindAdministratorToOrganizationReturnSecondNotFound() throws AuthenticationException {
+        //primo if
+        Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
+        //secondo if
+        Mockito.when(organizationService.getOrganization(anyLong())).thenReturn(Optional.of(testOrganization));
+        //terzo if
+        Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testLevel3Permission));
+        Mockito.when(authFacade.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
+        Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
+        Mockito.when(adminService.getPermissionList(anyString())).thenReturn(testPermissionListLevel3Permission);
+        //quinto if
+        Mockito.when(authFacade.createPermissionFromRequest(anyString(), any(AdministratorBindingRequest.class), anyString())).thenReturn(Optional.empty());
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), administratorApiController.bindAdministratorToOrganization(administratorBindingRequest));
 
-
+    }
+    @Test
+    public void testBindAdministratorToOrganizationReturnThirdNotFound() throws AuthenticationException {
+        //primo if
+        Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
+        //secondo if
+        Mockito.when(organizationService.getOrganization(anyLong())).thenReturn(Optional.of(testOrganization));
+        //terzo if
+        Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testLevel3Permission));
+        Mockito.when(authFacade.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
+        Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
+        Mockito.when(adminService.getPermissionList(anyString())).thenReturn(testPermissionListLevel3Permission);
+        //quinto if
+        Mockito.when(authFacade.createPermissionFromRequest(anyString(), any(AdministratorBindingRequest.class), anyString())).thenReturn(Optional.of(testLevel3Permission));
+        Mockito.when(authenticationService.getUserIdByEmail(anyString(), anyString())).thenReturn(Optional.of("prova"));
+        //sesto if
+        Mockito.when(adminService.bindAdministratorToOrganization(any(Permission.class))).thenReturn(Optional.empty());
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), administratorApiController.bindAdministratorToOrganization(administratorBindingRequest));
+    }
+    @Test
+    public void testBindAdministratorToOrganizationReturnCreated() throws AuthenticationException {
+        //primo if
+        Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
+        //secondo if
+        Mockito.when(organizationService.getOrganization(anyLong())).thenReturn(Optional.of(testOrganization));
+        //terzo if
+        Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testLevel3Permission));
+        Mockito.when(authFacade.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
+        Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
+        Mockito.when(adminService.getPermissionList(anyString())).thenReturn(testPermissionListLevel3Permission);
+        //quinto if
+        Mockito.when(authFacade.createPermissionFromRequest(anyString(), any(AdministratorBindingRequest.class), anyString())).thenReturn(Optional.of(testLevel3Permission));
+        Mockito.when(authenticationService.getUserIdByEmail(anyString(), anyString())).thenReturn(Optional.of("prova"));
+        //sesto if
+        Mockito.when(adminService.bindAdministratorToOrganization(any(Permission.class))).thenReturn(Optional.of(testLevel3Permission));
+        Assert.assertEquals(new ResponseEntity<>(testLevel3Permission, HttpStatus.CREATED), administratorApiController.bindAdministratorToOrganization(administratorBindingRequest));
     }
 }
