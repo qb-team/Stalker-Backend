@@ -52,8 +52,6 @@ public class AccessApiControllerTest {
     private AuthenticationService authenticationService;
     @MockBean
     private AdministratorService administratorService;
-    @Mock
-    private Optional<String> getAccessToken;
 
 
     @TestConfiguration

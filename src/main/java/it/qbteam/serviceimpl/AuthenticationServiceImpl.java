@@ -69,7 +69,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         final String administratorId = getFirebaseUser(accessToken).get().getUid();
         List<Permission> adminList = new LinkedList<>();
-        
         permissionRepo.findByAdministratorId(administratorId).forEach(adminList::add);
 
         return !adminList.isEmpty();

@@ -28,7 +28,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Optional <Organization> getOrganization(Long organizationId) {
-
         return organizationRepo.findById(organizationId);
     }
 
