@@ -210,9 +210,14 @@ public class AccessApiControllerTest {
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(true);
         testOrgAuthList.add("prova 2");
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), accessApiController.getAuthenticatedAccessListInPlace(testOrgAuthList, 1l));
-
+    }
+    @Test
+    public void testGetAuthenticatedAccessListInPlaceReturnForbiddenAdministratorEdition() throws AuthenticationException {
+        Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
         Mockito.when(authFacade.isWebAppAdministrator("prova")).thenReturn(true);
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(true);
+        Mockito.when(placeService.getPlace(anyLong())).thenReturn(Optional.of(new Place().organizationId(1l)));
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.empty());
         Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
         Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
