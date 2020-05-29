@@ -67,7 +67,7 @@ public class GpsAreaCalculatorTest {
 
         area = areaCalculator.calculateArea(coordinates);
 
-        // Assert.assertEquals(expected, area, 5.0D);
+        Assert.assertEquals(193527.3, area, 10000.0D);
     }
 
     @Test
