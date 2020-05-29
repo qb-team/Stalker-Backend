@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.NativeWebRequest;
-import sun.awt.image.ImageWatched;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +37,8 @@ public class AdministratorApiControllerTest {
     private NativeWebRequest request;
     @MockBean
     private AuthenticationService authenticationService;
+
+
 
     @TestConfiguration
     static public class AdministratorApiControllerConfiguration {
