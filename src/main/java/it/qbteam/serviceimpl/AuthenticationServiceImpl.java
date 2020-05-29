@@ -107,12 +107,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public Boolean createUser(String accessToken, String email, String password) throws AuthenticationException {
-        if (!checkToken(accessToken))
+        if (!checkToken(accessToken)) {
             throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
-        
-        if(email == null || email.isEmpty() || password.length() < 6)
+        }
+        if(email == null || email.isEmpty() || password.length() < 6) {
             return false;
-
+        }
         try {
             final CreateRequest request = new UserRecord.CreateRequest().setEmail(email).setPassword(password);
             firebaseAdaptee.createUser(request); // corrisponde a firebaseAuth nel test

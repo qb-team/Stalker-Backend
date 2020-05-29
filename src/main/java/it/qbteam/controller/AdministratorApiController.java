@@ -116,7 +116,7 @@ public class AdministratorApiController implements AdministratorApi {
 
         Optional<Permission> returnedCreation = adminService.createNewAdministratorInOrganization(permission.get());
         if(returnedCreation.isPresent()){
-            return new ResponseEntity<>(returnedCreation.get(), HttpStatus.OK); //201
+            return new ResponseEntity<>(returnedCreation.get(), HttpStatus.CREATED); //201
         }
         else
         {
@@ -156,7 +156,6 @@ public class AdministratorApiController implements AdministratorApi {
                 admin.setMail(email.get());
             }
         });
-        
         return new ResponseEntity<List<Permission>>(adminList, HttpStatus.OK); //200
     }
 

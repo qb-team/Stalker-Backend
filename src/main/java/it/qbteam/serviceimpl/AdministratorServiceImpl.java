@@ -54,7 +54,6 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public List<Permission> getPermissionList(String administratorId) {
         List<Permission> permissionList = new LinkedList<>();
-
         permissionRepo.findByAdministratorId(administratorId).forEach(permissionList::add);
 
         return permissionList;
