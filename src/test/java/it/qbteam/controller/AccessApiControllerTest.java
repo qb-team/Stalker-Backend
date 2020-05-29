@@ -1,25 +1,18 @@
 package it.qbteam.controller;
 
-
-import com.google.api.client.auth.oauth2.BearerToken;
-import it.qbteam.api.AccessApi;
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.Permission;
 import it.qbteam.model.Place;
 import it.qbteam.model.PlaceAccess;
-import it.qbteam.repository.OrganizationAccessRepository;
-import it.qbteam.repository.PlaceAccessRepository;
 import it.qbteam.service.AccessService;
 import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.service.PlaceService;
-import it.qbteam.serviceimpl.AccessServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -30,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +122,7 @@ public class AccessApiControllerTest {
         Mockito.when(authFacade.isAppUser("prova")).thenReturn(true);
         Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(true);
-        Mockito.when(accessService.getAnonymousAccessListInPlace(any(List.class), anyLong())).thenReturn(testPlaceAccessList);
+        Mockito.when(accessService.getAnonymousAccessListInPlace(anyList(), anyLong())).thenReturn(testPlaceAccessList);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), accessApiController.getAnonymousAccessListInPlace(testListToken, 1l));
     }
     @Test
@@ -140,7 +132,7 @@ public class AccessApiControllerTest {
         Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         Mockito.when(authenticationService.isAppUser(anyString())).thenReturn(true);
         testPlaceAccessList.add(new PlaceAccess().placeId(1l).exitToken("prova"));
-        Mockito.when(accessService.getAnonymousAccessListInPlace(any(List.class), anyLong())).thenReturn(testPlaceAccessList);
+        Mockito.when(accessService.getAnonymousAccessListInPlace(anyList(), anyLong())).thenReturn(testPlaceAccessList);
         Assert.assertEquals(new ResponseEntity<>(testPlaceAccessList, HttpStatus.OK), accessApiController.getAnonymousAccessListInPlace(testListToken, 1l));
     }
     @Test
@@ -178,7 +170,7 @@ public class AccessApiControllerTest {
         Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
         Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
-        Mockito.when(accessService.getAuthenticatedAccessListInOrganization(any(List.class), anyLong())).thenReturn(testOrganizationAccessList);
+        Mockito.when(accessService.getAuthenticatedAccessListInOrganization(anyList(), anyLong())).thenReturn(testOrganizationAccessList);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), accessApiController.getAuthenticatedAccessListInOrganization(testOrgAuthList, 1l));
     }
     @Test
@@ -192,7 +184,7 @@ public class AccessApiControllerTest {
         Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
         testOrganizationAccessList.add(new OrganizationAccess().exitToken("prova").organizationId(1l));
-        Mockito.when(accessService.getAuthenticatedAccessListInOrganization(any(List.class), anyLong())).thenReturn(testOrganizationAccessList);
+        Mockito.when(accessService.getAuthenticatedAccessListInOrganization(anyList(), anyLong())).thenReturn(testOrganizationAccessList);
         Assert.assertEquals(new ResponseEntity<>(testOrganizationAccessList, HttpStatus.OK), accessApiController.getAuthenticatedAccessListInOrganization(testOrgAuthList, 1l));
     }
     @Test
@@ -252,7 +244,7 @@ public class AccessApiControllerTest {
         Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(false);
         Mockito.when(placeService.getPlace(anyLong())).thenReturn(Optional.of(new Place().organizationId(1l)));
         testPlaceAccessList.add(new PlaceAccess().placeId(1l).exitToken("prova"));
-        Mockito.when(accessService.getAuthenticatedAccessListInPlace(any(List.class), anyLong())).thenReturn(testPlaceAccessList);
+        Mockito.when(accessService.getAuthenticatedAccessListInPlace(anyList(), anyLong())).thenReturn(testPlaceAccessList);
         Assert.assertEquals(new ResponseEntity<>(testPlaceAccessList, HttpStatus.OK), accessApiController.getAuthenticatedAccessListInPlace(testOrgAuthList, 1l));
     }
 }

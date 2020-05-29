@@ -4,7 +4,9 @@ import it.qbteam.exception.AuthenticationException;
 import it.qbteam.model.AdministratorBindingRequest;
 import it.qbteam.model.Organization;
 import it.qbteam.model.Permission;
-import it.qbteam.service.*;
+import it.qbteam.service.AuthenticationService;
+import it.qbteam.service.OrganizationService;
+import it.qbteam.service.AdministratorService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.NativeWebRequest;
-import sun.awt.image.ImageWatched;
 
 import java.util.LinkedList;
 import java.util.List;
