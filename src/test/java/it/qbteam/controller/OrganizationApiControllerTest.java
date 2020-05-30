@@ -142,7 +142,7 @@ public class OrganizationApiControllerTest {
         Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         //secondo if
         Mockito.when(orgService.getOrganization(anyLong())).thenReturn(Optional.empty());
-        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), organizationApiController.requestDeletionOfOrganization(testOrganizationDeletionRequest));
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), organizationApiController.updateOrganization(testOrganization));
         //terzo if
         Mockito.when(orgService.getOrganization(anyLong())).thenReturn(Optional.of(testOrganization));
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testPermission));
@@ -151,13 +151,13 @@ public class OrganizationApiControllerTest {
         Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
         Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
-        Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.requestDeletionOfOrganization(testOrganizationDeletionRequest));
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.updateOrganization(testOrganization));
         testPermission.setPermission(2);
         testPermissionList.clear();
         testPermissionList.add(testPermission);
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testPermission));
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
-        Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.requestDeletionOfOrganization(testOrganizationDeletionRequest));
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.updateOrganization(testOrganization));
         //seconda possibilità terzo if
         testPermissionList.clear();
         testPermission.setPermission(3);
