@@ -1,4 +1,4 @@
-package it.qbteam.areacalculator;
+package it.qbteam.areautils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,49 +6,15 @@ import java.util.List;
 public class GpsAreaCalculator implements AreaCalculator {
     private static final double EARTH_CIRCUMFERENCE = 6371000 * 2 * Math.PI; // approximated radius in meters
 
-    private class GpsCoordinate implements Coordinate {
-        private double longitude; // vertical lines, go left (east) and right (west) the X axis
-        private double latitude; // horizontal lines, go up (north) and down (south) the Y axis
-
-        public void setX(double x) {
-            this.longitude = x;
-        }
-
-        public void setY(double y) {
-            this.latitude = y;
-        }
-
-        public Double getX() {
-            return longitude;
-        }
-
-        public Double getY() {
-            return latitude;
-        }
-    }
-
-    @Override
-    public Coordinate buildCoordinate(double y, double x) {
-        Coordinate c = new GpsCoordinate();
-
-        // setting latitude
-        c.setY(y);
-
-        // setting longitude
-        c.setX(x);
-
-        return c;
-    }
-
     @Override
     public Double calculateArea(List<Coordinate> coordinates) {
         if (coordinates.size() < 3) {
             return 0D;
         }
 
-        final List<Double> listY = new ArrayList<Double>();
-        final List<Double> listX = new ArrayList<Double>();
-        final List<Double> listArea = new ArrayList<Double>();
+        final List<Double> listY = new ArrayList<>();
+        final List<Double> listX = new ArrayList<>();
+        final List<Double> listArea = new ArrayList<>();
 
         // calculate segment x and y in degrees for each point
         final double latitudeRef = coordinates.get(0).getY();
@@ -69,11 +35,10 @@ public class GpsAreaCalculator implements AreaCalculator {
         }
 
         // sum areas of all triangle segments
-        double areasSum = listArea.stream().mapToDouble(d -> d).sum();
-        // double areasSum = 0;
-        // for (final Double area : listArea) {
-        //     areasSum = areasSum + area;
-        // }
+        double areasSum = 0;
+        for (final Double area : listArea) {
+            areasSum = areasSum + area;
+        }
 
         // if area is negative, returns the positive value
         return Math.abs(areasSum);
