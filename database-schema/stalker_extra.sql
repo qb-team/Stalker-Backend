@@ -11,6 +11,9 @@ ALTER TABLE `OrganizationAccess`
   ADD PRIMARY KEY (`id`),
   ADD KEY `organizationId` (`organizationId`);
 
+ALTER TABLE `OrganizationConstraint`
+  ADD PRIMARY KEY (`organizationId`);
+
 ALTER TABLE `OrganizationDeletionRequest`
   ADD PRIMARY KEY (`organizationId`);
 
@@ -33,9 +36,6 @@ ALTER TABLE `Organization`
 ALTER TABLE `OrganizationAccess`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `OrganizationDeletionRequest`
-  MODIFY `organizationId` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier of the organization.';
-
 ALTER TABLE `Place`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for a place of an organization.';
 
@@ -48,6 +48,9 @@ ALTER TABLE `Favorite`
 
 ALTER TABLE `OrganizationAccess`
   ADD CONSTRAINT `OrganizationAccess_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `OrganizationConstraint`
+  ADD CONSTRAINT `OrganizationConstraint_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `OrganizationDeletionRequest`
   ADD CONSTRAINT `OrganizationDeletionRequest_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

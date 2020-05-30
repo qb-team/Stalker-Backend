@@ -14,4 +14,4 @@ CREATE TABLE `Organization` (
   `lastChangeDate` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the organization parameters were last changed.',
   `trackingArea` json NOT NULL COMMENT 'Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.',
   `trackingMode` enum('authenticated','anonymous') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'How an user who added to its favorites the organization can be tracked inside the organization''s trackingArea and its places.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Subject interested in tracking people\'s presence inside its own places, in either an anonymous or authenticated way.';

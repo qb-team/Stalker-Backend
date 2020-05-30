@@ -33,7 +33,7 @@ CREATE TABLE `Organization` (
   `lastChangeDate` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the organization parameters were last changed.',
   `trackingArea` json NOT NULL COMMENT 'Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.',
   `trackingMode` enum('authenticated','anonymous') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'How an user who added to its favorites the organization can be tracked inside the organization''s trackingArea and its places.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Subject interested in tracking people\'s presence inside its own places, in either an anonymous or authenticated way.';
 
 CREATE TABLE `OrganizationAccess` (
   `id` bigint NOT NULL,
@@ -43,6 +43,11 @@ CREATE TABLE `OrganizationAccess` (
   `organizationId` bigint NOT NULL COMMENT 'Unique identifier of the organization in which the user had access.',
   `orgAuthServerId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'User unique identifier from the authentication server of the organization.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Access to an organization.';
+
+CREATE TABLE `OrganizationConstraint` (
+  `organizationId` bigint NOT NULL COMMENT 'Unique identifier of the organization the administrator is part of.',
+  `maxArea` double NOT NULL COMMENT 'Maximum tracking area size, in square meters. This includes both the organization\'s tracking area and thus the place\'s area.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Represents a constraint for an organization.';
 
 CREATE TABLE `OrganizationDeletionRequest` (
   `organizationId` bigint NOT NULL COMMENT 'Unique identifier of the organization.',
@@ -56,7 +61,7 @@ CREATE TABLE `Permission` (
   `orgAuthServerId` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Administrator unique identifier from the authentication server of the organization.',
   `permission` tinyint UNSIGNED NOT NULL COMMENT 'What can or cannot do an organization''s administrator. The permission levels are: - Owner: 3 (higher level) - Manager: 2 - Viewer: 1 (lowest level)',
   `nominatedBy` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'administratorId of the owner administrator who nominated the current administrator.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='What can or cannot do an organization&#39;s administrator.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='What can or cannot do an organization\'s administrator.';
 
 CREATE TABLE `Place` (
   `id` bigint NOT NULL COMMENT 'Unique identifier for a place of an organization.',
@@ -86,6 +91,9 @@ ALTER TABLE `OrganizationAccess`
   ADD PRIMARY KEY (`id`),
   ADD KEY `organizationId` (`organizationId`);
 
+ALTER TABLE `OrganizationConstraint`
+  ADD PRIMARY KEY (`organizationId`);
+
 ALTER TABLE `OrganizationDeletionRequest`
   ADD PRIMARY KEY (`organizationId`);
 
@@ -108,9 +116,6 @@ ALTER TABLE `Organization`
 ALTER TABLE `OrganizationAccess`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `OrganizationDeletionRequest`
-  MODIFY `organizationId` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier of the organization.';
-
 ALTER TABLE `Place`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for a place of an organization.';
 
@@ -123,6 +128,9 @@ ALTER TABLE `Favorite`
 
 ALTER TABLE `OrganizationAccess`
   ADD CONSTRAINT `OrganizationAccess_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `OrganizationConstraint`
+  ADD CONSTRAINT `OrganizationConstraint_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `OrganizationDeletionRequest`
   ADD CONSTRAINT `OrganizationDeletionRequest_ibfk_1` FOREIGN KEY (`organizationId`) REFERENCES `Organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
