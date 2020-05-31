@@ -118,7 +118,7 @@ public class PlaceApiController implements PlaceApi {
             if(updatedPlace.isPresent()) {
                 return new ResponseEntity<>(updatedPlace.get(), HttpStatus.OK); // 200
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
             }
         }
     }

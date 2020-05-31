@@ -1,5 +1,7 @@
 package it.qbteam.serviceimpl;
 
+import it.qbteam.areautils.GpsAreaFacade;
+import it.qbteam.model.Organization;
 import it.qbteam.model.Place;
 import it.qbteam.repository.OrganizationRepository;
 import it.qbteam.repository.PlaceRepository;
@@ -29,17 +31,21 @@ public class PlaceServiceImplTest {
     @MockBean
     private OrganizationRepository organizationRepository;
 
+    @MockBean
+    private GpsAreaFacade gpsAreaFacade;
+
     @TestConfiguration
     static class PlaceServiceImplConfiguration{
         @Bean
-        public PlaceServiceImpl placeService(PlaceRepository placeRepository, OrganizationRepository organizationRepository) {
-            return new PlaceServiceImpl(placeRepository, organizationRepository);
+        public PlaceServiceImpl placeService(PlaceRepository placeRepository, OrganizationRepository organizationRepository, GpsAreaFacade gpsAreaFacade) {
+            return new PlaceServiceImpl(placeRepository, organizationRepository, gpsAreaFacade);
         }
     }
     @Autowired
     private PlaceServiceImpl placeService;
 
-    private Place testPlace = new Place();
+    private Place testPlace = new Place().trackingArea("{\"Organizzazioni\":[]}").organizationId(1L);
+    private Organization testOrganization = new Organization().trackingArea("{\"Organizzazioni\":[]}").id(1L);
     private Iterable<Place> testIterable = new ArrayList<>();
     private List<Place> testArray = new ArrayList<>();
 
@@ -48,9 +54,10 @@ public class PlaceServiceImplTest {
         testPlace.setId(1l);
     }
 
-    // @Test
+    @Test
     public void testCreateNewPlaceCallRepositoryFunctionAndSetIdToNull(){
         Mockito.when(placeRepository.save(any(Place.class))).thenReturn(testPlace);
+        Mockito.when(organizationRepository.findById(testOrganization.getId())).thenReturn(Optional.of(testOrganization));
 
         placeService.createNewPlace(testPlace);
         Mockito.verify(placeRepository, Mockito.times(1)).save(testPlace);
@@ -62,11 +69,13 @@ public class PlaceServiceImplTest {
         placeService.deletePlace(testPlace);
         Mockito.verify(placeRepository, Mockito.times(1)).delete(testPlace);
     }
-    // @Test
+
+    @Test
     public void testUpdatePlacePerformSaveOperationOnThePlaceObjectGiven(){
         Mockito.when(placeRepository.save(any(Place.class))).thenReturn(testPlace);
+        Mockito.when(organizationRepository.findById(testOrganization.getId())).thenReturn(Optional.of(testOrganization));
+
         Assert.assertEquals(Optional.of(testPlace), placeService.updatePlace(testPlace));
-        Assert.assertEquals(testPlace, placeService.updatePlace(testPlace).get());
     }
     @Test
     public void testGetPlaceListOfOrganizationReturnEmptyListGivenInvalidOrganizationId(){
