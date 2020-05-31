@@ -1,5 +1,6 @@
 package it.qbteam.serviceimpl;
 
+import com.google.api.client.json.Json;
 import it.qbteam.areautils.Coordinate;
 import it.qbteam.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
@@ -31,9 +32,10 @@ public class PlaceServiceImpl implements PlaceService {
     private OrganizationRepository orgRepo;
 
     @Autowired
-    public PlaceServiceImpl(PlaceRepository placeRepository, OrganizationRepository organizationRepository) {
+    public PlaceServiceImpl(PlaceRepository placeRepository, OrganizationRepository organizationRepository, GpsAreaFacade gpsAreaFacade) {
         this.placeRepo = placeRepository;
         this.orgRepo = organizationRepository;
+        this.gpsAreaFacade = gpsAreaFacade;
     }
 
     private List<Coordinate> jsonTrackingAreaToList(String jsonTrackingArea) {
@@ -43,17 +45,23 @@ public class PlaceServiceImpl implements PlaceService {
         try {
             JsonNode jsonTree = objectMapper.readTree(jsonTrackingArea);
             jsonTree = jsonTree.get("Organizzazioni");
-            jsonTree.elements().forEachRemaining((node) -> {
+
+            Iterator<JsonNode> itNode = jsonTree.elements();
+
+            while (itNode.hasNext()) {
+                JsonNode node = itNode.next();
                 double latitude = Double.parseDouble(node.get("lat").asText());
                 double longitude = Double.parseDouble(node.get("long").asText());
                 Coordinate coord = gpsAreaFacade.buildCoordinate(latitude, longitude);
 
                 coords.add(coord);
-            });
+            }
+
         } catch (Exception e) {
             // for whatever exception, return empty list
-            System.out.println("A " + e.getClass() + " was thrown." + " More info: " + e.getMessage());
+            System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
         }
+        System.out.println("Coordinates: " + coords.size());
 
         return coords;
     }
