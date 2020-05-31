@@ -63,7 +63,6 @@ public class OrganizationServiceImplTest {
     @Before
     public void setUp() {
         Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
-
     }
 
     @Test
@@ -110,9 +109,11 @@ public class OrganizationServiceImplTest {
         assertEquals(expectedReturn, organizationService.getOrganization(anyLong()));
     }
 
-    // @Test
+    @Test
     public void testUpdateOrganizationCorrectlyUpdateOrganizationFieldsAndReturnIt() {
+        List<Organization> orgList = new ArrayList<>();
         Organization orgWithChanges = new Organization();
+        orgWithChanges.setId(1L);
         orgWithChanges.setName("default name");
         orgWithChanges.setImage("default image");
         orgWithChanges.setTrackingArea("default trackingArea");
@@ -127,7 +128,10 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
 
+        orgList.add(orgWithChanges);
+
         Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+        Mockito.when(organizationRepository.findByName(orgWithChanges.getName())).thenReturn(orgList);
         Mockito.when(gpsAreaFacade.buildCoordinate(anyDouble(), anyDouble())).thenCallRealMethod();
         Mockito.when(gpsAreaFacade.calculateArea(anyList())).thenReturn(10D); // just a random value, could be anything
         Mockito.when(organizationConstraintRepository.findById(anyLong())).thenReturn(Optional.of(new OrganizationConstraint().maxArea(20D)));
@@ -138,7 +142,7 @@ public class OrganizationServiceImplTest {
         assertEquals(orgWithChanges, returnedObject);
     }
 
-    // @Test
+    @Test
     public void testUpdateOrganizationTrackingArea() {
         Organization orgWithChanges = new Organization();
         orgWithChanges.setId(1L);
@@ -146,6 +150,9 @@ public class OrganizationServiceImplTest {
 
         Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
         Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+        Mockito.when(gpsAreaFacade.buildCoordinate(anyDouble(), anyDouble())).thenCallRealMethod();
+        Mockito.when(gpsAreaFacade.calculateArea(anyList())).thenReturn(10D); // just a random value, could be anything
+        Mockito.when(organizationConstraintRepository.findById(anyLong())).thenReturn(Optional.of(new OrganizationConstraint().maxArea(20D)));
 
         Optional<Organization> optionalReturnedObject = organizationService.updateOrganizationTrackingArea(orgWithChanges.getId(), "new tracking area");
         Organization returnedObject= optionalReturnedObject.get();

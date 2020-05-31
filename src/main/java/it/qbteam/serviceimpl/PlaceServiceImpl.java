@@ -61,7 +61,6 @@ public class PlaceServiceImpl implements PlaceService {
             // for whatever exception, return empty list
             System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
         }
-        System.out.println("Coordinates: " + coords.size());
 
         return coords;
     }
