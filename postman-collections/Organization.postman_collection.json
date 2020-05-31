@@ -199,14 +199,8 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "requestReason",
-							"value": "I'm sorry I must leave Stalker!",
-							"type": "text"
-						}
-					],
+					"mode": "raw",
+					"raw": "{\"organizationId\": {{organizationId}},\"requestReason\": \"I'm sorry I must leave Stalker!\",\"administratorId\": \"{{administratorId}}\"}",
 					"options": {
 						"raw": {
 							"language": "json"
