@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -343,11 +344,25 @@ public class AdministratorApiControllerTest {
         Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
         Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         //secondo if
-        Mockito.when(authFacade.isWebAppAdministrator(anyString())).thenReturn(true);
-        Mockito.when(authFacade.authenticationProviderUserId(anyString())).thenReturn(Optional.of("prova"));
-        Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
-        Mockito.when(adminService.getPermissionList(anyString())).thenReturn(testPermissionListLevel3Permission);
-        Assert.assertEquals(new ResponseEntity<List<Permission>>(testPermissionListLevel3Permission, HttpStatus.OK), administratorApiController.getPermissionList("prova"));
+        Mockito.when(authenticationService.isWebAppAdministrator("prova")).thenReturn(true);
+        Mockito.when(authFacade.isWebAppAdministrator("prova")).thenReturn(true);
+        Mockito.when(authFacade.authenticationProviderUserId("administratorId")).thenReturn(Optional.of("prova"));
+        Mockito.when(authenticationService.getUserId("prova")).thenReturn("administratorId");
+        Mockito.when(adminService.getPermissionList("administratorId")).thenReturn(testPermissionListLevel3Permission);
+        Assert.assertEquals(new ResponseEntity<>(testPermissionListLevel3Permission, HttpStatus.OK), administratorApiController.getPermissionList("administratorId"));
+    }
+    @Test
+    public void testGetPermissionListReturnNoContent() throws AuthenticationException {
+        //primo if
+        Mockito.when(authFacade.getAccessToken()).thenReturn(Optional.of("prova"));
+        Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
+        //secondo if
+        Mockito.when(authenticationService.isWebAppAdministrator("prova")).thenReturn(true);
+        Mockito.when(authFacade.isWebAppAdministrator("prova")).thenReturn(true);
+        Mockito.when(authFacade.authenticationProviderUserId("administratorId")).thenReturn(Optional.of("prova"));
+        Mockito.when(authenticationService.getUserId("prova")).thenReturn("administratorId");
+        Mockito.when(adminService.getPermissionList("administratorId")).thenReturn(new ArrayList<>());
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), administratorApiController.getPermissionList("administratorId"));
     }
     @Test
     public void testUnbindAdministratorFromOrganizationReturnForbidden() throws AuthenticationException {
@@ -449,7 +464,7 @@ public class AdministratorApiControllerTest {
         Mockito.when(adminService.getPermissionList(anyString())).thenReturn(testPermissionListLevel3Permission);
         //terzo if
         Mockito.when(adminService.updateAdministratorPermission(any(Permission.class))).thenReturn(Optional.of(testLevel3Permission));
-        Assert.assertEquals(new ResponseEntity<Permission>(testLevel3Permission, HttpStatus.OK) , administratorApiController.updateAdministratorPermission(testLevel3Permission));
+        Assert.assertEquals(new ResponseEntity<Permission>(testLevel3Permission, HttpStatus.CREATED) , administratorApiController.updateAdministratorPermission(testLevel3Permission));
 
     }
 

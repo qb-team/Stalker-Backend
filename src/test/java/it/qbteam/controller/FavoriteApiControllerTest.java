@@ -100,7 +100,7 @@ public class FavoriteApiControllerTest {
         Mockito.when(favoriteService.getFavorite(testFavorite)).thenReturn(false);
         //quarto if
         Mockito.when(favoriteService.addFavoriteOrganization(testFavorite)).thenReturn(Optional.empty());
-        Assert.assertEquals(new ResponseEntity<Favorite>(HttpStatus.NOT_FOUND), favoriteApiController.addFavoriteOrganization(testFavorite));
+        Assert.assertEquals(new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST), favoriteApiController.addFavoriteOrganization(testFavorite));
     }
     @Test
     public void testAddFavoriteOrganizationReturnCreated() throws AuthenticationException {

@@ -177,7 +177,7 @@ class AuthenticationFacade {
     public Optional<Permission> createPermissionFromRequest(String accessToken, AdministratorBindingRequest abr, String nominatedBy) {
         Optional<String> administratorId = authenticationProviderUserIdByEmail(accessToken, abr.getMail());
         
-        if(!authenticationProviderUserIdByEmail(accessToken, abr.getMail()).isPresent()) {
+        if(!administratorId.isPresent()) {
             return Optional.empty();
         }
         
