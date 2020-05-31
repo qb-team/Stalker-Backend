@@ -40,7 +40,7 @@ public class PlaceServiceImplTest {
     private PlaceServiceImpl placeService;
 
     private Place testPlace = new Place();
-    private Iterable<Place> testTterable = new ArrayList<>();
+    private Iterable<Place> testIterable = new ArrayList<>();
     private List<Place> testArray = new ArrayList<>();
 
     @Before
@@ -70,14 +70,14 @@ public class PlaceServiceImplTest {
     }
     @Test
     public void testGetPlaceListOfOrganizationReturnEmptyListGivenInvalidOrganizationId(){
-        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(anyLong())).thenReturn(testTterable);
+        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(anyLong())).thenReturn(testIterable);
         Assert.assertEquals(testArray, placeService.getPlaceListOfOrganization(1l));
     }
     @Test
     public void testGetPlaceListOfOrganizationReturnValidListGivenValidOrganizationId(){
         testArray.add(testPlace);
-        testTterable=testArray;
-        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(anyLong())).thenReturn(testTterable);
+        testIterable =testArray;
+        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(anyLong())).thenReturn(testIterable);
         Assert.assertEquals(testArray, placeService.getPlaceListOfOrganization(1l));
     }
     @Test
