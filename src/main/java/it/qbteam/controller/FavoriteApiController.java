@@ -43,26 +43,26 @@ public class FavoriteApiController implements FavoriteApi {
     @Override
     public ResponseEntity<Favorite> addFavoriteOrganization(@Valid Favorite favorite) {
         if(!authFacade.getAccessToken().isPresent()) {
-            return new ResponseEntity<Favorite>(HttpStatus.UNAUTHORIZED); //401
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
 
         if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
-            return new ResponseEntity<Favorite>(HttpStatus.FORBIDDEN); //403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
 
         if(favoriteService.getFavorite(favorite)){
-            return new ResponseEntity<Favorite>(HttpStatus.BAD_REQUEST); //400
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
 
         Optional<Favorite> favouriteInsertion = favoriteService.addFavoriteOrganization(favorite);
 
         if(favouriteInsertion.isPresent())
         {
-            return new ResponseEntity<Favorite>(favouriteInsertion.get(), HttpStatus.CREATED); // 201
+            return new ResponseEntity<>(favouriteInsertion.get(), HttpStatus.CREATED); // 201
         }
         else
         {
-            return new ResponseEntity<Favorite>(HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
         }
     }
 
@@ -115,19 +115,19 @@ public class FavoriteApiController implements FavoriteApi {
     @Override
     public ResponseEntity<Void> removeFavoriteOrganization(@Valid Favorite favorite) {
         if(!authFacade.getAccessToken().isPresent()) {
-            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED); //401
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
 
         if(authFacade.isWebAppAdministrator(authFacade.getAccessToken().get())){
-            return new ResponseEntity<Void>(HttpStatus.FORBIDDEN); //403
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
 
         if (!favoriteService.getFavorite(favorite)){
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         
         favoriteService.removeFavoriteOrganization(favorite);
-        return new ResponseEntity<Void>(HttpStatus.RESET_CONTENT); //205
+        return new ResponseEntity<>(HttpStatus.RESET_CONTENT); //205
 
     }
 }
