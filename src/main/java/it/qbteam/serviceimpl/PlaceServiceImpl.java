@@ -1,5 +1,7 @@
 package it.qbteam.serviceimpl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.api.client.json.Json;
 import it.qbteam.areautils.Coordinate;
 import it.qbteam.areautils.GpsAreaFacade;
@@ -38,48 +40,46 @@ public class PlaceServiceImpl implements PlaceService {
         this.gpsAreaFacade = gpsAreaFacade;
     }
 
-    private List<Coordinate> jsonTrackingAreaToList(String jsonTrackingArea) {
+    private List<Coordinate> jsonTrackingAreaToList(String jsonTrackingArea) throws Exception {
         List<Coordinate> coords = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        try {
-            JsonNode jsonTree = objectMapper.readTree(jsonTrackingArea);
-            jsonTree = jsonTree.get("Organizzazioni");
+        JsonNode jsonTree = objectMapper.readTree(jsonTrackingArea);
+        jsonTree = jsonTree.get("Organizzazioni");
 
-            Iterator<JsonNode> itNode = jsonTree.elements();
+        Iterator<JsonNode> itNode = jsonTree.elements();
 
-            while (itNode.hasNext()) {
-                JsonNode node = itNode.next();
-                double latitude = Double.parseDouble(node.get("lat").asText());
-                double longitude = Double.parseDouble(node.get("long").asText());
-                Coordinate coord = gpsAreaFacade.buildCoordinate(latitude, longitude);
-
-                coords.add(coord);
-            }
-
-        } catch (Exception e) {
-            // for whatever exception, return empty list
-            System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
+        while (itNode.hasNext()) {
+            JsonNode node = itNode.next();
+            double latitude = Double.parseDouble(node.get("lat").asText());
+            double longitude = Double.parseDouble(node.get("long").asText());
+            coords.add(gpsAreaFacade.buildCoordinate(latitude, longitude));
         }
 
         return coords;
     }
 
     private Boolean isPlaceInsideOrganization(String placeTrackingArea, String organizationTrackingArea) {
-        List<Coordinate> orgCoordinates = jsonTrackingAreaToList(organizationTrackingArea);
-        List<Coordinate> placeCoordinates = jsonTrackingAreaToList(placeTrackingArea);
+        try {
+            List<Coordinate> orgCoordinates = jsonTrackingAreaToList(organizationTrackingArea);
+            List<Coordinate> placeCoordinates = jsonTrackingAreaToList(placeTrackingArea);
 
-        boolean allCoordinateInsideArea = true;
+            boolean allCoordinateInsideArea = true;
 
-        Iterator<Coordinate> coordIterator = placeCoordinates.iterator();
-        
-        while(allCoordinateInsideArea && coordIterator.hasNext()) {
-            if(!gpsAreaFacade.isPointInsidePolygon(orgCoordinates, coordIterator.next())) {
-                allCoordinateInsideArea = false;
+            Iterator<Coordinate> coordIterator = placeCoordinates.iterator();
+
+            while(allCoordinateInsideArea && coordIterator.hasNext()) {
+                if(!gpsAreaFacade.isPointInsidePolygon(orgCoordinates, coordIterator.next())) {
+                    allCoordinateInsideArea = false;
+                }
             }
-        }
 
-        return allCoordinateInsideArea;
+            return allCoordinateInsideArea;
+        } catch (Exception e) {
+            // for whatever exception, return empty list
+            System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

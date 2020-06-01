@@ -87,7 +87,7 @@ public class PlaceApiControllerTest {
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testPermission));
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
         Mockito.when(placeService.createNewPlace(testPlace)).thenReturn(Optional.empty());
-        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), placeApiController.createNewPlace(testPlace));
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), placeApiController.createNewPlace(testPlace));
         //ultimo return
         Mockito.when(placeService.createNewPlace(testPlace)).thenReturn(Optional.of(testPlace));
         Assert.assertEquals(new ResponseEntity<>(testPlace, HttpStatus.CREATED), placeApiController.createNewPlace(testPlace));
