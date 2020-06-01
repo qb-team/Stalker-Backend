@@ -45,7 +45,7 @@ public interface ReportApi {
         @ApiResponse(code = 401, message = "The administrator is not authenticated. Nothing gets returned."),
         @ApiResponse(code = 403, message = "Users cannot have access. Nothing gets returned."),
         @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
-    @RequestMapping(value = "/report/organization/{placeId}",
+    @RequestMapping(value = "/report/place/{placeId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<List<TimePerUserReport>> getTimePerUserReport(@Min(1L)@ApiParam(value = "ID of the place. The viewer administrator must have permissions for this organization.",required=true) @PathVariable("placeId") Long placeId);
