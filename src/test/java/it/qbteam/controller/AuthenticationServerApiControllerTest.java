@@ -84,6 +84,8 @@ public class AuthenticationServerApiControllerTest {
         //ok
         testListInfo.add(new OrganizationAuthenticationServerInformation().name("prova").surname("prova").orgAuthServerId("prova"));
         Mockito.when(authenticationServerService.getUserInfoFromAuthServer(any(OrganizationAuthenticationServerRequest.class))).thenReturn(testListInfo);
+        Assert.assertEquals(new ResponseEntity<>(testListInfo, HttpStatus.OK), authenticationServerApiController.getUserInfoFromAuthServer(testOrganizationAuthenticationServerRequest));
+
 
 
     }
