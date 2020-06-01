@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import it.qbteam.model.OrganizationMovement;
 
 @Service
-public class OrganizationMovementRedisPublisher extends OrganizationMovementPublisher {
+public class  OrganizationMovementRedisPublisher extends OrganizationMovementPublisher {
     private RedisTemplate<String, OrganizationMovement> movementTemplate;
 
     private RedisTemplate<String, Integer> counterTemplate;
