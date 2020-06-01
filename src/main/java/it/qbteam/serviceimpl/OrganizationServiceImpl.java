@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,16 +37,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         try {
             JsonNode jsonTree = objectMapper.readTree(jsonTrackingArea);
             jsonTree = jsonTree.get("Organizzazioni");
-            jsonTree.elements().forEachRemaining((node) -> {
+
+            Iterator<JsonNode> itNode = jsonTree.elements();
+
+            while (itNode.hasNext()) {
+                JsonNode node = itNode.next();
                 double latitude = Double.parseDouble(node.get("lat").asText());
                 double longitude = Double.parseDouble(node.get("long").asText());
                 Coordinate coord = gpsAreaFacade.buildCoordinate(latitude, longitude);
 
                 coords.add(coord);
-            });
+            }
+
         } catch (Exception e) {
             // for whatever exception, return empty list
-            System.out.println("A " + e.getClass() + " was thrown." + " More info: " + e.getMessage());
+            System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
         }
 
         return coords;
@@ -96,9 +102,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Optional<Organization> updateOrganization(Organization organization) {
-        if(organizationRepo.findByName(organization.getName()).iterator().hasNext()) {
-            return Optional.empty();
+        Iterator<Organization> orgs = organizationRepo.findByName(organization.getName()).iterator();
+        boolean unique = true;
+        while(unique && orgs.hasNext()) {
+            if(!orgs.next().getId().equals(organization.getId())) {
+                unique = false;
+            }
         }
+        if(!unique) return Optional.empty();
 
         if(!canTrackingAreaBeUpdated(organization.getTrackingArea(), organization.getId())) {
             return Optional.empty();

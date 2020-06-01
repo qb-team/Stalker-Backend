@@ -10,8 +10,8 @@ cache:
 
 script:
   # Installing Backend
-  - mvn clean compile
+  - mvn clean package test
 
 after_success:
   # Testing Backend
-  - mvn clean test jacoco:report coveralls:report -DrepoToken=$COVERALLSTOKEN
+  - mvn jacoco:report coveralls:report -DrepoToken=$COVERALLSTOKEN

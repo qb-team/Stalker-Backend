@@ -176,7 +176,7 @@ public class OrganizationApiControllerTest {
         Mockito.when(request.getHeader(anyString())).thenReturn("Bearer prova");
         //secondo if
         Mockito.when(orgService.getOrganization(anyLong())).thenReturn(Optional.empty());
-        Assert.assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), organizationApiController.updateOrganizationTrackingArea(1L, "prova"));
+        Assert.assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), organizationApiController.updateOrganizationTrackingArea(1L, "prova"));
         //terzo if
         Mockito.when(orgService.getOrganization(anyLong())).thenReturn(Optional.of(testOrganization));
 
@@ -203,7 +203,7 @@ public class OrganizationApiControllerTest {
         Assert.assertEquals(new ResponseEntity<>(testOrganization, HttpStatus.OK), organizationApiController.updateOrganizationTrackingArea(1L, "prova"));
         //seconda parte 4 if
         Mockito.when(orgService.updateOrganizationTrackingArea(anyLong(), anyString())).thenReturn(Optional.empty());
-        Assert.assertEquals(new ResponseEntity<>( HttpStatus.NOT_FOUND), organizationApiController.updateOrganizationTrackingArea(1L, "prova"));
+        Assert.assertEquals(new ResponseEntity<>( HttpStatus.BAD_REQUEST), organizationApiController.updateOrganizationTrackingArea(1L, "prova"));
 
 
     }

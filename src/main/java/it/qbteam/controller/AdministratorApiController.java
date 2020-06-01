@@ -156,7 +156,7 @@ public class AdministratorApiController implements AdministratorApi {
                 admin.setMail(email.get());
             }
         });
-        return new ResponseEntity<List<Permission>>(adminList, HttpStatus.OK); //200
+        return new ResponseEntity<>(adminList, HttpStatus.OK); //200
     }
 
     /**
@@ -174,12 +174,17 @@ public class AdministratorApiController implements AdministratorApi {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
-        if(!authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) && !authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(administratorId)){
-
+        if(!authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()) || !authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(administratorId)){
+            System.out.println("PRIMA COND: " + authFacade.isWebAppAdministrator(authFacade.getAccessToken().get()));
+            System.out.println("SECONDA COND: " + authFacade.authenticationProviderUserId(authFacade.getAccessToken().get()).get().equals(administratorId));
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); //403
         }
         List<Permission> returnedListOfPermission = adminService.getPermissionList(administratorId);
-        return new ResponseEntity<List<Permission>>(returnedListOfPermission, HttpStatus.OK); //201
+        if(returnedListOfPermission.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(returnedListOfPermission, HttpStatus.OK); //200
+        }
     }
 
     /**
@@ -231,7 +236,7 @@ public class AdministratorApiController implements AdministratorApi {
         Optional<Permission> returnedUpdatedPermission= adminService.updateAdministratorPermission(permission);
         if(returnedUpdatedPermission.isPresent())
         {
-            return new ResponseEntity<Permission>(returnedUpdatedPermission.get(), HttpStatus.OK); //201
+            return new ResponseEntity<>(returnedUpdatedPermission.get(), HttpStatus.CREATED); //201
         }
         else
         {

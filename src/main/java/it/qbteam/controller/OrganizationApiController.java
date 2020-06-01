@@ -159,7 +159,7 @@ public class OrganizationApiController implements OrganizationApi {
         if(!authFacade.getAccessToken().isPresent())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         if(!orgService.getOrganization(organizationId).isPresent()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organizationId);
 
@@ -170,7 +170,7 @@ public class OrganizationApiController implements OrganizationApi {
             if(updatedOrganization.isPresent()) {
                 return new ResponseEntity<>(updatedOrganization.get(), HttpStatus.OK); // 200
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 404
             }
         }
     }
