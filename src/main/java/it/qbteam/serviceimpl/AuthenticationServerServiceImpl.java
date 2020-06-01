@@ -1,8 +1,6 @@
 package it.qbteam.serviceimpl;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +46,9 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
             OrganizationAuthenticationServerCredentials credentials = organizationAuthenticationServerRequest.getOrganizationCredentials();
 
             if(authServerConn.login(credentials.getUsername(), credentials.getPassword())) {
-                for(String uid: organizationAuthenticationServerRequest.getOrgAuthServerIds()) {
+                Set<String> setUids = new LinkedHashSet<>(organizationAuthenticationServerRequest.getOrgAuthServerIds());
+                
+                for(String uid: setUids) {
                     Optional<OrganizationAuthenticationServerInformation> orgAuthServerInfo = authServerConn.searchByIdentifier(uid);
                     
                     if(orgAuthServerInfo.isPresent()) {
