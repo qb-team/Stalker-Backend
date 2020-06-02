@@ -160,7 +160,7 @@ public class AccessApiController implements AccessApi {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
-        List<PlaceAccess> accessList = accessService.getAuthenticatedAccessListInPlace(orgAuthServerIds, place.get().getOrganizationId());
+        List<PlaceAccess> accessList = accessService.getAuthenticatedAccessListInPlace(orgAuthServerIds, place.get().getId());
         if(!accessList.isEmpty()) {
             return new ResponseEntity<>(accessList, HttpStatus.OK); // 200
         } else {

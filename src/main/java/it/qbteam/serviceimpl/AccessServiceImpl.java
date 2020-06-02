@@ -9,8 +9,10 @@ import it.qbteam.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AccessServiceImpl implements AccessService {
@@ -27,12 +29,12 @@ public class AccessServiceImpl implements AccessService {
     @Override
     public List<OrganizationAccess> getAnonymousAccessListInOrganization(List<String> exitTokens, Long organizationId) {
         List<OrganizationAccess> accessList = new LinkedList<>();
-        
-        if(exitTokens != null) {
-            exitTokens.forEach((exitToken) -> {
-                organizationAccessRepo.findByExitTokenAndOrganizationId(exitToken, organizationId).forEach(accessList::add);
-            });
-        }
+
+        Set<String> setOfExitTokens = new LinkedHashSet<>(exitTokens);
+
+        setOfExitTokens.forEach((exitToken) -> {
+            organizationAccessRepo.findByExitTokenAndOrganizationId(exitToken, organizationId).forEach(accessList::add);
+        });
 
         return accessList;  
     }
@@ -40,12 +42,12 @@ public class AccessServiceImpl implements AccessService {
     @Override
     public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId) {
         List<PlaceAccess> placeList = new LinkedList<>();
-        
-        if(exitTokens != null) {
-            exitTokens.forEach((exitToken) -> {
-                placeAccessRepo.findByExitTokenAndPlaceId(exitToken, placeId).forEach(placeList::add);
-            });    
-        }
+
+        Set<String> setOfExitTokens = new LinkedHashSet<>(exitTokens);
+
+        setOfExitTokens.forEach((exitToken) -> {
+            placeAccessRepo.findByExitTokenAndPlaceId(exitToken, placeId).forEach(placeList::add);
+        });
         
         return placeList;
     }
@@ -53,12 +55,12 @@ public class AccessServiceImpl implements AccessService {
     @Override
     public List<OrganizationAccess> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, Long organizationId) {
         List<OrganizationAccess> accessList = new LinkedList<>();
-        
-        if(orgAuthServerIds != null) {
-            orgAuthServerIds.forEach((orgAuthServerId) -> {
-                organizationAccessRepo.findByOrgAuthServerIdAndOrganizationId(orgAuthServerId, organizationId).forEach(accessList::add);
-            });
-        }
+
+        Set<String> setOfOrgAuthServerIds = new LinkedHashSet<>(orgAuthServerIds);
+
+        setOfOrgAuthServerIds.forEach((orgAuthServerId) -> {
+            organizationAccessRepo.findByOrgAuthServerIdAndOrganizationId(orgAuthServerId, organizationId).forEach(accessList::add);
+        });
 
         return accessList;
     }
@@ -66,12 +68,12 @@ public class AccessServiceImpl implements AccessService {
     @Override
     public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId) {
         List<PlaceAccess> placeList = new LinkedList<>();
-        
-        if(orgAuthServerIds != null) {
-            orgAuthServerIds.forEach((orgAuthServerId) -> {
-                placeAccessRepo.findByOrgAuthServerIdAndPlaceId(orgAuthServerId, placeId).forEach(placeList::add);
-            });    
-        }
+
+        Set<String> setOfOrgAuthServerIds = new LinkedHashSet<>(orgAuthServerIds);
+
+        setOfOrgAuthServerIds.forEach((orgAuthServerId) -> {
+            placeAccessRepo.findByOrgAuthServerIdAndPlaceId(orgAuthServerId, placeId).forEach(placeList::add);
+        });
         
         return placeList;
     }
