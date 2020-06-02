@@ -112,7 +112,6 @@ public class LDAPServerConnectorAdapter implements AuthenticationServerConnector
             System.out.println(e);
             System.out.println(e.getDiagnosticMessage());
             System.out.println("The search request could not be created.");
-            
         }
         
         return Optional.empty();  

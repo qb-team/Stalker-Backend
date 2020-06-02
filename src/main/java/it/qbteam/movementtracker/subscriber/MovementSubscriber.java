@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MovementSubscriber extends MessageListener {
     @Override
-    public void onMessage(Message message, byte[] pattern);
+    void onMessage(Message message, byte[] pattern);
 }
