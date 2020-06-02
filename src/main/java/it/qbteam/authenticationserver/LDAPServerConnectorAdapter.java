@@ -1,5 +1,7 @@
 package it.qbteam.authenticationserver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -90,7 +92,7 @@ public class LDAPServerConnectorAdapter implements AuthenticationServerConnector
         try {
             SearchRequest searchRequest = new SearchRequest(baseDN, SearchScope.SUB, "(uidNumber=" + userId + ")", "givenName", "sn");
             SearchResult searchResult = connection.search(searchRequest);
-            
+
             if(searchResult.getSearchEntries().size() > 1) {
                 return Optional.empty();
             }
@@ -115,6 +117,39 @@ public class LDAPServerConnectorAdapter implements AuthenticationServerConnector
         }
         
         return Optional.empty();  
+    }
+
+    @Override
+    public List<OrganizationAuthenticationServerInformation> searchAll() {
+        List<OrganizationAuthenticationServerInformation> users = new ArrayList<>();
+        if(connection == null || !connection.isConnected()) {
+            return users;
+        }
+
+        try {
+            SearchRequest searchRequest = new SearchRequest(baseDN, SearchScope.SUB, "(uidNumber=*)", "uidNumber", "givenName", "sn");
+            SearchResult searchResult = connection.search(searchRequest);
+
+            searchResult.getSearchEntries().forEach(sre -> {
+                OrganizationAuthenticationServerInformation orgAuthServerInfo = new OrganizationAuthenticationServerInformation();
+
+                orgAuthServerInfo.setOrgAuthServerId(sre.getAttribute("uidNumber").getValue());
+                orgAuthServerInfo.setName(sre.getAttribute("givenName").getValue());
+                orgAuthServerInfo.setSurname(sre.getAttribute("sn").getValue());
+
+                users.add(orgAuthServerInfo);
+            });
+        } catch(LDAPSearchException sExc) {
+            System.out.println(sExc);
+            System.out.println(sExc.getDiagnosticMessage());
+            System.out.println("The search request could not be performed.");
+        } catch (LDAPException e) {
+            System.out.println(e);
+            System.out.println(e.getDiagnosticMessage());
+            System.out.println("The search request could not be created.");
+        }
+
+        return users;
     }
 
     @Override

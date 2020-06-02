@@ -2,6 +2,7 @@ package it.qbteam.authenticationserver;
 
 import it.qbteam.model.OrganizationAuthenticationServerInformation;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,6 +37,13 @@ public interface AuthenticationServerConnector {
      * @return
      */
     Optional<OrganizationAuthenticationServerInformation> searchByIdentifier(String userId);
+
+    /**
+     * Description
+     *
+     * @return
+     */
+    List<OrganizationAuthenticationServerInformation> searchAll();
 
     /**
      * Description

@@ -47,6 +47,16 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
 
             if(authServerConn.login(credentials.getUsername(), credentials.getPassword())) {
                 Set<String> setUids = new LinkedHashSet<>(organizationAuthenticationServerRequest.getOrgAuthServerIds());
+
+                // Two possibilities:
+                // - administrator asked for all users in the server, then setUids contains one single item which is "*"
+                // - administrator asked for one or more users, the setUids contains >= 1 item different from "*"
+
+                if(setUids.size() == 1 && setUids.iterator().next().equals("*")) {
+                    List<OrganizationAuthenticationServerInformation> orgAuthServerInfo = authServerConn.searchAll();
+
+                    infos.addAll(orgAuthServerInfo);
+                }
                 
                 for(String uid: setUids) {
                     Optional<OrganizationAuthenticationServerInformation> orgAuthServerInfo = authServerConn.searchByIdentifier(uid);
