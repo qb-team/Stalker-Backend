@@ -61,12 +61,12 @@ public class AuthenticationFacadeTest {
     @Test
     public void testIsAppUser() throws AuthenticationException{
         Mockito.when(authenticationService.isAppUser(anyString())).thenThrow(new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE));
-        Assert.assertFalse(authenticationFacade.isAppUser(null));
+        Assert.assertFalse(authenticationFacade.isAppUser("prova"));
     }
     @Test
     public void testIsWebAppAdministrator() throws AuthenticationException{
         Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenThrow(new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE));
-        Assert.assertFalse(authenticationFacade.isWebAppAdministrator(null));
+        Assert.assertFalse(authenticationFacade.isWebAppAdministrator("prova"));
     }
     @Test
     public void testAuthenticationProvidedEmailByUserId() throws AuthenticationException {
