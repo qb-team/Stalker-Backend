@@ -3,8 +3,8 @@ package it.qbteam.serviceimpl;
 import it.qbteam.model.Favorite;
 import it.qbteam.model.FavoriteId;
 import it.qbteam.model.Organization;
-import it.qbteam.repository.FavoriteRepository;
-import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.FavoriteRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
 import it.qbteam.service.FavoriteService;
 
 import org.springframework.beans.factory.annotation.Autowired;

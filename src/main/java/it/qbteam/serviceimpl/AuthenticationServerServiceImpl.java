@@ -5,12 +5,12 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import it.qbteam.authenticationserver.AuthenticationServerConnector;
+import it.qbteam.persistence.authenticationserver.AuthenticationServerConnector;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationAuthenticationServerCredentials;
 import it.qbteam.model.OrganizationAuthenticationServerInformation;
 import it.qbteam.model.OrganizationAuthenticationServerRequest;
-import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
 import it.qbteam.service.AuthenticationServerService;
 
 @Service

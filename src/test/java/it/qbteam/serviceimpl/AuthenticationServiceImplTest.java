@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.exception.AuthenticationException;
 import it.qbteam.model.Permission;
-import it.qbteam.repository.PermissionRepository;
+import it.qbteam.persistence.repository.PermissionRepository;
 
 @RunWith(SpringRunner.class)
 public class AuthenticationServiceImplTest {

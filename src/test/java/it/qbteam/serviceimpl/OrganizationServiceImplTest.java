@@ -1,15 +1,14 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.areautils.GpsAreaFacade;
+import it.qbteam.persistence.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationConstraint;
-import it.qbteam.repository.OrganizationConstraintRepository;
-import it.qbteam.repository.OrganizationDeletionRequestRepository;
-import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.OrganizationConstraintRepository;
+import it.qbteam.persistence.repository.OrganizationDeletionRequestRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;

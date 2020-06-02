@@ -3,6 +3,7 @@ package it.qbteam.areautils;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.qbteam.persistence.areautils.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

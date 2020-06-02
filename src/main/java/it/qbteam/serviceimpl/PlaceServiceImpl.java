@@ -1,14 +1,11 @@
 package it.qbteam.serviceimpl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.google.api.client.json.Json;
-import it.qbteam.areautils.Coordinate;
-import it.qbteam.areautils.GpsAreaFacade;
+import it.qbteam.persistence.areautils.Coordinate;
+import it.qbteam.persistence.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
 import it.qbteam.model.Place;
-import it.qbteam.repository.OrganizationRepository;
-import it.qbteam.repository.PlaceRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.PlaceRepository;
 import it.qbteam.service.PlaceService;
 
 import org.springframework.beans.factory.annotation.Autowired;

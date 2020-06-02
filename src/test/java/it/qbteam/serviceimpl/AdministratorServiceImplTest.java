@@ -3,8 +3,8 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Permission;
 import it.qbteam.model.PermissionId;
-import it.qbteam.repository.OrganizationRepository;
-import it.qbteam.repository.PermissionRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.PermissionRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

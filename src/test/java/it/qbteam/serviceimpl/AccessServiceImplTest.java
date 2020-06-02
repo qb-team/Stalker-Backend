@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
-import it.qbteam.repository.OrganizationAccessRepository;
-import it.qbteam.repository.PlaceAccessRepository;
+import it.qbteam.persistence.repository.OrganizationAccessRepository;
+import it.qbteam.persistence.repository.PlaceAccessRepository;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;

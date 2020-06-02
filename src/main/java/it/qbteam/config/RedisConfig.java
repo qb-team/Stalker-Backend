@@ -28,10 +28,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
-import it.qbteam.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
-import it.qbteam.movementtracker.subscriber.PlaceMovementRedisSubscriber;
-import it.qbteam.repository.OrganizationAccessRepository;
-import it.qbteam.repository.PlaceAccessRepository;
+import it.qbteam.persistence.movementtracker.subscriber.OrganizationMovementRedisSubscriber;
+import it.qbteam.persistence.movementtracker.subscriber.PlaceMovementRedisSubscriber;
+import it.qbteam.persistence.repository.OrganizationAccessRepository;
+import it.qbteam.persistence.repository.PlaceAccessRepository;
 
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;

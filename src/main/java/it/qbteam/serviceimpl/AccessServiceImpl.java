@@ -2,8 +2,8 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.OrganizationAccess;
 import it.qbteam.model.PlaceAccess;
-import it.qbteam.repository.OrganizationAccessRepository;
-import it.qbteam.repository.PlaceAccessRepository;
+import it.qbteam.persistence.repository.OrganizationAccessRepository;
+import it.qbteam.persistence.repository.PlaceAccessRepository;
 import it.qbteam.service.AccessService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.movementtracker.publisher.PlaceMovementPublisher;
-import it.qbteam.movementtracker.publisher.OrganizationMovementPublisher;
+import it.qbteam.persistence.movementtracker.publisher.PlaceMovementPublisher;
+import it.qbteam.persistence.movementtracker.publisher.OrganizationMovementPublisher;
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.model.PlaceMovement;
 import it.qbteam.service.MovementService;

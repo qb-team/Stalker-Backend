@@ -2,14 +2,13 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.Permission;
 import it.qbteam.model.PermissionId;
-import it.qbteam.repository.OrganizationRepository;
-import it.qbteam.repository.PermissionRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.PermissionRepository;
 import it.qbteam.service.AdministratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

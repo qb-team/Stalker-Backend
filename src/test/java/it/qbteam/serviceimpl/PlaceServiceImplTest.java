@@ -1,10 +1,10 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.areautils.GpsAreaFacade;
+import it.qbteam.persistence.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
 import it.qbteam.model.Place;
-import it.qbteam.repository.OrganizationRepository;
-import it.qbteam.repository.PlaceRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
+import it.qbteam.persistence.repository.PlaceRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

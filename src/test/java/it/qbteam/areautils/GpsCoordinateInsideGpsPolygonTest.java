@@ -1,5 +1,6 @@
 package it.qbteam.areautils;
 
+import it.qbteam.persistence.areautils.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

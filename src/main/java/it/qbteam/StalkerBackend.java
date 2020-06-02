@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "it.qbteam.repository")
+@EnableJpaRepositories(basePackages = "it.qbteam.persistence.repository")
 public class StalkerBackend {
 
   public static void main(String[] args) {

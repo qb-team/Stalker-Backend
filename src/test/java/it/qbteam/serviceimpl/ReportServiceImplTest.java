@@ -2,7 +2,7 @@ package it.qbteam.serviceimpl;
 
 import it.qbteam.model.PlaceAccess;
 import it.qbteam.model.TimePerUserReport;
-import it.qbteam.repository.PlaceAccessRepository;
+import it.qbteam.persistence.repository.PlaceAccessRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

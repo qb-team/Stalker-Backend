@@ -1,12 +1,13 @@
 package it.qbteam.serviceimpl;
 
-import it.qbteam.areautils.*;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationConstraint;
 import it.qbteam.model.OrganizationDeletionRequest;
-import it.qbteam.repository.OrganizationConstraintRepository;
-import it.qbteam.repository.OrganizationDeletionRequestRepository;
-import it.qbteam.repository.OrganizationRepository;
+import it.qbteam.persistence.areautils.Coordinate;
+import it.qbteam.persistence.areautils.GpsAreaFacade;
+import it.qbteam.persistence.repository.OrganizationConstraintRepository;
+import it.qbteam.persistence.repository.OrganizationDeletionRequestRepository;
+import it.qbteam.persistence.repository.OrganizationRepository;
 import it.qbteam.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
