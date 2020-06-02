@@ -158,7 +158,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String getUserId(String accessToken) throws AuthenticationException {
         if (!checkToken(accessToken))
             throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
-        
         final FirebaseToken userData = getFirebaseUser(accessToken).get();
 
         return userData.getUid();      
