@@ -35,6 +35,43 @@ public class ModelTest {
         Assert.assertEquals("uid", f.orgAuthServerId("uid").getOrgAuthServerId());
         Assert.assertEquals(date, f.creationDate(date).getCreationDate());
     }
+
+    @Test
+    public void testOrganization() {
+        Organization o = new Organization();
+
+        OffsetDateTime date = OffsetDateTime.now();
+
+        Assert.assertEquals(1, o.id(1L).getId(), 0);
+        Assert.assertEquals("testorg", o.name("testorg").getName());
+        Assert.assertEquals("descr", o.description("descr").getDescription());
+        Assert.assertEquals("image", o.image("image").getImage());
+        Assert.assertEquals("street", o.street("street").getStreet());
+        Assert.assertEquals("3a", o.number("3a").getNumber());
+        Assert.assertEquals(Integer.valueOf(11111), o.postCode(11111).getPostCode());
+        Assert.assertEquals("city", o.city("city").getCity());
+        Assert.assertEquals("country", o.country("country").getCountry());
+        Assert.assertEquals("authurl.it", o.authenticationServerURL("authurl.it").getAuthenticationServerURL());
+        Assert.assertEquals(date, o.creationDate(date).getCreationDate());
+        Assert.assertEquals(date, o.lastChangeDate(date).getLastChangeDate());
+        Assert.assertEquals("{\"json\": true}", o.trackingArea("{\"json\": true}").getTrackingArea());
+        Assert.assertEquals(Organization.TrackingModeEnum.anonymous, o.trackingMode(Organization.TrackingModeEnum.anonymous).getTrackingMode());
+    }
+
+    @Test
+    public void testOrganizationAccess() {
+        OrganizationAccess access = new OrganizationAccess();
+
+        OffsetDateTime date = OffsetDateTime.now();
+
+        Assert.assertEquals(1L, access.id(1L).getId(), 0);
+        Assert.assertEquals(date, access.entranceTimestamp(date).getEntranceTimestamp());
+        Assert.assertEquals(date, access.exitTimestamp(date).getExitTimestamp());
+        Assert.assertEquals("exitToken", access.exitToken("exitToken").getExitToken());
+        Assert.assertEquals(1L, access.organizationId(1L).getOrganizationId(), 0);
+        Assert.assertEquals("serverId", access.orgAuthServerId("serverId").getOrgAuthServerId());
+    }
+
     @Test
     public void testOrganizationAuthenticationServerCredentials(){
         OrganizationAuthenticationServerCredentials testOASC = new OrganizationAuthenticationServerCredentials();
