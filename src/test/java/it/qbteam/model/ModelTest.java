@@ -7,6 +7,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.constraints.AssertTrue;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RunWith(SpringRunner.class)
@@ -78,6 +80,43 @@ public class ModelTest {
         OrganizationAuthenticationServerInformation testToString = new OrganizationAuthenticationServerInformation();
         Assert.assertEquals("class OrganizationAuthenticationServerInformation {\n    orgAuthServerId: null\n    name: null\n    surname: null\n}", testToString.toString());
 
+    }
+
+    @Test
+    public void testOrganizationAuthenticationServerRequest(){
+        OrganizationAuthenticationServerRequest testOASR = new OrganizationAuthenticationServerRequest().organizationId(1L).addOrgAuthServerIdsItem("prova");
+        OrganizationAuthenticationServerCredentials testCredential = new OrganizationAuthenticationServerCredentials().password("prova");
+        OrganizationAuthenticationServerRequest testOASRWithCredential = new OrganizationAuthenticationServerRequest().organizationId(1L).addOrgAuthServerIdsItem("prova").organizationCredentials(testCredential);
+
+        Assert.assertEquals(testOASRWithCredential, testOASR.organizationCredentials(testCredential));
+
+        Assert.assertEquals(testCredential, testOASRWithCredential.getOrganizationCredentials());
+        testOASR.setOrganizationCredentials(new OrganizationAuthenticationServerCredentials().username("prova"));
+        Assert.assertEquals(new OrganizationAuthenticationServerCredentials().username("prova"), testOASR.getOrganizationCredentials());
+        testOASR.setOrganizationId(1L);
+        Assert.assertEquals(new Long(1), testOASR.getOrganizationId());
+
+        List<String> orgAuthServerIds = new ArrayList<>();
+        orgAuthServerIds.add("prova");
+        testOASR.orgAuthServerIds(orgAuthServerIds);
+        testOASRWithCredential.setOrgAuthServerIds(orgAuthServerIds);
+        Assert.assertEquals(testOASR.getOrgAuthServerIds(), testOASRWithCredential.getOrgAuthServerIds());
+
+
+
+        Assert.assertTrue(testOASR.equals(testOASR));
+        Assert.assertFalse(testOASR.equals(null));
+        Assert.assertFalse(testOASR.equals(new Favorite()));
+
+        testOASR.setOrganizationCredentials(testCredential);
+        Assert.assertTrue(testOASR.equals(testOASRWithCredential));
+
+        Assert.assertEquals(Objects.hash(testOASR.getOrganizationCredentials(), testOASR.getOrganizationId(), testOASR.getOrgAuthServerIds()), testOASR.hashCode());
+
+        Assert.assertEquals("class OrganizationAuthenticationServerRequest {\n    organizationCredentials: class OrganizationAuthenticationServerCredentials {\n        username: null\n        password: prova\n    }\n    organizationId: 1\n    orgAuthServerIds: [prova]\n}", testOASR.toString());
+        OrganizationAuthenticationServerRequest testToString = new OrganizationAuthenticationServerRequest();
+
+        Assert.assertEquals("class OrganizationAuthenticationServerRequest {\n    organizationCredentials: null\n    organizationId: null\n    orgAuthServerIds: []\n}", testToString.toString());
     }
 
 }
