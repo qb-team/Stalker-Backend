@@ -56,5 +56,28 @@ public class ModelTest {
         OrganizationAuthenticationServerCredentials testToString = new OrganizationAuthenticationServerCredentials().password("prova");
         Assert.assertEquals("class OrganizationAuthenticationServerCredentials {\n    username: null\n    password: prova\n}", testToString.toString());
     }
+    @Test
+    public void testOrganizationAuthenticationServerInformation(){
+        OrganizationAuthenticationServerInformation testOASI = new OrganizationAuthenticationServerInformation();
+        testOASI.setOrgAuthServerId("prova");
+        testOASI.setName("prova");
+        testOASI.setSurname("prova");
+        Assert.assertEquals("prova", testOASI.getOrgAuthServerId());
+        Assert.assertEquals("prova", testOASI.getName());
+        Assert.assertEquals("prova", testOASI.getSurname());
+
+        OrganizationAuthenticationServerInformation testEquals = new OrganizationAuthenticationServerInformation().name("prova").surname("prova").orgAuthServerId("prova");
+        Assert.assertTrue(testOASI.equals(testOASI));
+        Assert.assertFalse(testEquals.equals(null));
+        Assert.assertFalse(testEquals.equals(new Favorite().organizationId(1L)));
+        Assert.assertTrue(testOASI.equals(testEquals));
+
+        Assert.assertEquals(Objects.hash(testOASI.getOrgAuthServerId(), testOASI.getName(), testOASI.getSurname()), testOASI.hashCode());
+
+        Assert.assertEquals("class OrganizationAuthenticationServerInformation {\n    orgAuthServerId: prova\n    name: prova\n    surname: prova\n}", testOASI.toString());
+        OrganizationAuthenticationServerInformation testToString = new OrganizationAuthenticationServerInformation();
+        Assert.assertEquals("class OrganizationAuthenticationServerInformation {\n    orgAuthServerId: null\n    name: null\n    surname: null\n}", testToString.toString());
+
+    }
 
 }
