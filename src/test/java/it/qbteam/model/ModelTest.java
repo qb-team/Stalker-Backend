@@ -156,4 +156,162 @@ public class ModelTest {
         Assert.assertEquals("class OrganizationAuthenticationServerRequest {\n    organizationCredentials: null\n    organizationId: null\n    orgAuthServerIds: []\n}", testToString.toString());
     }
 
+    @Test
+    public void testOrganizationConstraint() {
+        OrganizationConstraint oc = new OrganizationConstraint();
+
+        Assert.assertEquals(1L, oc.organizationId(1L).getOrganizationId(), 0);
+        Assert.assertEquals(2000.50D, oc.maxArea(2000.50D).getMaxArea(), 0);
+
+        Assert.assertTrue(oc.equals(oc));
+        Assert.assertFalse(oc.equals(null));
+        Assert.assertFalse(oc.equals(new OrganizationConstraint()));
+
+        Assert.assertEquals("class OrganizationConstraint {\n    organizationId: 1\n    maxArea: 2000.5\n}", oc.toString());
+    }
+
+    @Test
+    public void testOrganizationDeletionRequest() {
+        OrganizationDeletionRequest odr = new OrganizationDeletionRequest();
+
+        Assert.assertEquals(15L, odr.organizationId(15L).getOrganizationId(), 0);
+        Assert.assertEquals("adminId", odr.administratorId("adminId").getAdministratorId());
+        Assert.assertEquals("super important reason", odr.requestReason("super important reason").getRequestReason());
+
+        Assert.assertTrue(odr.equals(odr));
+        Assert.assertFalse(odr.equals(null));
+        Assert.assertFalse(odr.equals(new OrganizationDeletionRequest()));
+
+        Assert.assertEquals("class OrganizationDeletionRequest {\n    organizationId: 15\n    requestReason: super important reason\n    administratorId: adminId\n}", odr.toString());
+    }
+
+    @Test
+    public void testOrganizationMovement() {
+        OrganizationMovement om = new OrganizationMovement();
+
+        OffsetDateTime date = OffsetDateTime.now();
+
+        Assert.assertEquals("exitToken", om.exitToken("exitToken").getExitToken());
+        Assert.assertEquals(date, om.timestamp(date).getTimestamp());
+        Assert.assertEquals(1, om.movementType(1).getMovementType(), 0);
+        Assert.assertEquals(10L, om.organizationId(10L).getOrganizationId(), 0);
+        Assert.assertEquals("id", om.orgAuthServerId("id").getOrgAuthServerId());
+
+        Assert.assertTrue(om.equals(om));
+        Assert.assertFalse(om.equals(null));
+        Assert.assertFalse(om.equals(new OrganizationMovement()));
+
+        Assert.assertEquals("class OrganizationMovement {\n    exitToken: exitToken\n    timestamp: " + date.toString() + "\n    movementType: 1\n    organizationId: 10\n    orgAuthServerId: id\n}", om.toString());
+    }
+
+    @Test
+    public void testOrganizationPresenceCounter() {
+        OrganizationPresenceCounter opc = new OrganizationPresenceCounter();
+
+        Assert.assertEquals(1L, opc.organizationId(1L).getOrganizationId(), 0);
+        Assert.assertEquals(100, opc.counter(100).getCounter(), 0);
+
+        Assert.assertTrue(opc.equals(opc));
+        Assert.assertFalse(opc.equals(null));
+        Assert.assertFalse(opc.equals(new OrganizationPresenceCounter()));
+
+        Assert.assertEquals("class OrganizationPresenceCounter {\n    organizationId: 1\n    counter: 100\n}", opc.toString());
+    }
+
+    @Test
+    public void testPermission() {
+        Permission p = new Permission();
+
+        Assert.assertEquals("adminId", p.administratorId("adminId").getAdministratorId());
+        Assert.assertEquals("id", p.orgAuthServerId("id").getOrgAuthServerId());
+        Assert.assertEquals("mail", p.mail("mail").getMail());
+        Assert.assertEquals(1L, p.organizationId(1L).getOrganizationId(), 0);
+        Assert.assertEquals(2, p.permission(2).getPermission(), 0);
+        Assert.assertEquals("adminId2", p.nominatedBy("adminId2").getNominatedBy());
+
+        Assert.assertTrue(p.equals(p));
+        Assert.assertFalse(p.equals(null));
+        Assert.assertFalse(p.equals(new Permission()));
+
+        Assert.assertEquals("class Permission {\n    administratorId: adminId\n    organizationId: 1\n    orgAuthServerId: id\n    mail: mail\n    permission: 2\n    nominatedBy: adminId2\n}", p.toString());
+    }
+
+    @Test
+    public void testPlace() {
+        Place p = new Place();
+
+        Assert.assertEquals(20L, p.id(20L).getId(), 0);
+        Assert.assertEquals("placename", p.name("placename").getName());
+        Assert.assertEquals(1L, p.organizationId(1L).getOrganizationId(), 0);
+        Assert.assertEquals("{\"json\": true}", p.trackingArea("{\"json\": true}").getTrackingArea());
+
+        Assert.assertTrue(p.equals(p));
+        Assert.assertFalse(p.equals(null));
+        Assert.assertFalse(p.equals(new Place()));
+
+        Assert.assertEquals("class Place {\n    id: 20\n    name: placename\n    organizationId: 1\n    trackingArea: {\"json\": true}\n}", p.toString());
+    }
+
+    @Test
+    public void testPlaceAccess() {
+        PlaceAccess access = new PlaceAccess();
+
+        OffsetDateTime date = OffsetDateTime.now();
+
+        Assert.assertEquals(1L, access.id(1L).getId(), 0);
+        Assert.assertEquals(date, access.entranceTimestamp(date).getEntranceTimestamp());
+        Assert.assertEquals(date, access.exitTimestamp(date).getExitTimestamp());
+        Assert.assertEquals("exitToken", access.exitToken("exitToken").getExitToken());
+        Assert.assertEquals(1L, access.placeId(1L).getPlaceId(), 0);
+        Assert.assertEquals("serverId", access.orgAuthServerId("serverId").getOrgAuthServerId());
+    }
+
+    @Test
+    public void testPlaceMovement() {
+        PlaceMovement om = new PlaceMovement();
+
+        OffsetDateTime date = OffsetDateTime.now();
+
+        Assert.assertEquals("exitToken", om.exitToken("exitToken").getExitToken());
+        Assert.assertEquals(date, om.timestamp(date).getTimestamp());
+        Assert.assertEquals(1, om.movementType(1).getMovementType(), 0);
+        Assert.assertEquals(10L, om.placeId(10L).getPlaceId(), 0);
+        Assert.assertEquals("id", om.orgAuthServerId("id").getOrgAuthServerId());
+
+        Assert.assertTrue(om.equals(om));
+        Assert.assertFalse(om.equals(null));
+        Assert.assertFalse(om.equals(new PlaceMovement()));
+
+        Assert.assertEquals("class PlaceMovement {\n    exitToken: exitToken\n    timestamp: " + date.toString() + "\n    movementType: 1\n    placeId: 10\n    orgAuthServerId: id\n}", om.toString());
+    }
+
+    @Test
+    public void testPlacePresenceCounter() {
+        PlacePresenceCounter opc = new PlacePresenceCounter();
+
+        Assert.assertEquals(1L, opc.placeId(1L).getPlaceId(), 0);
+        Assert.assertEquals(100, opc.counter(100).getCounter(), 0);
+
+        Assert.assertTrue(opc.equals(opc));
+        Assert.assertFalse(opc.equals(null));
+        Assert.assertFalse(opc.equals(new PlacePresenceCounter()));
+
+        Assert.assertEquals("class PlacePresenceCounter {\n    placeId: 1\n    counter: 100\n}", opc.toString());
+    }
+
+    @Test
+    public void testTimePerUserReport() {
+        TimePerUserReport t = new TimePerUserReport();
+
+        Assert.assertEquals(10L, t.placeId(10L).getPlaceId(), 0);
+        Assert.assertEquals("id", t.orgAuthServerId("id").getOrgAuthServerId());
+        Assert.assertEquals(3600L, t.totalTime(3600L).getTotalTime(), 0);
+
+        Assert.assertTrue(t.equals(t));
+        Assert.assertFalse(t.equals(null));
+        Assert.assertFalse(t.equals(new TimePerUserReport()));
+
+        Assert.assertEquals("class TimePerUserReport {\n    placeId: 10\n    orgAuthServerId: id\n    totalTime: 3600\n}", t.toString());
+    }
+
 }
