@@ -1,4 +1,4 @@
-package it.qbteam.persistence.movementtracker;
+package it.qbteam.persistence.movementtracker.publisher;
 
 import it.qbteam.model.OrganizationMovement;
 import it.qbteam.persistence.movementtracker.publisher.OrganizationMovementPublisher;
