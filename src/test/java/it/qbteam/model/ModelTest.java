@@ -22,6 +22,12 @@ public class ModelTest {
         Assert.assertEquals("uidTest", abr.orgAuthServerId("uidTest").getOrgAuthServerId());
         Assert.assertEquals("testpwd", abr.password("testpwd").getPassword());
         Assert.assertEquals(3, abr.permission(3).getPermission(),0);
+
+        Assert.assertTrue(abr.equals(abr));
+        Assert.assertFalse(abr.equals(null));
+        Assert.assertFalse(abr.equals(new AdministratorBindingRequest()));
+
+        Assert.assertEquals("class AdministratorBindingRequest {\n    organizationId: 1\n    orgAuthServerId: uidTest\n    mail: prova@prova.it\n    password: testpwd\n    permission: 3\n}", abr.toString());
     }
 
     @Test
@@ -34,6 +40,12 @@ public class ModelTest {
         Assert.assertEquals(1L, f.organizationId(1L).getOrganizationId(), 0);
         Assert.assertEquals("uid", f.orgAuthServerId("uid").getOrgAuthServerId());
         Assert.assertEquals(date, f.creationDate(date).getCreationDate());
+
+        Assert.assertTrue(f.equals(f));
+        Assert.assertFalse(f.equals(null));
+        Assert.assertFalse(f.equals(new Favorite()));
+
+        Assert.assertEquals("class Favorite {\n    userId: uid\n    organizationId: 1\n    orgAuthServerId: uid\n    creationDate: " + date.toString() + "\n}", f.toString());
     }
 
     @Test
@@ -42,7 +54,7 @@ public class ModelTest {
 
         OffsetDateTime date = OffsetDateTime.now();
 
-        Assert.assertEquals(1, o.id(1L).getId(), 0);
+        Assert.assertEquals(1L, o.id(1L).getId(), 0);
         Assert.assertEquals("testorg", o.name("testorg").getName());
         Assert.assertEquals("descr", o.description("descr").getDescription());
         Assert.assertEquals("image", o.image("image").getImage());
@@ -56,6 +68,18 @@ public class ModelTest {
         Assert.assertEquals(date, o.lastChangeDate(date).getLastChangeDate());
         Assert.assertEquals("{\"json\": true}", o.trackingArea("{\"json\": true}").getTrackingArea());
         Assert.assertEquals(Organization.TrackingModeEnum.anonymous, o.trackingMode(Organization.TrackingModeEnum.anonymous).getTrackingMode());
+
+        Assert.assertTrue(o.equals(o));
+        Assert.assertFalse(o.equals(null));
+        Assert.assertFalse(o.equals(new Organization()));
+
+        String toString = "class Organization {\n" +
+                "    id: 1\n" + "    name: testorg\n" + "    description: descr\n" +
+                "    image: image\n" + "    street: street\n" + "    number: 3a\n" +
+                "    postCode: 11111\n" + "    city: city\n" + "    country: country\n" +
+                "    authenticationServerURL: authurl.it\n" + "    creationDate: " + date.toString() + "\n    lastChangeDate: " + date.toString() + "\n" +
+                "    trackingArea: {\"json\": true}\n" + "    trackingMode: " + Organization.TrackingModeEnum.anonymous.toString() + "\n}";
+        Assert.assertEquals(toString, o.toString());
     }
 
     @Test
@@ -70,6 +94,12 @@ public class ModelTest {
         Assert.assertEquals("exitToken", access.exitToken("exitToken").getExitToken());
         Assert.assertEquals(1L, access.organizationId(1L).getOrganizationId(), 0);
         Assert.assertEquals("serverId", access.orgAuthServerId("serverId").getOrgAuthServerId());
+
+        Assert.assertTrue(access.equals(access));
+        Assert.assertFalse(access.equals(null));
+        Assert.assertFalse(access.equals(new OrganizationAccess()));
+
+        Assert.assertEquals("class OrganizationAccess {\n    id: 1\n    entranceTimestamp: " + date.toString() + "\n    exitTimestamp: " + date.toString() + "\n    exitToken: exitToken\n    organizationId: 1\n    orgAuthServerId: serverId\n}", access.toString());
     }
 
     @Test
@@ -116,7 +146,6 @@ public class ModelTest {
         Assert.assertEquals("class OrganizationAuthenticationServerInformation {\n    orgAuthServerId: prova\n    name: prova\n    surname: prova\n}", testOASI.toString());
         OrganizationAuthenticationServerInformation testToString = new OrganizationAuthenticationServerInformation();
         Assert.assertEquals("class OrganizationAuthenticationServerInformation {\n    orgAuthServerId: null\n    name: null\n    surname: null\n}", testToString.toString());
-
     }
 
     @Test
@@ -138,8 +167,6 @@ public class ModelTest {
         testOASR.orgAuthServerIds(orgAuthServerIds);
         testOASRWithCredential.setOrgAuthServerIds(orgAuthServerIds);
         Assert.assertEquals(testOASR.getOrgAuthServerIds(), testOASRWithCredential.getOrgAuthServerIds());
-
-
 
         Assert.assertTrue(testOASR.equals(testOASR));
         Assert.assertFalse(testOASR.equals(null));
@@ -264,6 +291,12 @@ public class ModelTest {
         Assert.assertEquals("exitToken", access.exitToken("exitToken").getExitToken());
         Assert.assertEquals(1L, access.placeId(1L).getPlaceId(), 0);
         Assert.assertEquals("serverId", access.orgAuthServerId("serverId").getOrgAuthServerId());
+
+        Assert.assertTrue(access.equals(access));
+        Assert.assertFalse(access.equals(null));
+        Assert.assertFalse(access.equals(new PlaceAccess()));
+
+        Assert.assertEquals("class PlaceAccess {\n    id: 1\n    entranceTimestamp: " + date.toString() + "\n    exitTimestamp: " + date.toString() + "\n    exitToken: exitToken\n    placeId: 1\n    orgAuthServerId: serverId\n}", access.toString());
     }
 
     @Test
