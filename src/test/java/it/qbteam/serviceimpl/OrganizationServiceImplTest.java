@@ -122,7 +122,7 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setDescription("default description");
         orgWithChanges.setCountry("default country");
         orgWithChanges.setCity("default city");
-        orgWithChanges.setAuthenticationServerURL("default Url");
+        orgWithChanges.setAuthenticationServerURL("defaulturl.it:389");
         orgWithChanges.setTrackingMode(Organization.TrackingModeEnum.authenticated);
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));

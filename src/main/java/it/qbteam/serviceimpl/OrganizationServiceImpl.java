@@ -122,9 +122,9 @@ public class OrganizationServiceImpl implements OrganizationService {
             return Optional.empty();
         }
 
-        if(!organization.getAuthenticationServerURL().matches(urlRegex)) {
-            return Optional.empty();
-        }
+        //if(!organization.getAuthenticationServerURL().matches(urlRegex)) {
+        //    return Optional.empty();
+        //}
 
         return Optional.of(organizationRepo.save(organization));
     }
