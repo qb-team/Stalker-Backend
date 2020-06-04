@@ -40,6 +40,7 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
 
         if(organization.getTrackingMode() == Organization.TrackingModeEnum.anonymous || organization.getAuthenticationServerURL().isEmpty()) {
             return infos;
+
         }
 
         if(authServerConn.openConnection(organization.getAuthenticationServerURL())) {
@@ -47,7 +48,6 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
 
             if(authServerConn.login(credentials.getUsername(), credentials.getPassword())) {
                 Set<String> setUids = new LinkedHashSet<>(organizationAuthenticationServerRequest.getOrgAuthServerIds());
-
                 // Two possibilities:
                 // - administrator asked for all users in the server, then setUids contains one single item which is "*"
                 // - administrator asked for one or more users, the setUids contains >= 1 item different from "*"
@@ -60,7 +60,6 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
                 
                 for(String uid: setUids) {
                     Optional<OrganizationAuthenticationServerInformation> orgAuthServerInfo = authServerConn.searchByIdentifier(uid);
-                    
                     if(orgAuthServerInfo.isPresent()) {
                         infos.add(orgAuthServerInfo.get());
                     }
