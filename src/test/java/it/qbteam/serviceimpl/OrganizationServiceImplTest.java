@@ -1,8 +1,10 @@
 package it.qbteam.serviceimpl;
 
+import it.qbteam.model.OrganizationDeletionRequest;
 import it.qbteam.persistence.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationConstraint;
+import it.qbteam.persistence.areautils.GpsCoordinate;
 import it.qbteam.persistence.repository.OrganizationConstraintRepository;
 import it.qbteam.persistence.repository.OrganizationDeletionRequestRepository;
 import it.qbteam.persistence.repository.OrganizationRepository;
@@ -19,10 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -109,20 +108,59 @@ public class OrganizationServiceImplTest {
     }
 
     @Test
+    public void testaUpdateOrganizatiorReturnOptionalEmpty(){
+        Iterable<Organization> testIterator= new LinkedList<>();
+        List<Organization> testList = new LinkedList<>();
+        testList.add(new Organization().name("prova").id(2L));
+        testIterator=testList;
+
+        Mockito.when(organizationRepository.findByName(anyString())).thenReturn(testIterator);
+        assertEquals(Optional.empty(), organizationService.updateOrganization(new Organization().name("prova").id(1L)));
+
+        testList.clear();
+        testList.add(new Organization().name("prova").id(1L));
+        testIterator=testList;
+        Mockito.when(organizationRepository.findByName(anyString())).thenReturn(testIterator);
+        assertEquals(Optional.empty(), organizationService.updateOrganization(new Organization().name("prova").id(1L)));
+
+    }
+
+    @Test
     public void testUpdateOrganizationCorrectlyUpdateOrganizationFieldsAndReturnIt() {
         List<Organization> orgList = new ArrayList<>();
         Organization orgWithChanges = new Organization();
         orgWithChanges.setId(1L);
         orgWithChanges.setName("default name");
         orgWithChanges.setImage("default image");
-        orgWithChanges.setTrackingArea("default trackingArea");
+        orgWithChanges.setTrackingArea("{\n" +
+                "    \"Organizzazioni\": [\n" +
+                "        {\n" +
+                "            \"lat\": \"45.411222\",\n" +
+                "            \"long\": \"11.887317\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"lat\": \"45.411555\",\n" +
+                "            \"long\": \"11.887474\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"lat\": \"45.411440\",\n" +
+                "            \"long\": \"11.887946\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"lat\": \"45.411109\",\n" +
+                "            \"long\": \"11.887786\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}");
         orgWithChanges.setStreet("default street");
         orgWithChanges.setPostCode(2);
         orgWithChanges.setNumber("default number");
         orgWithChanges.setDescription("default description");
         orgWithChanges.setCountry("default country");
         orgWithChanges.setCity("default city");
-        orgWithChanges.setAuthenticationServerURL("defaulturl.it:389");
+
+        orgWithChanges.setAuthenticationServerURL("prova");
+
         orgWithChanges.setTrackingMode(Organization.TrackingModeEnum.authenticated);
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
@@ -135,10 +173,12 @@ public class OrganizationServiceImplTest {
         Mockito.when(gpsAreaFacade.calculateArea(anyList())).thenReturn(10D); // just a random value, could be anything
         Mockito.when(organizationConstraintRepository.findById(anyLong())).thenReturn(Optional.of(new OrganizationConstraint().maxArea(20D)));
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganization(orgWithChanges);
-        Organization returnedObject= optionalReturnedObject.get();
+        assertEquals(Optional.empty(), organizationService.updateOrganization(orgWithChanges));
 
-        assertEquals(orgWithChanges, returnedObject);
+        orgWithChanges.setAuthenticationServerURL("prova.it");
+
+
+        assertEquals(orgWithChanges, organizationService.updateOrganization(orgWithChanges).get());
     }
 
     @Test
@@ -147,16 +187,28 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setId(1L);
         orgWithChanges.setTrackingArea("new tracking area");
 
-        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
-        Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+
+        assertEquals(Optional.empty(), organizationService.updateOrganizationTrackingArea(1L, "prova"));
+        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+
+
         Mockito.when(gpsAreaFacade.buildCoordinate(anyDouble(), anyDouble())).thenCallRealMethod();
         Mockito.when(gpsAreaFacade.calculateArea(anyList())).thenReturn(10D); // just a random value, could be anything
         Mockito.when(organizationConstraintRepository.findById(anyLong())).thenReturn(Optional.of(new OrganizationConstraint().maxArea(20D)));
 
-        Optional<Organization> optionalReturnedObject = organizationService.updateOrganizationTrackingArea(orgWithChanges.getId(), "new tracking area");
-        Organization returnedObject= optionalReturnedObject.get();
-        assertEquals(orgWithChanges.getTrackingArea(), returnedObject.getTrackingArea());
-    }
+        assertEquals(Optional.empty(), organizationService.updateOrganizationTrackingArea(1L, "prova"));
 
+
+        Mockito.when(organizationRepository.findById(anyLong())).thenReturn(Optional.of(new Organization()));
+        Mockito.when(organizationRepository.save(any(Organization.class))).thenReturn(orgWithChanges);
+        assertEquals(orgWithChanges.getTrackingArea(), organizationService.updateOrganizationTrackingArea(orgWithChanges.getId(), "new tracking area").get().getTrackingArea());
+    }
+    @Test
+    public void testRequestDeletionOfOrganization(){
+        Mockito.when(organizationDeletionRequestRepository.save(any(OrganizationDeletionRequest.class))).thenReturn(null);
+        organizationService.requestDeletionOfOrganization(new OrganizationDeletionRequest().requestReason("prova"));
+        Mockito.verify(organizationDeletionRequestRepository, Mockito.times(1)).save(any(OrganizationDeletionRequest.class));
+    }
 
 }
