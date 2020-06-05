@@ -26,7 +26,12 @@ public class AuthenticationServerServiceImpl implements AuthenticationServerServ
         this.authServerConn = authServerConnector;
     }
 
-
+    /**
+     * Returns the information (id, name, surname) of the requested users.
+     *
+     * @param organizationAuthenticationServerRequest complex object which contains credentials for authenticating to the organization's authentication server, the organization id and the list of ids to search in the server
+     * @return the information (id, name, surname) of the requested users. List is empty if the credentials are incorrect or if the list is actually empty.
+     */
     @Override
     public List<OrganizationAuthenticationServerInformation> getUserInfoFromAuthServer(OrganizationAuthenticationServerRequest organizationAuthenticationServerRequest) {
         List<OrganizationAuthenticationServerInformation> infos = new LinkedList<>();

@@ -25,10 +25,24 @@ public class ReportServiceImpl implements ReportService {
         this.placeAccessRepo = placeAccessRepository;
     }
 
+    /**
+     * Calculates the duration in seconds (rounded to lowest integer) between firstDate and lastDate.
+     *
+     * @param firstDate
+     * @param lastDate
+     * @return duration between firstDate and lastDate
+     */
     private Long getDuration(OffsetDateTime firstDate, OffsetDateTime lastDate) {
         return lastDate.minusSeconds(firstDate.toInstant().toEpochMilli()/1000).toInstant().toEpochMilli()/1000;
     }
 
+    /**
+     * Returns a set of aggregated data in which each record contains how much time (in seconds) has been a certain user in a place of an organization.
+     * The data is collected from the access data, which means that only authenticated accesses make sense and will be returned.
+     *
+     * @param placeId id of the place of which data is requested
+     * @return list in which each record contains how much time (in seconds) has been a certain user in a place of an organization.
+     */
     @Override
     public List<TimePerUserReport> getTimePerUserReport(Long placeId) {
         Iterable<PlaceAccess> allAccessOfSinglePlace = placeAccessRepo.findByPlaceId(placeId);
