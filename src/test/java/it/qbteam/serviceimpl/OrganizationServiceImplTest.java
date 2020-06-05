@@ -158,7 +158,9 @@ public class OrganizationServiceImplTest {
         orgWithChanges.setDescription("default description");
         orgWithChanges.setCountry("default country");
         orgWithChanges.setCity("default city");
-        orgWithChanges.setAuthenticationServerURL("pincopallino.it");
+
+        orgWithChanges.setAuthenticationServerURL("prova");
+
         orgWithChanges.setTrackingMode(Organization.TrackingModeEnum.authenticated);
         orgWithChanges.setCreationDate(OffsetDateTime.now());
         orgWithChanges.setLastChangeDate(OffsetDateTime.now(Clock.tickSeconds(ZoneId.systemDefault())));
@@ -170,6 +172,12 @@ public class OrganizationServiceImplTest {
         Mockito.when(gpsAreaFacade.buildCoordinate(anyDouble(), anyDouble())).thenCallRealMethod();
         Mockito.when(gpsAreaFacade.calculateArea(anyList())).thenReturn(10D); // just a random value, could be anything
         Mockito.when(organizationConstraintRepository.findById(anyLong())).thenReturn(Optional.of(new OrganizationConstraint().maxArea(20D)));
+
+        assertEquals(Optional.empty(), organizationService.updateOrganization(orgWithChanges));
+
+        orgWithChanges.setAuthenticationServerURL("prova.it");
+
+
         assertEquals(orgWithChanges, organizationService.updateOrganization(orgWithChanges).get());
     }
 
