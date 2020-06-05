@@ -10,7 +10,7 @@ cache:
 
 script:
   # Installing Backend
-  - mvn clean package
+  - mvn clean package -DskipTests
   - mvn test > /dev/null
 
 after_success:
