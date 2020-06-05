@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,11 +99,22 @@ public class AuthenticationServiceImplTest {
         Assert.assertEquals("test@test.it", authenticationService.isWebAppAdministrator(token));
     }
 
+    @Test
+    public void testIsWebAppAdministratorReturnFalse() throws FirebaseAuthException, AuthenticationException {
+        Mockito.when(permissionRepo.findByAdministratorId(anyString())).thenReturn(new LinkedList<>());
+        Assert.assertFalse(authenticationService.isWebAppAdministrator(randomToken));
+    }
+
     @Test(expected = AuthenticationException.class)
     public void testIsAppUserThrowsExceptionIfAccessTokenIsInvalid() throws AuthenticationException {
         final String token = ""; // token can also be null
         // expected can be whatever string
         Assert.assertEquals("test@test.it", authenticationService.isAppUser(token));
+    }
+    @Test
+    public void testIsAppUserReturnFalse() throws FirebaseAuthException, AuthenticationException {
+        Mockito.when(permissionRepo.findByAdministratorId(anyString())).thenReturn(new LinkedList<>());
+        Assert.assertTrue(authenticationService.isAppUser(randomToken));
     }
 
     @Test(expected = AuthenticationException.class)
@@ -171,9 +183,22 @@ public class AuthenticationServiceImplTest {
     @Test
     public void testIsWebAppAdministratorReturnsTrueIfThereArePermissions() throws AuthenticationException {
         List<Permission> permList = new LinkedList<>();
-        permList.add(new Permission());
+        permList.add(new Permission().permission(2).administratorId("uid"));
         Mockito.when(permissionRepo.findByAdministratorId(anyString())).thenReturn(permList);
+        Mockito.when(firebaseToken.getUid()).thenReturn("uid");
 
-        //Assert.assertEquals(true, authenticationService.isWebAppAdministrator(randomToken));
+        Assert.assertEquals(true, authenticationService.isWebAppAdministrator(randomToken));
     }
+    @Test
+    public void testGetUserId() throws AuthenticationException {
+        Mockito.when(firebaseToken.getUid()).thenReturn("uid");
+        Assert.assertEquals("uid", authenticationService.getUserId(randomToken));
+    }
+    @Test
+    public void testGetEmailByUserId() throws AuthenticationException, FirebaseAuthException {
+        Assert.assertEquals(Optional.empty(), authenticationService.getEmailByUserId(randomToken, ""));
+        Mockito.when(firebaseAuth.getUser(anyString())).thenThrow(FirebaseAuthException.class);
+        Assert.assertEquals(Optional.empty(), authenticationService.getEmailByUserId(randomToken, "prova"));
+    }
+
 }

@@ -64,10 +64,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return true if the user is a web-app administrator., false otherwise
      */
     public Boolean isWebAppAdministrator(String accessToken) throws AuthenticationException {
-        if (!checkToken(accessToken))
-            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
 
+
+        if (!checkToken(accessToken)) {
+
+            throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+        }
         final String administratorId = getFirebaseUser(accessToken).get().getUid();
+
         List<Permission> adminList = new LinkedList<>();
         permissionRepo.findByAdministratorId(administratorId).forEach(adminList::add);
 
@@ -182,6 +186,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	public Optional<String> getEmailByUserId(String accessToken, String userId) throws AuthenticationException {
         if (!checkToken(accessToken))
         throw new AuthenticationException(INVALID_TOKEN_EXCEPTION_MESSAGE);
+
 
         if (userId == null || userId.isEmpty())
             return Optional.empty();
