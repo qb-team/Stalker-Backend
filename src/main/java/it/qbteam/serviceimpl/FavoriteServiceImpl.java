@@ -27,6 +27,12 @@ public class FavoriteServiceImpl implements FavoriteService {
         this.organizationRepo = organizationRepository;
     }
 
+    /**
+     * Adds a new favorite organization to the user profile. The user will now be able to track his/hers movements in the organization and its places.
+     *
+     * @param favorite favorite record to add
+     * @return favorite record if correctly saved, Optional.empty() otherwise
+     */
     @Override
     public Optional<Favorite> addFavoriteOrganization(Favorite favorite) {
         if(!organizationRepo.existsById(favorite.getOrganizationId())){
@@ -35,6 +41,12 @@ public class FavoriteServiceImpl implements FavoriteService {
         return Optional.of(favoriteRepo.save(favorite));
     }
 
+    /**
+     * Returns the list of favorite organizations of an app user.
+     *
+     * @param userId id of the user in the authentication provider
+     * @return the list of favorite organizations if there any, empty list otherwise
+     */
     @Override
     public List<Organization> getFavoriteOrganizationList(String userId) {
 
@@ -51,12 +63,23 @@ public class FavoriteServiceImpl implements FavoriteService {
         return returnList;
     }
 
+    /**
+     * Removes a favorite organization from the user profile. The user will no longer be able to track his/hers movements in the organization and its places.
+     *
+     * @param favorite favorite record to remove
+     */
     @Override
     public void removeFavoriteOrganization(Favorite favorite) {
         FavoriteId identificator= new FavoriteId(favorite.getUserId(), favorite.getOrganizationId());
         favoriteRepo.deleteById(identificator);
     }
-    
+
+    /**
+     * Returns true/false whether the favorite record already exists or not.
+     *
+     * @param favorite favorite record to check if it exists
+     * @return true if the record exists, false if not
+     */
     @Override
     public Boolean getFavorite(Favorite favorite){
         return favoriteRepo.existsById(new FavoriteId(favorite.getUserId(), favorite.getOrganizationId()));

@@ -15,33 +15,33 @@ import java.util.Optional;
  */
 public interface FavoriteService {
     /**
-     * Description
+     * Adds a new favorite organization to the user profile. The user will now be able to track his/hers movements in the organization and its places.
      * 
-     * @param favorite
-     * @return
+     * @param favorite favorite record to add
+     * @return favorite record if correctly saved, Optional.empty() otherwise
      */
     Optional<Favorite> addFavoriteOrganization(Favorite favorite);
 
     /**
-     * Description
+     * Returns the list of favorite organizations of an app user.
      * 
-     * @param userId
-     * @return
+     * @param userId id of the user in the authentication provider
+     * @return the list of favorite organizations if there any, empty list otherwise
      */
     List<Organization> getFavoriteOrganizationList(String userId);
 
     /**
-     * Description
-     * 
-     * @param favorite
+     * Removes a favorite organization from the user profile. The user will no longer be able to track his/hers movements in the organization and its places.
+     *
+     * @param favorite favorite record to remove
      */
     void removeFavoriteOrganization(Favorite favorite);
 
     /**
-     * Description
+     * Returns true/false whether the favorite record already exists or not.
      * 
-     * @param favorite
-     * @return
+     * @param favorite favorite record to check if it exists
+     * @return true if the record exists, false if not
      */
     Boolean getFavorite(Favorite favorite);
 }
