@@ -231,7 +231,7 @@ public class AccessApiControllerTest {
         Mockito.when(authFacade.isWebAppAdministrator("prova")).thenReturn(false);
         Mockito.when(authenticationService.isWebAppAdministrator(anyString())).thenReturn(false);
         Mockito.when(placeService.getPlace(anyLong())).thenReturn(Optional.of(new Place().organizationId(1l)));
-        Mockito.when(accessService.getAuthenticatedAccessListInOrganization(any(List.class), anyLong())).thenReturn(testPlaceAccessList);
+        Mockito.when(accessService.getAuthenticatedAccessListInPlace(anyList(), anyLong())).thenReturn(testPlaceAccessList);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), accessApiController.getAuthenticatedAccessListInPlace(testOrgAuthList, 1l));
     }
     @Test

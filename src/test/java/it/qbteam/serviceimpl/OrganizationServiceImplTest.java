@@ -4,7 +4,6 @@ import it.qbteam.model.OrganizationDeletionRequest;
 import it.qbteam.persistence.areautils.GpsAreaFacade;
 import it.qbteam.model.Organization;
 import it.qbteam.model.OrganizationConstraint;
-import it.qbteam.persistence.areautils.GpsCoordinate;
 import it.qbteam.persistence.repository.OrganizationConstraintRepository;
 import it.qbteam.persistence.repository.OrganizationDeletionRequestRepository;
 import it.qbteam.persistence.repository.OrganizationRepository;
