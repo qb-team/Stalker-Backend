@@ -87,11 +87,22 @@ public class OrganizationServiceImpl implements OrganizationService {
         this.orgConstrRepo = organizationConstraintRepository;
     }
 
+    /**
+     * Returns the information of an organization given its id.
+     *
+     * @param organizationId id of the organization
+     * @return organization record if found, Optional.empty() if not
+     */
     @Override
     public Optional <Organization> getOrganization(Long organizationId) {
         return organizationRepo.findById(organizationId);
     }
 
+    /**
+     * Returns the list of all organizations.
+     *
+     * @return list of all organizations
+     */
     @Override
     public List<Organization> getOrganizationList() {
 
@@ -102,11 +113,22 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     }
 
+    /**
+     * Saves in the system a request of deletion of an organization, which has to be analyzed by a Stalker administrator.
+     *
+     * @param organizationDeletionRequest deletion request made by an owner administrator of the organization
+     */
     @Override
     public void requestDeletionOfOrganization(OrganizationDeletionRequest organizationDeletionRequest) {
         orgDelReqRepo.save(organizationDeletionRequest);
     }
 
+    /**
+     * Updates the organization data.
+     *
+     * @param organization new data for the organization
+     * @return the updated organization if the organization could be updated, Optional.empty() if could not
+     */
     @Override
     public Optional<Organization> updateOrganization(Organization organization) {
         Iterator<Organization> orgs = organizationRepo.findByName(organization.getName()).iterator();
@@ -129,6 +151,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         return Optional.of(organizationRepo.save(organization));
     }
 
+    /**
+     * Updates the organization tracking area, given its id and the new tracking area.
+     *
+     * @param organizationId id of the organization
+     * @param trackingArea new tracking area
+     * @return updated organization with the new tracking area if exists, Optional.empty() if not
+     */
     @Override
     public Optional<Organization> updateOrganizationTrackingArea(Long organizationId, String trackingArea) {
         if(!canTrackingAreaBeUpdated(trackingArea, organizationId)) {

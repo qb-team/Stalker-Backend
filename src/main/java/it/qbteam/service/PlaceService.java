@@ -14,41 +14,41 @@ import java.util.Optional;
  */
 public interface PlaceService {
     /**
-     * Description
+     * Creates a new place for an organization and returns it.
      * 
-     * @param place
-     * @return
+     * @param place record to be added to the database
+     * @return place record if it was added, Optional.empty() if it was not
      */
     Optional<Place> createNewPlace(Place place);
 
     /**
-     * Description
+     * Removes a place of an organization from the system.
      * 
-     * @param place
+     * @param place record to be added to the database
      */
     void deletePlace(Place place);
 
     /**
-     * Description
+     * Updates a place of an organization.
      * 
-     * @param place
-     * @return
+     * @param place record to be updated
+     * @return updated place if could be updated, Optional.empty() if could not
      */
     Optional<Place> updatePlace(Place place);
     
     /**
-     * Description
+     * Returns the list of places of an organization given its id.
      * 
-     * @param organizationId
-     * @return
+     * @param organizationId id of the organization
+     * @return list of places if there are any, empty list otherwise.
      */
     List<Place> getPlaceListOfOrganization(Long organizationId);
 
     /**
-     * Description
+     * Returns the place record given its id.
      * 
-     * @param placeId
-     * @return
+     * @param placeId id of the place
+     * @return place of the organization, Optional.empty() if not
      */
     Optional<Place> getPlace(Long placeId);
 }
