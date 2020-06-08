@@ -1018,7 +1018,7 @@ components:
       type: object
       additionalProperties: false
       description: >-
-        Information of a user of an organizations.
+        Information of a user of an organization.
       required:
         - orgAuthServerId
         - name
