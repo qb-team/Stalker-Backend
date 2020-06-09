@@ -85,7 +85,9 @@ public class AccessServiceImpl implements AccessService {
         Set<String> setOfOrgAuthServerIds = new LinkedHashSet<>(orgAuthServerIds);
 
         setOfOrgAuthServerIds.forEach((orgAuthServerId) -> {
-            organizationAccessRepo.findByOrgAuthServerIdAndOrganizationId(orgAuthServerId, organizationId).forEach(accessList::add);
+            organizationAccessRepo.findByOrgAuthServerIdAndOrganizationId(orgAuthServerId, organizationId).forEach(access -> {
+                if(access.getExitTimestamp() != null) accessList.add(access);
+            });
         });
 
         return accessList;
@@ -101,14 +103,16 @@ public class AccessServiceImpl implements AccessService {
      */
     @Override
     public List<PlaceAccess> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, Long placeId) {
-        List<PlaceAccess> placeList = new LinkedList<>();
+        List<PlaceAccess> accessList = new LinkedList<>();
 
         Set<String> setOfOrgAuthServerIds = new LinkedHashSet<>(orgAuthServerIds);
 
         setOfOrgAuthServerIds.forEach((orgAuthServerId) -> {
-            placeAccessRepo.findByOrgAuthServerIdAndPlaceId(orgAuthServerId, placeId).forEach(placeList::add);
+            placeAccessRepo.findByOrgAuthServerIdAndPlaceId(orgAuthServerId, placeId).forEach(access -> {
+                if(access.getExitTimestamp() != null) accessList.add(access);
+            });
         });
         
-        return placeList;
+        return accessList;
     }
 }
