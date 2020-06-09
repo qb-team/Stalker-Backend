@@ -138,13 +138,18 @@ public class OrganizationServiceImpl implements OrganizationService {
                 unique = false;
             }
         }
-        if(!unique) return Optional.empty();
-
-        if(!canTrackingAreaBeUpdated(organization.getTrackingArea(), organization.getId())) {
+        if(!unique) {
+            // System.out.println("Nome non univoco");
             return Optional.empty();
         }
 
-        if(!organization.getAuthenticationServerURL().matches(urlRegex)) {
+        if(!canTrackingAreaBeUpdated(organization.getTrackingArea(), organization.getId())) {
+            // System.out.println("Area troppo grande");
+            return Optional.empty();
+        }
+
+        if(organization.getTrackingMode() == Organization.TrackingModeEnum.authenticated && !organization.getAuthenticationServerURL().matches(urlRegex)) {
+            // System.out.println("URL non valido");
             return Optional.empty();
         }
 
