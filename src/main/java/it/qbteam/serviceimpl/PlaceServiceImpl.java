@@ -79,6 +79,12 @@ public class PlaceServiceImpl implements PlaceService {
         }
     }
 
+    /**
+     * Creates a new place for an organization and returns it.
+     *
+     * @param place record to be added to the database
+     * @return place record if it was added, Optional.empty() if it was not
+     */
     @Override
     public Optional<Place> createNewPlace(Place place) {
         // for safety purposes: removing the id, because it does not count as the repository assigns 
@@ -87,11 +93,22 @@ public class PlaceServiceImpl implements PlaceService {
         return updatePlace(place);
     }
 
+    /**
+     * Removes a place of an organization from the system.
+     *
+     * @param place record to be added to the database
+     */
     @Override
     public void deletePlace(Place place) {
         placeRepo.delete(place);
     }
 
+    /**
+     * Updates a place of an organization.
+     *
+     * @param place record to be updated
+     * @return updated place if could be updated, Optional.empty() if could not
+     */
     @Override
     public Optional<Place> updatePlace(Place place) {
         Optional<Organization> organization = orgRepo.findById(place.getOrganizationId());
@@ -103,6 +120,12 @@ public class PlaceServiceImpl implements PlaceService {
         return Optional.empty();
     }
 
+    /**
+     * Returns the list of places of an organization given its id.
+     *
+     * @param organizationId id of the organization
+     * @return list of places if there are any, empty list otherwise.
+     */
     @Override
     public List<Place> getPlaceListOfOrganization(Long organizationId) {
         Iterable<Place> organizationIterableList = placeRepo.findAllPlacesOfAnOrganization(organizationId);
@@ -111,6 +134,12 @@ public class PlaceServiceImpl implements PlaceService {
         return organizationList;
     }
 
+    /**
+     * Returns the place record given its id.
+     *
+     * @param placeId id of the place
+     * @return place of the organization, Optional.empty() if not
+     */
     @Override
     public Optional<Place> getPlace(Long placeId) {
         return placeRepo.findById(placeId);  

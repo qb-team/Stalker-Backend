@@ -23,7 +23,12 @@ public class PresenceServiceImpl implements PresenceService {
         this.presenceCounterTemplate = presenceCounterTemplate;
     }
 
-
+    /**
+     * Returns the presence counter (current number of people) for the organization given its id.
+     *
+     * @param organizationId id of the organization
+     * @return presence counter
+     */
     @Override
     public Optional<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId) {
         Integer currentCounter = presenceCounterTemplate.opsForValue().get("organization:"+organizationId);
@@ -34,6 +39,12 @@ public class PresenceServiceImpl implements PresenceService {
         return Optional.of(orgPresenceCounter);
     }
 
+    /**
+     * Returns the presence counter (current number of people) for the place of the organization given its id.
+     *
+     * @param placeId id of the place
+     * @return presence counter
+     */
     @Override
     public Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId) {
         Integer currentCounter = presenceCounterTemplate.opsForValue().get("place:"+placeId);

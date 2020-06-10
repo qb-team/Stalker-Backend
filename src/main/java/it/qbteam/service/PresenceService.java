@@ -14,18 +14,18 @@ import java.util.Optional;
  */
 public interface PresenceService {
     /**
-     * Description
+     * Returns the presence counter (current number of people) for the organization given its id.
      * 
-     * @param organizationId
-     * @return
+     * @param organizationId id of the organization
+     * @return presence counter
      */
     Optional<OrganizationPresenceCounter> getOrganizationPresenceCounter(Long organizationId);
 
     /**
-     * Description
-     * 
-     * @param placeId
-     * @return
+     * Returns the presence counter (current number of people) for the place of the organization given its id.
+     *
+     * @param placeId id of the place
+     * @return presence counter
      */
     Optional<PlacePresenceCounter> getPlacePresenceCounter(Long placeId);
 }

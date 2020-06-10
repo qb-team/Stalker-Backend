@@ -1,5 +1,6 @@
 package it.qbteam.serviceimpl;
 
+import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class AccessServiceImplTest {
         List<OrganizationAccess> outputList = new LinkedList<>();
         List<String> ids = new LinkedList<>();
 
-        outputList.add(new OrganizationAccess());
+        outputList.add(new OrganizationAccess().exitTimestamp(OffsetDateTime.now()));
         
         ids.add("orgAuthServerId");
 
@@ -65,7 +66,7 @@ public class AccessServiceImplTest {
         List<PlaceAccess> outputList = new LinkedList<>();
         List<String> ids = new LinkedList<>();
 
-        outputList.add(new PlaceAccess());
+        outputList.add(new PlaceAccess().exitTimestamp(OffsetDateTime.now()));
         
         ids.add("orgAuthServerId");
 

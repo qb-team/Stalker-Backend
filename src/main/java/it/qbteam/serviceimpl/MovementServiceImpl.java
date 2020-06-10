@@ -25,6 +25,12 @@ public class MovementServiceImpl implements MovementService {
         this.placeMovementPublisher = placeMovementPublisher;
     }
 
+    /**
+     * Sends a movement in an organization to be tracked by the system.
+     *
+     * @param organizationMovement movement to be tracked
+     * @return movement record if tracked, Optional.empty() if not
+     */
     @Override
     public Optional<OrganizationMovement> trackMovementInOrganization(OrganizationMovement organizationMovement) {
         if(organizationMovement == null || (organizationMovement.getMovementType() != -1 && organizationMovement.getMovementType() != 1)) {
@@ -44,6 +50,12 @@ public class MovementServiceImpl implements MovementService {
         return Optional.of(organizationMovement);
     }
 
+    /**
+     * Sends a movement in a place to be tracked by the system.
+     *
+     * @param placeMovement movement to be tracked
+     * @return movement record if tracked, Optional.empty() if not
+     */
     @Override
     public Optional<PlaceMovement> trackMovementInPlace(PlaceMovement placeMovement) {
         if(placeMovement == null || (placeMovement.getMovementType() != -1 && placeMovement.getMovementType() != 1)) {

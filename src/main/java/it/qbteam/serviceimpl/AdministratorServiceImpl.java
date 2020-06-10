@@ -26,6 +26,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         this.organizationRepo = organizationRepository;
     }
 
+    /**
+     * Binds an administrator to an organization, which means the new administator will have permissions to view/manage/own the organization.
+     *
+     * @param permission permission record to add
+     * @return the permission object if it was correctly saved, Optional.empty() otherwise
+     */
     @Override
     public Optional<Permission> bindAdministratorToOrganization(Permission permission) {
         if(permission == null || !organizationRepo.existsById(permission.getOrganizationId()))
@@ -34,6 +40,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         return Optional.of(permissionRepo.save(permission));
     }
 
+    /**
+     * Creates a new account in the authentication provider and then binds this new account to an organization, which means the new administator will have permissions to view/manage/own the organization.
+     *
+     * @param permission permission record to add
+     * @return the permission object if it was correctly saved, Optional.empty() otherwise
+     */
     @Override
     public Optional<Permission> createNewAdministratorInOrganization(Permission permission) {
         if(permission == null)
@@ -42,6 +54,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         return Optional.of(permissionRepo.save(permission));
     }
 
+    /**
+     * Returns the list of administrators (actually, permission records) in the organization, if any.
+     *
+     * @param organizationId id of the organization
+     * @return list of permission records if there are permissions saved in the organization, empty list if there are not
+     */
     @Override
     public List<Permission> getAdministratorListOfOrganization(Long organizationId) {
         List<Permission> adminList = new LinkedList<>();
@@ -51,6 +69,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         return adminList;
     }
 
+    /**
+     * Returns the list of permissions of a given administrator.
+     *
+     * @param administratorId id of the administrator in the authentication provider
+     * @return list of permission records if there are permissions saved for the administrator, empty list if there are not
+     */
     @Override
     public List<Permission> getPermissionList(String administratorId) {
         List<Permission> permissionList = new LinkedList<>();
@@ -59,6 +83,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         return permissionList;
     }
 
+    /**
+     * Updates a permission record in the database for the given permission record.
+     *
+     * @param permission permission record to update
+     * @return updated permission record
+     */
     @Override
     public Optional<Permission> updateAdministratorPermission(Permission permission) {
         if(permission == null)
@@ -67,6 +97,11 @@ public class AdministratorServiceImpl implements AdministratorService {
         return Optional.of(permissionRepo.save(permission));
     }
 
+    /**
+     * Unbinds an administrator from an organization, which means the administator will no longer have permissions to view/manage/own the organization.
+     *
+     * @param permission permission record to remove
+     */
     @Override
     public void unbindAdministratorFromOrganization(Permission permission) {
         if(permission != null) {

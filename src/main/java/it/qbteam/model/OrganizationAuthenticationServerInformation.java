@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 /**
  * Information of a user of an organizations.
  */
-@ApiModel(description = "Information of a user of an organizations.")
+@ApiModel(description = "Information of a user of an organization.")
 
 public class OrganizationAuthenticationServerInformation   {
   @JsonProperty("orgAuthServerId")

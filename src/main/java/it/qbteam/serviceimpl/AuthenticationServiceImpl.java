@@ -155,7 +155,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * 
      * @param accessToken access token returned by the authentication provider in
      *                    the client application
-     * @param email e-mail address of the userID to be returned
      * @return userId if the user account was found, and null if it was not.
      */
     @Override

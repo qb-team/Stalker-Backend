@@ -7,7 +7,6 @@ import it.qbteam.model.Permission;
 import it.qbteam.service.AdministratorService;
 import it.qbteam.service.AuthenticationService;
 import it.qbteam.service.OrganizationService;
-import org.aspectj.weaver.ast.Or;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
