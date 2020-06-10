@@ -82,7 +82,7 @@ public class MovementServiceImpl implements MovementService {
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
           .toString();
      
-        System.out.println("exitToken: " + generatedString);
+        //System.out.println("exitToken: " + generatedString);
 
         return generatedString;
     }

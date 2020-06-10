@@ -130,7 +130,7 @@ public class OrganizationApiController implements OrganizationApi {
         }
         Optional<Permission> permission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), organization.getId());
 
-        if(!permission.isPresent() || permission.get().getPermission() < 3) { // 3 is Owner level
+        if(!permission.isPresent() || permission.get().getPermission() < 2) { // manager
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         } else {
             Optional<Organization> updatedOrganization = orgService.updateOrganization(organization);
