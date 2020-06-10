@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/report/place/{{placeId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/report/place/{{placeId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

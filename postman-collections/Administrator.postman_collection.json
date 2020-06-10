@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/organization/{{organizationId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/organization/{{organizationId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -62,7 +62,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/bindadministrator",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/bindadministrator",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -92,7 +92,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/createadministrator",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/createadministrator",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -123,7 +123,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/permission/{{administratorId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/permission/{{administratorId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -164,7 +164,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/unbindadministrator",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/unbindadministrator",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -204,7 +204,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/administrator/updatepermission",
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/updatepermission",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

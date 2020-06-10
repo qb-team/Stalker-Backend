@@ -33,7 +33,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/organization",
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -87,7 +87,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/organization/{{organizationId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -127,7 +127,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/organization",
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -167,7 +167,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/organization/{{organizationId}}/trackingArea",
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}/trackingArea",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -208,7 +208,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/organization/{{organizationId}}/requestdeletion",
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}/requestdeletion",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

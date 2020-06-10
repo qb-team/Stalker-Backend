@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/favorite/{{userId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/favorite/{{userId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -61,7 +61,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/favorite/addfavorite",
+					"raw": "{{protocol}}://{{host}}:{{port}}/favorite/addfavorite",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -101,7 +101,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/favorite/removefavorite",
+					"raw": "{{protocol}}://{{host}}:{{port}}/favorite/removefavorite",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

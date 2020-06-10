@@ -49,7 +49,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/movement/track/organization",
+					"raw": "{{protocol}}://{{host}}:{{port}}/movement/track/organization",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -90,7 +90,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/movement/track/place",
+					"raw": "{{protocol}}://{{host}}:{{port}}/movement/track/place",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

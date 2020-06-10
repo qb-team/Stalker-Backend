@@ -23,7 +23,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/access/organization/{{organizationId}}/anonymous/{{exitTokens}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/organization/{{organizationId}}/anonymous/{{exitTokens}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -59,7 +59,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/access/place/{{placeId}}/anonymous/{{exitTokens}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/place/{{placeId}}/anonymous/{{exitTokens}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -105,7 +105,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/access/organization/{{organizationId}}/authenticated/{{orgAuthServerIds}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/organization/{{organizationId}}/authenticated/{{orgAuthServerIds}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -151,7 +151,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/access/place/{{placeId}}/authenticated/{{orgAuthServerIds}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/place/{{placeId}}/authenticated/{{orgAuthServerIds}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

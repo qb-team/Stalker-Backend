@@ -30,7 +30,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/authenticationserver/userinformation",
+					"raw": "{{protocol}}://{{host}}:{{port}}/authenticationserver/userinformation",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

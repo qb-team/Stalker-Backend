@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/place/organization/{{organizationId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/place/organization/{{organizationId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -62,7 +62,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/place",
+					"raw": "{{protocol}}://{{host}}:{{port}}/place",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -101,7 +101,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/place",
+					"raw": "{{protocol}}://{{host}}:{{port}}/place",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -131,7 +131,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/place/{{placeId}}",
+					"raw": "{{protocol}}://{{host}}:{{port}}/place/{{placeId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"

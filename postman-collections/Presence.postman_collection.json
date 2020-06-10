@@ -21,7 +21,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/presence/organization/{{organizationId}}/counter",
+					"raw": "{{protocol}}://{{host}}:{{port}}/presence/organization/{{organizationId}}/counter",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -54,7 +54,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/presence/place/{{placeId}}/counter",
+					"raw": "{{protocol}}://{{host}}:{{port}}/presence/place/{{placeId}}/counter",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
