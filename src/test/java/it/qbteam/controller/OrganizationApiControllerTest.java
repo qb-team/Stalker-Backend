@@ -151,7 +151,7 @@ public class OrganizationApiControllerTest {
         Mockito.when(authenticationService.getUserId(anyString())).thenReturn("prova");
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.updateOrganization(testOrganization));
-        testPermission.setPermission(2);
+        testPermission.setPermission(1);
         testPermissionList.clear();
         testPermissionList.add(testPermission);
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testPermission));
@@ -159,7 +159,7 @@ public class OrganizationApiControllerTest {
         Assert.assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), organizationApiController.updateOrganization(testOrganization));
         //seconda possibilità terzo if
         testPermissionList.clear();
-        testPermission.setPermission(3);
+        testPermission.setPermission(2);
         testPermissionList.add(testPermission);
         Mockito.when(authFacade.permissionInOrganization(anyString(), anyLong())).thenReturn(Optional.of(testPermission));
         Mockito.when(administratorService.getPermissionList(anyString())).thenReturn(testPermissionList);
