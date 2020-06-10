@@ -9,13 +9,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CORSConfig {
     @Value("${LOCAL_URL}")
-    private static String localOrigin;
+    private String localOrigin;
   
     @Value("${REMOTE_URL}")
-    private static String remoteOrigin;
+    private String remoteOrigin;
     
     @Bean
     public WebMvcConfigurer corsConfigurer() {
+      System.out.println("LOCAL " + localOrigin + " REMOTE " + remoteOrigin);
       return new WebMvcConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
