@@ -51,7 +51,7 @@ public class ReportServiceImpl implements ReportService {
         allAccessOfSinglePlace.forEach(listOfAllAccessOnPlace::add);
 
         Map<String, Long> mapUserIdWithTime = listOfAllAccessOnPlace.stream()
-                .filter(access -> access.getOrgAuthServerId() != null)
+                .filter(access -> access.getOrgAuthServerId() != null && access.getExitTimestamp() != null)
                 .collect(Collectors.groupingBy(PlaceAccess::getOrgAuthServerId, Collectors
                         .summingLong(acc -> getDuration(acc.getEntranceTimestamp(), acc.getExitTimestamp()))));
 

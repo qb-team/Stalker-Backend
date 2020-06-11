@@ -42,7 +42,9 @@ public class AccessServiceImpl implements AccessService {
         Set<String> setOfExitTokens = new LinkedHashSet<>(exitTokens);
 
         setOfExitTokens.forEach((exitToken) -> {
-            organizationAccessRepo.findByExitTokenAndOrganizationId(exitToken, organizationId).forEach(accessList::add);
+            organizationAccessRepo.findByExitTokenAndOrganizationId(exitToken, organizationId).forEach(access -> {
+                if(access.getExitTimestamp() != null) accessList.add(access);
+            });
         });
 
         return accessList;  
@@ -59,15 +61,17 @@ public class AccessServiceImpl implements AccessService {
      */
     @Override
     public List<PlaceAccess> getAnonymousAccessListInPlace(List<String> exitTokens, Long placeId) {
-        List<PlaceAccess> placeList = new LinkedList<>();
+        List<PlaceAccess> accessList = new LinkedList<>();
 
         Set<String> setOfExitTokens = new LinkedHashSet<>(exitTokens);
 
         setOfExitTokens.forEach((exitToken) -> {
-            placeAccessRepo.findByExitTokenAndPlaceId(exitToken, placeId).forEach(placeList::add);
+            placeAccessRepo.findByExitTokenAndPlaceId(exitToken, placeId).forEach(access -> {
+                if(access.getExitTimestamp() != null) accessList.add(access);
+            });
         });
         
-        return placeList;
+        return accessList;
     }
 
     /**

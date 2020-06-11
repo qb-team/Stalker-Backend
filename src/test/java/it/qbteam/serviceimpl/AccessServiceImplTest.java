@@ -88,7 +88,7 @@ public class AccessServiceImplTest {
         Iterable<OrganizationAccess> organizationAccessIterable= new LinkedList<>();
         Assert.assertEquals(organizationAccessList, accessService.getAnonymousAccessListInOrganization(exitTokens, 1l));
 
-        OrganizationAccess testOrganizationAccess = new OrganizationAccess().organizationId(1l).exitToken("prova").orgAuthServerId("prova");
+        OrganizationAccess testOrganizationAccess = new OrganizationAccess().organizationId(1l).exitToken("prova").orgAuthServerId("prova").exitTimestamp(OffsetDateTime.now());
         organizationAccessList.add(testOrganizationAccess);
         organizationAccessIterable=organizationAccessList;
         exitTokens.add("prova");
@@ -104,7 +104,7 @@ public class AccessServiceImplTest {
         Iterable<PlaceAccess> placeAccessIterable= new LinkedList<>();
         Assert.assertEquals(placeAccessList, accessService.getAnonymousAccessListInPlace(exitTokens, 1l));
 
-        PlaceAccess testPlaceAccess = new PlaceAccess().id(1l).placeId(1l).exitToken("prova").orgAuthServerId("prova");
+        PlaceAccess testPlaceAccess = new PlaceAccess().id(1l).placeId(1l).exitToken("prova").orgAuthServerId("prova").exitTimestamp(OffsetDateTime.now());
         placeAccessList.add(testPlaceAccess);
         placeAccessIterable=placeAccessList;
         exitTokens.add("prova");
