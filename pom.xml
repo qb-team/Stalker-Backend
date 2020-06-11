@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>it.qbteam</groupId>
 	<artifactId>stalker-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Stalker Backend</name>
 	<description>Backend per Stalker</description>
 	<packaging>jar</packaging>

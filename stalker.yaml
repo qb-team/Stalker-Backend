@@ -10,7 +10,7 @@ info:
 # Server attualmente localhost
 servers:
   - description: Server attualmente localhost
-    url: http://localhost:8080/
+    url: https://stalker-qb.team:8080/
 tags:
   - name: organization
     description: End-points for retrieving, updating and asking for deletion of organizations.
