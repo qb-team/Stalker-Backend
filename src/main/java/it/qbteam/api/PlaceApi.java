@@ -86,7 +86,6 @@ public interface PlaceApi {
      *         or Place list of organization is empty. Nothing gets returned. (status code 204)
      *         or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Returns the list of places of the organization.", nickname = "getPlaceListOfOrganization", notes = "Returns the list of places of the organization. Both app users and web-app administrators can access this end-point.", response = Place.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerAuth")
@@ -95,8 +94,7 @@ public interface PlaceApi {
         @ApiResponse(code = 200, message = "Place list of organization returned successfully.", response = Place.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "Place list of organization is empty. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The administrator or the user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned.") })
     @RequestMapping(value = "/place/organization/{organizationId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

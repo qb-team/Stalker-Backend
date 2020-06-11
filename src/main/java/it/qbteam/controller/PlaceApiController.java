@@ -40,7 +40,6 @@ public class PlaceApiController implements PlaceApi {
      *         or The new tracking area does not respect the area constraints for the organization. Nothing gets returned. (status code 400)
      *         or The administrator is not authenticated. Nothing gets returned. (status code 401)
      *         or Users or administrator with viewer permission cannot have access. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. The place cannot be added. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<Place> createNewPlace(@Valid Place place) {

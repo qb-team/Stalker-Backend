@@ -39,7 +39,6 @@ public class MovementApiController implements MovementApi {
      * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<OrganizationMovement> trackMovementInOrganization(@Valid OrganizationMovement organizationMovement) {
@@ -75,7 +74,6 @@ public class MovementApiController implements MovementApi {
      * or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have access. Nothing gets returned. (status code 403)
-     * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<PlaceMovement> trackMovementInPlace(@Valid PlaceMovement placeMovement) {

@@ -35,7 +35,6 @@ public interface MovementApi {
      *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Tracks the user movement inside the trackingArea of an organization.", nickname = "trackMovementInOrganization", notes = "Tracks the user movement inside the trackingArea of an organization.", response = OrganizationMovement.class, authorizations = {
         @Authorization(value = "bearerAuth")
@@ -45,8 +44,7 @@ public interface MovementApi {
         @ApiResponse(code = 202, message = "Exit movement successfully tracked. The movement gets returned.", response = OrganizationMovement.class),
         @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The organization could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/movement/track/organization",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -64,7 +62,6 @@ public interface MovementApi {
      *         or Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned. (status code 400)
      *         or The user is not authenticated. Nothing gets returned. (status code 401)
      *         or Administrators cannot have access. Nothing gets returned. (status code 403)
-     *         or The place could not be found. Nothing gets returned. (status code 404)
      */
     @ApiOperation(value = "Tracks the user movement inside the trackingArea of a place of an organization.", nickname = "trackMovementInPlace", notes = "Tracks the user movement inside the trackingArea of a place of an organization.", response = PlaceMovement.class, authorizations = {
         @Authorization(value = "bearerAuth")
@@ -74,8 +71,7 @@ public interface MovementApi {
         @ApiResponse(code = 202, message = "Exit movement successfully tracked. The movement gets returned.", response = PlaceMovement.class),
         @ApiResponse(code = 400, message = "Exit movement was requested without the exitToken. It will not be tracked. Nothing gets returned."),
         @ApiResponse(code = 401, message = "The user is not authenticated. Nothing gets returned."),
-        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned."),
-        @ApiResponse(code = 404, message = "The place could not be found. Nothing gets returned.") })
+        @ApiResponse(code = 403, message = "Administrators cannot have access. Nothing gets returned.") })
     @RequestMapping(value = "/movement/track/place",
         produces = { "application/json" }, 
         consumes = { "application/json" },

@@ -513,8 +513,6 @@ paths:
           description: The administrator is not authenticated. Nothing gets returned.
         "403":
           description: Users or administrator with viewer permission cannot have access. Nothing gets returned.
-        "404":
-          description: The organization could not be found. The place cannot be added. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -603,8 +601,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
@@ -637,8 +633,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have access. Nothing gets returned.
-        "404":
-          description: The place could not be found. Nothing gets returned.
       requestBody:
         required: true
         content:
