@@ -13,6 +13,9 @@ public class CORSConfig {
   
     @Value("${REMOTE_URL}")
     private String remoteOrigin;
+
+    @Value("${REMOTE_URL2}")
+    private String remoteOrigin2;
     
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -20,7 +23,7 @@ public class CORSConfig {
       return new WebMvcConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
-          registry.addMapping("/**").allowedMethods("*").allowedOrigins(localOrigin, remoteOrigin);
+          registry.addMapping("/**").allowedMethods("*").allowedOrigins(localOrigin, remoteOrigin, remoteOrigin2);
         }
       };
     }
