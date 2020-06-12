@@ -34,8 +34,9 @@ public class AdministratorServiceImpl implements AdministratorService {
      */
     @Override
     public Optional<Permission> bindAdministratorToOrganization(Permission permission) {
-        if(permission == null || !organizationRepo.existsById(permission.getOrganizationId()))
+        if(permission == null || !organizationRepo.existsById(permission.getOrganizationId()) || permissionRepo.existsById(new PermissionId(permission.getAdministratorId(), permission.getOrganizationId()))) {
             return Optional.empty();
+        }
         
         return Optional.of(permissionRepo.save(permission));
     }
@@ -48,10 +49,11 @@ public class AdministratorServiceImpl implements AdministratorService {
      */
     @Override
     public Optional<Permission> createNewAdministratorInOrganization(Permission permission) {
-        if(permission == null)
-            return Optional.empty();
+        //if(permission == null)
+        //    return Optional.empty();
         
-        return Optional.of(permissionRepo.save(permission));
+        //return Optional.of(permissionRepo.save(permission));
+        return bindAdministratorToOrganization(permission);
     }
 
     /**

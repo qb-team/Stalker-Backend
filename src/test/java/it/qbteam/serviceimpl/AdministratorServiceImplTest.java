@@ -50,17 +50,15 @@ public class AdministratorServiceImplTest {
 
     private Iterable<Permission> testIterableList= testList;
 
-    @Before
-    public void setUp(){
-
-    }
-
     @Test
     public void testBindAdministratorToOrganizationReturnOptionalEmptyWithNullPermission() {
-
-        Assert.assertEquals(empty, administratorService.bindAdministratorToOrganization(null));
+        testPermission.setOrganizationId(1l);
+        testPermission.setAdministratorId("adminId");
 
         Mockito.when(organizationRepository.existsById(anyLong())).thenReturn(false);
+        Mockito.when(permissionRepository.existsById(new PermissionId("adminId", 1L))).thenReturn(true);
+
+        Assert.assertEquals(empty, administratorService.bindAdministratorToOrganization(null));
         Assert.assertEquals(empty, administratorService.bindAdministratorToOrganization(testPermission));
         
     }
