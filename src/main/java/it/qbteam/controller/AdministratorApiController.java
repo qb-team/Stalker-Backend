@@ -96,6 +96,10 @@ public class AdministratorApiController implements AdministratorApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
 
+        if(!organizationService.getOrganization(administratorBindingRequest.getOrganizationId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
+
         Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), administratorBindingRequest.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
