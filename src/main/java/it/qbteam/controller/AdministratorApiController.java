@@ -75,7 +75,7 @@ public class AdministratorApiController implements AdministratorApi {
         }
         else
         {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
         }
     }
 
@@ -124,7 +124,7 @@ public class AdministratorApiController implements AdministratorApi {
         }
         else
         {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
     }
 
@@ -233,6 +233,9 @@ public class AdministratorApiController implements AdministratorApi {
         if(!authFacade.getAccessToken().isPresent()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
         }
+        if(!organizationService.getOrganization(permission.getOrganizationId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        }
         Optional<Permission> checkPermission = authFacade.permissionInOrganization(authFacade.getAccessToken().get(), permission.getOrganizationId());
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
@@ -244,7 +247,7 @@ public class AdministratorApiController implements AdministratorApi {
         }
         else
         {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
     }
 }
