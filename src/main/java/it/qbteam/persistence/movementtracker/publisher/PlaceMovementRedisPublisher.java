@@ -1,14 +1,14 @@
 package it.qbteam.persistence.movementtracker.publisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+// import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.stereotype.Service;
+// import org.springframework.stereotype.Service;
 
 import it.qbteam.model.PlaceMovement;
 
-@Service
+// @Service
 public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
     private RedisTemplate<String, PlaceMovement> movementTemplate;
 
@@ -18,9 +18,9 @@ public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
 
     @Autowired
     public PlaceMovementRedisPublisher(
-        @Qualifier("presenceCounterTemplate") RedisTemplate<String, Integer> presenceCounterTemplate,
-        @Qualifier("placeMovementTemplate") RedisTemplate<String, PlaceMovement> placeMovementTemplate,
-        @Qualifier("placeMovementTopic") ChannelTopic topic
+        /*@Qualifier("presenceCounterTemplate") */RedisTemplate<String, Integer> presenceCounterTemplate,
+        /*@Qualifier("placeMovementTemplate") */RedisTemplate<String, PlaceMovement> placeMovementTemplate,
+        /*@Qualifier("placeMovementTopic") */ChannelTopic topic
     ) {
         this.counterTemplate = presenceCounterTemplate;
         this.movementTemplate = placeMovementTemplate;
