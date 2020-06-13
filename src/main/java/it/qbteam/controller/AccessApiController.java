@@ -45,7 +45,6 @@ public class AccessApiController implements AccessApi {
      * or List of anonymous accesses in an organization were not found. Nothing gets returned. (status code 204)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have accesses. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAnonymousAccessListInOrganization(List<String> exitTokens, @Min(1L) Long organizationId) {
@@ -62,7 +61,6 @@ public class AccessApiController implements AccessApi {
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        // manca 404
     }
 
     /**
@@ -75,7 +73,6 @@ public class AccessApiController implements AccessApi {
      * or List of anonymous accesses in a place were not found. Nothing gets returned. (status code 204)
      * or The user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators cannot have accesses. Nothing gets returned. (status code 403)
-     * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAnonymousAccessListInPlace(List<String> exitTokens, @Min(1L) Long placeId) {
@@ -92,7 +89,6 @@ public class AccessApiController implements AccessApi {
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        // manca 404
     }
 
     /**
@@ -105,7 +101,6 @@ public class AccessApiController implements AccessApi {
      * or List of authenticated accesses in an organization were not found. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      * or Users can only retrieve their accesses. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<OrganizationAccess>> getAuthenticatedAccessListInOrganization(List<String> orgAuthServerIds, @Min(1L) Long organizationId) {
@@ -126,7 +121,6 @@ public class AccessApiController implements AccessApi {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
         }
-        // manca 404
     }
 
     /**
@@ -139,7 +133,6 @@ public class AccessApiController implements AccessApi {
      * or List of authenticated accesses in a place were not found. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      * or Users can only retrieve their accesses. Nothing gets returned. (status code 403)
-     * or The place could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<PlaceAccess>> getAuthenticatedAccessListInPlace(List<String> orgAuthServerIds, @Min(1L) Long placeId) {

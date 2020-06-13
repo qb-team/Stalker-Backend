@@ -489,8 +489,6 @@ paths:
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
   "/place":
     post:
       tags:
@@ -685,8 +683,6 @@ paths:
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "403":
           description: Users can only retrieve their accesses. Nothing gets returned.
-        "404":
-          description: The place could not be found. Nothing gets returned.
   "/access/place/{placeId}/anonymous/{exitTokens}":
     get:
       tags:
@@ -731,8 +727,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have accesses. Nothing gets returned.
-        "404":
-          description: The place could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/authenticated/{orgAuthServerIds}":
     get:
       tags:
@@ -779,8 +773,6 @@ paths:
           description: The administrator or the user is not authenticated. Nothing gets returned.
         "403":
           description: Users can only retrieve their accesses. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
   "/access/organization/{organizationId}/anonymous/{exitTokens}":
     get:
       tags:
@@ -825,8 +817,6 @@ paths:
           description: The user is not authenticated. Nothing gets returned.
         "403":
           description: Administrators cannot have accesses. Nothing gets returned.
-        "404":
-          description: The organization could not be found. Nothing gets returned.
   "/presence/organization/{organizationId}/counter":
     get:
       tags:

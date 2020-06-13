@@ -58,7 +58,6 @@ public class PlaceApiController implements PlaceApi {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
             }
         }
-        // 404 manca
     }
 
     /**
@@ -132,7 +131,6 @@ public class PlaceApiController implements PlaceApi {
      * or Place list of organization is empty. Nothing gets returned. (status code 204)
      * or The administrator or the user is not authenticated. Nothing gets returned. (status code 401)
      * or Administrators who are not bound to the organization cannot access this end-point. Nothing gets returned. (status code 403)
-     * or The organization could not be found. Nothing gets returned. (status code 404)
      */
     @Override
     public ResponseEntity<List<Place>> getPlaceListOfOrganization(@Min(1L) Long organizationId) {
@@ -151,6 +149,5 @@ public class PlaceApiController implements PlaceApi {
         } else { 
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        // manca il 404
     }
 }
