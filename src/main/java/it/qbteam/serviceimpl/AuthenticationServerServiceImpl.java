@@ -1,7 +1,5 @@
 package it.qbteam.serviceimpl;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +10,12 @@ import it.qbteam.model.OrganizationAuthenticationServerInformation;
 import it.qbteam.model.OrganizationAuthenticationServerRequest;
 import it.qbteam.persistence.repository.OrganizationRepository;
 import it.qbteam.service.AuthenticationServerService;
+
+import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.Optional;
+import java.util.LinkedList;
 
 @Service
 public class AuthenticationServerServiceImpl implements AuthenticationServerService {

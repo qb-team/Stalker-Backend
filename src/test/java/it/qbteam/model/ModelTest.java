@@ -115,7 +115,7 @@ public class ModelTest {
 
         Assert.assertTrue(testOASC.equals(testOASC));
         Assert.assertFalse(testOASC.equals(null));
-        Assert.assertFalse(testOASC.equals(new Favorite().organizationId(1L)));
+        Assert.assertFalse(testOASC.equals(new OrganizationAuthenticationServerCredentials().username("prova2").password("prova2")));
         OrganizationAuthenticationServerCredentials testEquals = new OrganizationAuthenticationServerCredentials().username("prova").password("prova");
         Assert.assertTrue(testOASC.equals(testEquals));
 
@@ -137,7 +137,7 @@ public class ModelTest {
         OrganizationAuthenticationServerInformation testEquals = new OrganizationAuthenticationServerInformation().name("prova").surname("prova").orgAuthServerId("prova");
         Assert.assertTrue(testOASI.equals(testOASI));
         Assert.assertFalse(testEquals.equals(null));
-        Assert.assertFalse(testEquals.equals(new Favorite().organizationId(1L)));
+        Assert.assertFalse(testEquals.equals(new OrganizationAuthenticationServerInformation().name("nome").surname("cognome")));
         Assert.assertTrue(testOASI.equals(testEquals));
 
         Assert.assertEquals(Objects.hash(testOASI.getOrgAuthServerId(), testOASI.getName(), testOASI.getSurname()), testOASI.hashCode());
@@ -169,7 +169,7 @@ public class ModelTest {
 
         Assert.assertTrue(testOASR.equals(testOASR));
         Assert.assertFalse(testOASR.equals(null));
-        Assert.assertFalse(testOASR.equals(new Favorite()));
+        Assert.assertFalse(testOASR.equals(testOASR.orgAuthServerIds(new ArrayList<>())));
 
         testOASR.setOrganizationCredentials(testCredential);
         Assert.assertTrue(testOASR.equals(testOASRWithCredential));

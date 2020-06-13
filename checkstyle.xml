@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.2//EN" "https://checkstyle.org/dtds/configuration_1_2.dtd">
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
 <module name="Checker">
     <module name="TreeWalker">
         <module name="EmptyCatchBlock" />
@@ -10,6 +11,7 @@
         <!-- MPC2 (da PdQ) -->
         <module name="ClassFanOutComplexity">
             <property name="max" value="10" /> <!-- valore accettabile, non ottimale -->
+            <property name="excludedPackages" value="it.qbteam.config" />
         </module>
         <!-- MPC4 (da PdQ) -->
         <module name="ParameterNumber">

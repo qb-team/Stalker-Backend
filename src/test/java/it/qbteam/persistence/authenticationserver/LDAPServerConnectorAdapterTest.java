@@ -1,6 +1,6 @@
 package it.qbteam.persistence.authenticationserver;
 
-import com.unboundid.ldap.sdk.*;
+import com.unboundid.ldap.sdk.LDAPConnection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
