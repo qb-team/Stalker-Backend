@@ -1,6 +1,6 @@
 package it.qbteam.persistence.movementtracker.publisher;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -16,7 +16,7 @@ public class PlaceMovementRedisPublisher extends PlaceMovementPublisher {
 
     private ChannelTopic topic;
 
-    @Autowired
+    // @Autowired
     public PlaceMovementRedisPublisher(
         /*@Qualifier("presenceCounterTemplate") */RedisTemplate<String, Integer> presenceCounterTemplate,
         /*@Qualifier("placeMovementTemplate") */RedisTemplate<String, PlaceMovement> placeMovementTemplate,
