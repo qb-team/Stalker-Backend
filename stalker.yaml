@@ -2,14 +2,13 @@ openapi: 3.0.0
 info:
   version: "1.0.0"
   title: "Stalker API"
-  description: "API di Stalker di Imola Informatica sviluppato da qbteam"
+  description: "Stalker API - Project idea: Imola Informatica. Developed by: qbteam"
   contact:
     name: "qbteam"
     url: "https://github.com/qb-team/"
     email: "qbteamswe@gmail.com"
-# Server attualmente localhost
 servers:
-  - description: Server attualmente localhost
+  - description: Server available on-demand and before public release.
     url: https://stalker-qb.team:8080/
 tags:
   - name: organization
