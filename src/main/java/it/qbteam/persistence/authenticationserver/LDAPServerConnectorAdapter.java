@@ -12,11 +12,8 @@ import com.unboundid.ldap.sdk.SearchResult;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 
-// import org.springframework.stereotype.Service;
-
 import it.qbteam.model.OrganizationAuthenticationServerInformation;
 
-// @Service
 public class LDAPServerConnectorAdapter implements AuthenticationServerConnector {
 
     private LDAPConnection connection;
