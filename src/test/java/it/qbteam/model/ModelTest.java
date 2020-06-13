@@ -159,7 +159,7 @@ public class ModelTest {
         testOASR.setOrganizationCredentials(new OrganizationAuthenticationServerCredentials().username("prova"));
         Assert.assertEquals(new OrganizationAuthenticationServerCredentials().username("prova"), testOASR.getOrganizationCredentials());
         testOASR.setOrganizationId(1L);
-        Assert.assertEquals(new Long(1), testOASR.getOrganizationId());
+        Assert.assertEquals(1L, testOASR.getOrganizationId(), 0);
 
         List<String> orgAuthServerIds = new ArrayList<>();
         orgAuthServerIds.add("prova");
@@ -167,9 +167,11 @@ public class ModelTest {
         testOASRWithCredential.setOrgAuthServerIds(orgAuthServerIds);
         Assert.assertEquals(testOASR.getOrgAuthServerIds(), testOASRWithCredential.getOrgAuthServerIds());
 
+        OrganizationAuthenticationServerRequest testOASRforFailure = new OrganizationAuthenticationServerRequest();
+        testOASRforFailure.setOrganizationId(2L);
         Assert.assertTrue(testOASR.equals(testOASR));
         Assert.assertFalse(testOASR.equals(null));
-        Assert.assertFalse(testOASR.equals(testOASR.orgAuthServerIds(new ArrayList<>())));
+        Assert.assertFalse(testOASR.equals(testOASRforFailure));
 
         testOASR.setOrganizationCredentials(testCredential);
         Assert.assertTrue(testOASR.equals(testOASRWithCredential));
