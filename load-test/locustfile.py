@@ -50,7 +50,7 @@ class StalkerApi(TaskSet):
         "image": "",
         "street": "",
         "number": "",
-        "postCode": ,
+        "postCode": 1,
         "city": "",
         "country": "",
         "creationDate": "",
