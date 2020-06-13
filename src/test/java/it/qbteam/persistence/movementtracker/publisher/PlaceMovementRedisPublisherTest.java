@@ -1,8 +1,6 @@
 package it.qbteam.persistence.movementtracker.publisher;
 
 import it.qbteam.model.PlaceMovement;
-import it.qbteam.persistence.movementtracker.publisher.PlaceMovementPublisher;
-import it.qbteam.persistence.movementtracker.publisher.PlaceMovementRedisPublisher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

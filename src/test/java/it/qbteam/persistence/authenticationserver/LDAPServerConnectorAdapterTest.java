@@ -19,8 +19,6 @@ public class LDAPServerConnectorAdapterTest {
     @MockBean
     private LDAPConnection connection;
 
-    private String baseDN;
-
     @TestConfiguration
     static public class LDAPServerConnectorAdapterConfiguration {
         @Bean

@@ -34,10 +34,6 @@ public class PlaceMovementRedisSubscriberTest {
 
     private final String exitToken = "exitTokenExample";
 
-    private final OffsetDateTime timestamp = OffsetDateTime.now();
-
-    private final String orgAuthServerId = "id";
-
     private List<PlaceAccess> accessList;
 
     @TestConfiguration
