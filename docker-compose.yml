@@ -42,7 +42,7 @@ services:
   redisinsight:
     container_name: stalker-gui-for-nosql
     depends_on:
-      - stalker-nosql
+      - redis_engine
     image: redislabs/redisinsight
     ports:
       - "9000:8001"
