@@ -129,7 +129,9 @@ public class PlaceServiceImpl implements PlaceService {
                         }
                     }
                 }
-                return Optional.of(placeRepo.save(place));
+                if(!intersectionBetweenPlaces) {
+                    return Optional.of(placeRepo.save(place));
+                }
             }
         }
 
