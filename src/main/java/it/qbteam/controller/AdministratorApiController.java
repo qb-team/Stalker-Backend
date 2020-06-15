@@ -210,7 +210,7 @@ public class AdministratorApiController implements AdministratorApi {
         if(!checkPermission.isPresent() || checkPermission.get().getPermission() < 3) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
-        if(!adminService.getPermissionList(permission.getAdministratorId()).contains(permission)){
+        if(!adminService.getPermissionList(permission.getAdministratorId()).contains(permission.mail(null))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
         adminService.unbindAdministratorFromOrganization(permission);
