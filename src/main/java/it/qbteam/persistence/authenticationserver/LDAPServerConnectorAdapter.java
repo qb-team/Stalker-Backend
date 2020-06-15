@@ -66,7 +66,11 @@ public class LDAPServerConnectorAdapter implements AuthenticationServerConnector
         }
 
         try {
-            this.baseDN = username.substring(username.indexOf("dc="));
+            final int dcIndex = username.indexOf("dc=");
+            if(dcIndex == -1) {
+                return false;
+            }
+            this.baseDN = username.substring(dcIndex);
 
             connection.bind(username, password);
 
