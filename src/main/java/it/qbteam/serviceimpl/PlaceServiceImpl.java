@@ -124,7 +124,7 @@ public class PlaceServiceImpl implements PlaceService {
                 while(!intersectionBetweenPlaces && placeIt.hasNext()) {
                     Place pl = placeIt.next();
                     if(!pl.getId().equals(place.getId())) {
-                        if(!isPlaceTrackingAreaValid(place.getTrackingArea(), pl.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
+                        if(isPlaceTrackingAreaValid(place.getTrackingArea(), pl.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
                             intersectionBetweenPlaces = true;
                         }
                     }
