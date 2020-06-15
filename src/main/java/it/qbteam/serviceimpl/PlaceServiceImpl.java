@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,22 +58,22 @@ public class PlaceServiceImpl implements PlaceService {
         return coords;
     }
 
-    private Boolean isPlaceInsideOrganization(String placeTrackingArea, String organizationTrackingArea) {
+    private Boolean isPlaceTrackingAreaValid(String trackingArea1, String trackingArea2, BiFunction<List<Coordinate>, Coordinate, Boolean> checkToApply) {
         try {
-            List<Coordinate> orgCoordinates = jsonTrackingAreaToList(organizationTrackingArea);
-            List<Coordinate> placeCoordinates = jsonTrackingAreaToList(placeTrackingArea);
+            List<Coordinate> coordinates1 = jsonTrackingAreaToList(trackingArea1);
+            List<Coordinate> coordinates2 = jsonTrackingAreaToList(trackingArea2);
 
-            boolean allCoordinateInsideArea = true;
+            boolean checkToApplyStillValid = true;
 
-            Iterator<Coordinate> coordIterator = placeCoordinates.iterator();
+            Iterator<Coordinate> coordIterator = coordinates2.iterator();
 
-            while(allCoordinateInsideArea && coordIterator.hasNext()) {
-                if(!gpsAreaFacade.isPointInsidePolygon(orgCoordinates, coordIterator.next())) {
-                    allCoordinateInsideArea = false;
+            while(checkToApplyStillValid && coordIterator.hasNext()) {
+                if(checkToApply.apply(coordinates1, coordIterator.next())) {
+                    checkToApplyStillValid = false;
                 }
             }
 
-            return allCoordinateInsideArea;
+            return checkToApplyStillValid;
         } catch (Exception e) {
             // for whatever exception, return empty list
             System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
@@ -112,9 +114,23 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Place> updatePlace(Place place) {
         Optional<Organization> organization = orgRepo.findById(place.getOrganizationId());
+        BiFunction<List<Coordinate>, Coordinate, Boolean> isPointInsidePolygon = gpsAreaFacade::isPointInsidePolygon;
 
-        if(organization.isPresent() && isPlaceInsideOrganization(place.getTrackingArea(), organization.get().getTrackingArea())) {
-            return Optional.of(placeRepo.save(place));
+        if(organization.isPresent()) {
+            if(isPlaceTrackingAreaValid(place.getTrackingArea(), organization.get().getTrackingArea(), isPointInsidePolygon)) {
+                Iterator<Place> placeIt = placeRepo.findAllPlacesOfAnOrganization(place.getOrganizationId()).iterator();
+
+                boolean intersectionBetweenPlaces = false;
+                while(!intersectionBetweenPlaces && placeIt.hasNext()) {
+                    Place pl = placeIt.next();
+                    if(!pl.getId().equals(place.getId())) {
+                        if(!isPlaceTrackingAreaValid(place.getTrackingArea(), pl.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
+                            intersectionBetweenPlaces = true;
+                        }
+                    }
+                }
+                return Optional.of(placeRepo.save(place));
+            }
         }
 
         return Optional.empty();
