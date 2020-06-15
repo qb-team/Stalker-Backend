@@ -21,7 +21,6 @@ import javax.validation.constraints.Size;
 @Entity
 public class OrganizationDeletionRequest   {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("organizationId")
   private Long organizationId;
 
