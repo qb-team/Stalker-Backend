@@ -39,6 +39,17 @@ services:
       - ./containers/redis-container/data:/data
     networks:
       - stalker
+  redisinsight:
+    container_name: stalker-gui-for-nosql
+    depends_on:
+      - stalker-nosql
+    image: redislabs/redisinsight
+    ports:
+      - "9000:8001"
+    env_file:
+      - .env
+    networks:
+      - stalker
   # Comment or decomment when needed
   spring:
     container_name: stalker-rest-api
