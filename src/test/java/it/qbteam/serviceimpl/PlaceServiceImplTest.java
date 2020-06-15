@@ -58,6 +58,7 @@ public class PlaceServiceImplTest {
     public void testCreateNewPlaceCallRepositoryFunctionAndSetIdToNull(){
         Mockito.when(placeRepository.save(any(Place.class))).thenReturn(testPlace);
         Mockito.when(organizationRepository.findById(testOrganization.getId())).thenReturn(Optional.of(testOrganization));
+        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(testOrganization.getId())).thenReturn(new ArrayList<>());
 
         placeService.createNewPlace(testPlace);
         Mockito.verify(placeRepository, Mockito.times(1)).save(testPlace);
@@ -74,6 +75,7 @@ public class PlaceServiceImplTest {
     public void testUpdatePlacePerformSaveOperationOnThePlaceObjectGiven(){
         Mockito.when(placeRepository.save(any(Place.class))).thenReturn(testPlace);
         Mockito.when(organizationRepository.findById(testOrganization.getId())).thenReturn(Optional.of(testOrganization));
+        Mockito.when(placeRepository.findAllPlacesOfAnOrganization(testOrganization.getId())).thenReturn(new ArrayList<>());
 
         Assert.assertEquals(Optional.of(testPlace), placeService.updatePlace(testPlace));
     }
