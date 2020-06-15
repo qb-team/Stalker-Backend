@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,22 +58,29 @@ public class PlaceServiceImpl implements PlaceService {
         return coords;
     }
 
-    private Boolean isPlaceInsideOrganization(String placeTrackingArea, String organizationTrackingArea) {
+    /**
+     * Runs checkToApply for each coordinate in trackingArea2 against trackingArea1
+     * @param trackingArea1
+     * @param trackingArea2
+     * @param checkToApply
+     * @return
+     */
+    private Boolean isPlaceTrackingAreaValid(String trackingArea1, String trackingArea2, BiFunction<List<Coordinate>, Coordinate, Boolean> checkToApply) {
         try {
-            List<Coordinate> orgCoordinates = jsonTrackingAreaToList(organizationTrackingArea);
-            List<Coordinate> placeCoordinates = jsonTrackingAreaToList(placeTrackingArea);
+            List<Coordinate> coords1 = jsonTrackingAreaToList(trackingArea1); // coord. org or coord. place of list
+            List<Coordinate> coords2 = jsonTrackingAreaToList(trackingArea2); // coord. place or coord. place to add/update
 
-            boolean allCoordinateInsideArea = true;
+            boolean checkToApplyStillValid = true;
 
-            Iterator<Coordinate> coordIterator = placeCoordinates.iterator();
+            Iterator<Coordinate> coords2Iterator = coords2.iterator();
 
-            while(allCoordinateInsideArea && coordIterator.hasNext()) {
-                if(!gpsAreaFacade.isPointInsidePolygon(orgCoordinates, coordIterator.next())) {
-                    allCoordinateInsideArea = false;
+            while(checkToApplyStillValid && coords2Iterator.hasNext()) {
+                if(!checkToApply.apply(coords1, coords2Iterator.next())) {
+                    checkToApplyStillValid = false;
                 }
             }
 
-            return allCoordinateInsideArea;
+            return checkToApplyStillValid;
         } catch (Exception e) {
             // for whatever exception, return empty list
             System.out.println("A " + e.getClass() + " was thrown. More info: " + e.getMessage());
@@ -111,10 +120,40 @@ public class PlaceServiceImpl implements PlaceService {
      */
     @Override
     public Optional<Place> updatePlace(Place place) {
+        // retrieving information of the organization of the place
         Optional<Organization> organization = orgRepo.findById(place.getOrganizationId());
+        // reference to the function
+        BiFunction<List<Coordinate>, Coordinate, Boolean> isPointInsidePolygon = gpsAreaFacade::isPointInsidePolygon;
 
-        if(organization.isPresent() && isPlaceInsideOrganization(place.getTrackingArea(), organization.get().getTrackingArea())) {
-            return Optional.of(placeRepo.save(place));
+        // checking if the organization exists, otherwise the place cannot be updated
+        if(organization.isPresent()) {
+            // checking if the place is inside the organization tracking area
+            if(isPlaceTrackingAreaValid(organization.get().getTrackingArea(), place.getTrackingArea(), isPointInsidePolygon)) {
+                // LAST CHECK: checking if the place does not have a tracking area which has points inside other places' tracking area
+
+                // retrieving the list of places of the organization
+                Iterator<Place> placeIt = placeRepo.findAllPlacesOfAnOrganization(place.getOrganizationId()).iterator();
+
+                // boolean flag: stopping checks if intersections are found
+                boolean intersectionBetweenPlaces = false;
+                while(!intersectionBetweenPlaces && placeIt.hasNext()) {
+                    Place currentPlace = placeIt.next();
+
+                    // skipping to check the place of the organization which has the same primary key (which is, of course, the same place)
+                    if(!currentPlace.getId().equals(place.getId())) {
+                        // checking if area of place is completely outside of area of currentPlace
+                        // that is why isPointInsidePolygon is negated:
+                        // isPointInsidePolygon returns true if the point is inside
+                        // but now the opposite is required
+                        if(!isPlaceTrackingAreaValid(currentPlace.getTrackingArea(), place.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
+                            intersectionBetweenPlaces = true;
+                        }
+                    }
+                }
+                if(!intersectionBetweenPlaces) {
+                    return Optional.of(placeRepo.save(place));
+                }
+            }
         }
 
         return Optional.empty();
