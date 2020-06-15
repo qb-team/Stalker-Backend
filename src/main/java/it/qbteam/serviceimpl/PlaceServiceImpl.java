@@ -58,17 +58,24 @@ public class PlaceServiceImpl implements PlaceService {
         return coords;
     }
 
+    /**
+     * Runs checkToApply for each coordinate in trackingArea2 against trackingArea1
+     * @param trackingArea1
+     * @param trackingArea2
+     * @param checkToApply
+     * @return
+     */
     private Boolean isPlaceTrackingAreaValid(String trackingArea1, String trackingArea2, BiFunction<List<Coordinate>, Coordinate, Boolean> checkToApply) {
         try {
-            List<Coordinate> coordinates1 = jsonTrackingAreaToList(trackingArea1);
-            List<Coordinate> coordinates2 = jsonTrackingAreaToList(trackingArea2);
+            List<Coordinate> coords1 = jsonTrackingAreaToList(trackingArea1); // coord. org or coord. place of list
+            List<Coordinate> coords2 = jsonTrackingAreaToList(trackingArea2); // coord. place or coord. place to add/update
 
             boolean checkToApplyStillValid = true;
 
-            Iterator<Coordinate> coordIterator = coordinates2.iterator();
+            Iterator<Coordinate> coords2Iterator = coords2.iterator();
 
-            while(checkToApplyStillValid && coordIterator.hasNext()) {
-                if(checkToApply.apply(coordinates1, coordIterator.next())) {
+            while(checkToApplyStillValid && coords2Iterator.hasNext()) {
+                if(!checkToApply.apply(coords1, coords2Iterator.next())) {
                     checkToApplyStillValid = false;
                 }
             }
@@ -113,18 +120,32 @@ public class PlaceServiceImpl implements PlaceService {
      */
     @Override
     public Optional<Place> updatePlace(Place place) {
+        // retrieving information of the organization of the place
         Optional<Organization> organization = orgRepo.findById(place.getOrganizationId());
+        // reference to the function
         BiFunction<List<Coordinate>, Coordinate, Boolean> isPointInsidePolygon = gpsAreaFacade::isPointInsidePolygon;
 
+        // checking if the organization exists, otherwise the place cannot be updated
         if(organization.isPresent()) {
-            if(isPlaceTrackingAreaValid(place.getTrackingArea(), organization.get().getTrackingArea(), isPointInsidePolygon)) {
+            // checking if the place is inside the organization tracking area
+            if(isPlaceTrackingAreaValid(organization.get().getTrackingArea(), place.getTrackingArea(), isPointInsidePolygon)) {
+                // LAST CHECK: checking if the place does not have a tracking area which has points inside other places' tracking area
+
+                // retrieving the list of places of the organization
                 Iterator<Place> placeIt = placeRepo.findAllPlacesOfAnOrganization(place.getOrganizationId()).iterator();
 
+                // boolean flag: stopping checks if intersections are found
                 boolean intersectionBetweenPlaces = false;
                 while(!intersectionBetweenPlaces && placeIt.hasNext()) {
-                    Place pl = placeIt.next();
-                    if(!pl.getId().equals(place.getId())) {
-                        if(isPlaceTrackingAreaValid(place.getTrackingArea(), pl.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
+                    Place currentPlace = placeIt.next();
+
+                    // skipping to check the place of the organization which has the same primary key (which is, of course, the same place)
+                    if(!currentPlace.getId().equals(place.getId())) {
+                        // checking if area of place is completely outside of area of currentPlace
+                        // that is why isPointInsidePolygon is negated:
+                        // isPointInsidePolygon returns true if the point is inside
+                        // but now the opposite is required
+                        if(!isPlaceTrackingAreaValid(currentPlace.getTrackingArea(), place.getTrackingArea(), isPointInsidePolygon.andThen((res) -> !res))) {
                             intersectionBetweenPlaces = true;
                         }
                     }
