@@ -11,7 +11,7 @@
 	<artifactId>stalker-backend</artifactId>
 	<version>1.0.0</version>
 	<name>Stalker Backend</name>
-	<description>Backend per Stalker</description>
+	<description>Backend for Stalker</description>
 	<packaging>jar</packaging>
 
 	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->

@@ -1,7 +1,7 @@
 {
     "title": "Stalker API",
     "artifactId": "stalker-app",
-    "artifactVersion": "0.0.1",
+    "artifactVersion": "1.0.0",
     "artifactDescription": "Stalker App Model",
     "basePackage": "it.qbteam",
     "invokerPackage": "it.qbteam",
