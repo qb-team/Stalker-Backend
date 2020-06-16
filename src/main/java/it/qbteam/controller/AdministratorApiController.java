@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 @Controller
 public class AdministratorApiController implements AdministratorApi {
 
