@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.0.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>it.qbteam</groupId>
+	<artifactId>stalker-backend</artifactId>
+	<version>1.0.0</version>
+	<name>Stalker Backend</name>
+	<description>Backend for Stalker</description>
+	<packaging>jar</packaging>
+
+	<!-- Delle "variabili d'ambiente" valide solo per questo file POM -->
+	<properties>
+		<java.version>1.8</java.version>
+		<swagger.core.version>2.1.1</swagger.core.version>
+		<swagger.annotation.version>1.6.0</swagger.annotation.version>
+		<lombok.version>1.18.12</lombok.version>
+		<jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
+		<jackson-datatype-jsr310.version>2.11.0</jackson-datatype-jsr310.version>
+		<checkstyle.version>3.1.1</checkstyle.version>
+		<junit.version>4.13</junit.version>
+		<surefire.version>2.22.1</surefire.version>
+		<checkstyle.version>3.1.1</checkstyle.version>
+		<firebase-admin.version>6.12.2</firebase-admin.version>
+		<maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
+		<validation-api.version>2.0.1.Final</validation-api.version>
+		<mysql-connector-java.version>8.0.20</mysql-connector-java.version>
+		<unboundid-ldapsdk.version>5.0.1</unboundid-ldapsdk.version>
+	</properties>
+
+	<dependencies>
+		<!-- Base per creare applicazioni web, incluse quelle RESTful usando Spring MVC. Usa Tomcat container embedded -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Base per testare applicazioni Spring Boot con librerie come JUnit, Hamcrest e Mockito -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Plugin per memorizzare i dati in database -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Plugin per connettersi a database MySQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Plugin per connetersi a redis con lettuce  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!-- Plugin per connettersi a Firebase Admin SDK -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase-admin.version}</version>
+		</dependency>
+
+		<!-- Bean Validation API support -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${validation-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- Aggiunge annotazioni extra a quelle di Swagger Core di default -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger.annotation.version}</version>
+		</dependency>
+
+		<!-- Aggiunge JsonNullable da usare nei Java bean (è simile al tipo Optional) -->
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson-databind-nullable.version}</version>
+		</dependency>
+
+		<!-- JUnit per fare i test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Aggiunge la serializzazione di date -->
+		<dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson-datatype-jsr310.version}</version>
+		</dependency>
+		
+		<!-- Aggiunge la dipendenza per gestire la connessione a server LDAP -->
+		<dependency>
+			<groupId>com.unboundid</groupId>
+			<artifactId>unboundid-ldapsdk</artifactId>
+			<version>${unboundid-ldapsdk.version}</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>qbteam/stalker-backend</name>
+						<env>
+							<BP_JVM_VERSION>8.0.252</BP_JVM_VERSION>
+						</env>
+					</image>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit4</artifactId>
+						<version>${surefire.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<printSummary>false</printSummary> <!-- commentare in caso di errori con i test -->
+					<forkCount>0.5C</forkCount> <!-- Un processo della JVM ogni due core nel PC per eseguire i test -->
+					<reuseForks>true</reuseForks> <!-- Riutilizzati i processi per eseguire i test -->
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle.version}</version>
+				<configuration>
+					<configLocation>${project.basedir}/checkstyle.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<failsOnError>false</failsOnError>
+					<consoleOutput>true</consoleOutput>
+					<linkXRef>false</linkXRef>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>checkstyle</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.3.0</version>
+				<configuration>
+					<repoToken></repoToken>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle.version}</version>
+				<configuration>
+					<configLocation>${project.basedir}/checkstyle.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<failsOnError>false</failsOnError>
+					<consoleOutput>true</consoleOutput>
+					<linkXRef>false</linkXRef>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>

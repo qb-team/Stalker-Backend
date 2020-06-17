@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "6ae29ffe-cd8c-4ac3-be64-b88335e916d2",
+		"name": "Movement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "trackMovementInOrganization",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e6d804fe-c5ab-49e6-8b81-3afb3db31e9e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exitToken\": \"v25Hv8nqh56W1bqp\",\r\n    \"timestamp\": \"2000-01-24T02:57:07Z\",\r\n    \"movementType\": -1,\r\n    \"organizationId\": 1,\r\n    \"orgAuthServerId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/movement/track/organization",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"movement",
+						"track",
+						"organization"
+					]
+				},
+				"description": "Tracks the user movement inside the trackingArea of an organization."
+			},
+			"response": []
+		},
+		{
+			"name": "trackMovementInPlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placeId\" : 2,\r\n  \"movementType\" : 1,\r\n  \"timestamp\" : \"2000-01-23T04:56:07.000+00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/movement/track/place",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"movement",
+						"track",
+						"place"
+					]
+				},
+				"description": "Tracks the user movement inside the trackingArea of a place of an organization."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "772cd131-a69e-4868-96ed-8197cb9d38fe",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8f36b242-9091-4722-ada6-9efd07c252e0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

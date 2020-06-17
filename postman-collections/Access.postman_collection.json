@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "04b9fbc8-5c54-43ff-a4c1-929055e1f64d",
+		"name": "Access",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getAnonymousAccessListInOrganization",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fb3a8ef8-1c02-4f62-af0f-0acf7178d521",
+						"exec": [
+							"pm.environment.set(\"exitTokens\", \"token1,token2,token3\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/organization/{{organizationId}}/anonymous/{{exitTokens}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"access",
+						"organization",
+						"{{organizationId}}",
+						"anonymous",
+						"{{exitTokens}}"
+					]
+				},
+				"description": "Returns all the anonymous accesses in an organization registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getAnonymousAccessListInPlace",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "18c906b0-87ca-4648-bcd3-1462da6afc06",
+						"exec": [
+							"pm.environment.set(\"exitTokens\", \"token1,token2,token3\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/place/{{placeId}}/anonymous/{{exitTokens}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"access",
+						"place",
+						"{{placeId}}",
+						"anonymous",
+						"{{exitTokens}}"
+					]
+				},
+				"description": "Returns all the anonymous accesses in a place registered of the user owning the exitTokens (exitTokens are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Only app users can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getAuthenticatedAccessListInOrganization",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7ec648b0-11c6-408e-9801-d9f844d2c524",
+						"exec": [
+							"pm.environment.set(\"orgAuthServerIds\", \"token1,token2,token3\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/organization/{{organizationId}}/authenticated/{{orgAuthServerIds}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"access",
+						"organization",
+						"{{organizationId}}",
+						"authenticated",
+						"{{orgAuthServerIds}}"
+					]
+				},
+				"description": "Returns all the authenticated accesses in an organization registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getAuthenticatedAccessListInPlace",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "887a8141-f7f8-4f9f-bdbc-a616579005ab",
+						"exec": [
+							"pm.environment.set(\"orgAuthServerIds\", \"token1,token2,token3\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/access/place/{{placeId}}/authenticated/{{orgAuthServerIds}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"access",
+						"place",
+						"{{placeId}}",
+						"authenticated",
+						"{{orgAuthServerIds}}"
+					]
+				},
+				"description": "Returns all the authenticated accesses in a place registered of one or more users (orgAuthServerIds are separated by commas) that are fully registered. Fully registered means that there are both the entrance and the exit timestamp. Both app users and web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"protocolProfileBehavior": {}
+}

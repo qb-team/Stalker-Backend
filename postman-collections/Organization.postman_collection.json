@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "61cf15b5-00db-4d06-afd9-dfe0fb0f5757",
+		"name": "Organization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getOrganizationList",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"organization"
+					]
+				},
+				"description": "Returns the list of all organizations available in the system.\r\nThe list can be empty. Only app users can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getOrganization",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "169ae04a-06c2-415b-8b4c-0adc648efa44",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"organization",
+						"{{organizationId}}"
+					]
+				},
+				"description": "Gets the data available for a single organization. \r\nBoth app users and web-app administrators can access this end-point but, \r\napp users can request information for all the organizations while web-app \r\nadministrators can only for the organizations they have access to."
+			},
+			"response": []
+		},
+		{
+			"name": "updateOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.Imola Informatica è una società indipendente di consulenza IT.\\r\\n\\r\\nTutto ciò che riguarda il mondo dell’information technology ci riguarda, ci interessa e appassiona. Entriamo in gioco ogni volta in cui una azienda pubblica o privata vuole migliorare i propri servizi. Innovare i propri processi di lavoro, gli approcci di management per cogliere le opportunità business offerte dalla trasformazione digitale.\",\r\n    \"image\": \"https://pbs.twimg.com/profile_images/973153659143024640/dr-1ng9d_400x400.jpg\",\r\n    \"street\": \"Via Selice\",\r\n    \"number\": \"66A\",\r\n    \"postCode\": 40026,\r\n    \"city\": \"Imola\",\r\n    \"country\": \"Italia\",\r\n    \"authenticationServerURL\": null,\r\n    \"creationDate\": \"2020-03-01T20:57:47+01:00\",\r\n    \"lastChangeDate\": \"2020-05-01T16:37:56+02:00\",\r\n    \"trackingArea\": \"{\\\"Organizzazioni\\\": [{\\\"lat\\\": \\\"46.123987\\\", \\\"long\\\": \\\"10.829304\\\"}, {\\\"lat\\\": \\\"46.213987\\\", \\\"long\\\": \\\"10.987098\\\"}, {\\\"lat\\\": \\\"46.112223\\\", \\\"long\\\": \\\"10.987765\\\"}, {\\\"lat\\\": \\\"46.123561\\\", \\\"long\\\": \\\"10.828232\\\"}]}\",\r\n    \"trackingMode\": \"anonymous\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"organization"
+					]
+				},
+				"description": "Updates one or more properties of an organization. \r\nOnly web-app administrators (if they have the correct access rights) can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "updateOrganizationTrackingArea",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "trackingArea",
+							"value": "{\"json\":false}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}/trackingArea",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"organization",
+						"{{organizationId}}",
+						"trackingArea"
+					]
+				},
+				"description": "Updates the coordinates of the tracking area of an organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "requestDeletionOfOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"organizationId\": {{organizationId}},\"requestReason\": \"I'm sorry I must leave Stalker!\",\"administratorId\": \"{{administratorId}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/organization/{{organizationId}}/requestdeletion",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"organization",
+						"{{organizationId}}",
+						"requestdeletion"
+					]
+				},
+				"description": "Sends a deletion request to the system.  The request will be examined by Stalker administrators. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "189a6ef0-ff60-4440-bfde-1416661637b2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2c9a50a4-fab2-4fa4-a77c-1a7f14768e44",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

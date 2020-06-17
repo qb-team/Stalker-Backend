@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "cbb238c1-18aa-4a19-b9db-26606028ad10",
+		"name": "Place",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPlaceListOfOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/place/organization/{{organizationId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"place",
+						"organization",
+						"{{organizationId}}"
+					]
+				},
+				"description": "Returns the list of places of the organization.\r\nBoth app users and web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "createNewPlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 4,\r\n  \"name\" : \"Garage\",\r\n  \"trackingArea\" : \"{\\\"json\\\": 11}\",\r\n  \"id\" : 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/place",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"place"
+					]
+				},
+				"description": "Creates a new place for an organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "updatePlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 4,\r\n  \"name\" : \"Stanzona di Davide\",\r\n  \"trackingArea\" : \"{\\\"json\\\": false}\",\r\n  \"id\" : 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/place",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"place"
+					]
+				},
+				"description": "Updates one or more properties of a place of an organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "deletePlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/place/{{placeId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"place",
+						"{{placeId}}"
+					]
+				},
+				"description": "Deletes a place of an organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"protocolProfileBehavior": {}
+}

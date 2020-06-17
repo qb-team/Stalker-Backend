@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "ccaaac95-5a17-48d1-8b6e-170d957232d3",
+		"name": "Administrator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getAdministratorListOfOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/organization/{{organizationId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"organization",
+						"{{organizationId}}"
+					]
+				},
+				"description": "Returns the list of administrators of the organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "bindAdministratorToOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 1,\r\n  \"mail\": \"prova@prova.it\",\r\n  \"permission\" : 2,\r\n  \"orgAuthServerId\" : null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/bindadministrator",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"bindadministrator"
+					]
+				},
+				"description": "Bind an already existent administrator to the organization.\r\nOnly web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "createNewAdministratorInOrganization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 1,\r\n  \"mail\": \"prova@prova.it\",\r\n  \"password\": \"password\",\r\n  \"permission\" : 2,\r\n  \"orgAuthServerId\" : null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/createadministrator",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"createadministrator"
+					]
+				},
+				"description": "Creates and binds a new administrator to the current organization.  Only web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "getPermissionList",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/permission/{{administratorId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"permission",
+						"{{administratorId}}"
+					]
+				},
+				"description": "Gets the list of organizations that an administrator has permissions to view/manage/own. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "unbindAdministratorFromOrganization",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 1,\r\n  \"administratorId\" : \"administrator-id-here\",\r\n  \"permission\" : 2,\r\n  \"orgAuthServerId\" : null,\r\n  \"nominatedBy\" : \"{{administratorId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/unbindadministrator",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"unbindadministrator"
+					]
+				},
+				"description": "Unbind an administrator to the organization. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		},
+		{
+			"name": "updateAdministratorPermission",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationId\" : 1,\r\n  \"administratorId\" : \"administrator-id-here\",\r\n  \"permission\" : 2,\r\n  \"orgAuthServerId\" : null,\r\n  \"nominatedBy\" : \"{{administratorId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/administrator/updatepermission",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"administrator",
+						"updatepermission"
+					]
+				},
+				"description": "Update the permission for an already existent administrator in the organization. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "6e8be5f8-d4ef-417c-958f-482f1ead9661",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c5d471d7-c4ed-4ce7-a649-86d416c67723",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

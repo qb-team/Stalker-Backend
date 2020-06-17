@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "a78f07dd-461b-4427-b440-a0533ab2ce66",
+		"name": "AuthenticationServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getUserInfoFromAuthServer",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMmM1NDk4YTcwYjc0MjQ5NzI2ZDhmYjYxODlkZWI3NGMzNWM4MGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc3RhbGtlci1pbW9sYS1pbmZvcm1hdGljYSIsImF1ZCI6InN0YWxrZXItaW1vbGEtaW5mb3JtYXRpY2EiLCJhdXRoX3RpbWUiOjE1OTA4NTQ5NDQsInVzZXJfaWQiOiJjRWlMSldpelBwVjlXMzg4SjRtMUhpUEtRZ0czIiwic3ViIjoiY0VpTEpXaXpQcFY5VzM4OEo0bTFIaVBLUWdHMyIsImlhdCI6MTU5MDg1NDk0NCwiZXhwIjoxNTkwODU4NTQ0LCJlbWFpbCI6ImYucEBvdXRsb29rLml0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImYucEBvdXRsb29rLml0Il19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.nDHe-ZUmpV8IQLM76pt2oASBG6tEPEkfoV7JfEe4OdcIprcWZ3-yti8-sIlDlmTnvd5NwvJDCSiR8RheZ7s17Gks7kBGgD4fUQ3p70hV97T0fxAkCqIf5wZ1eSsS4BaSVNX7sh9RPTSXbLZ-exhLF5LhG2nJZJQ8KiG-KLtjY_BMLwccbUI0jDXnr9RK5lFLkYhgFjHiHMuOHl7ctFIR1wH99qte9Hmd6Pjk-yLdeYhLVZhR2NEKoCWfv3oqYdcQ1x7TNi3ymMH2f5FfYjlCiMhW2Hrlt-AvlIVVIcRtsMKlSzFOWk4zDrogAGr5v5YYT7oSQQbqqwancbfu3LDtzA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"organizationCredentials\": {\r\n    \"username\": \"cn=admin,dc=qbteam,dc=it\",\r\n    \"password\": \"admin\"\r\n  },\r\n  \"organizationId\": 3,\r\n  \"orgAuthServerIds\": [\r\n    \"1007\",\r\n    \"1006\",\r\n    \"1005\",\r\n    \"1004\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/authenticationserver/userinformation",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"authenticationserver",
+						"userinformation"
+					]
+				},
+				"description": "Gets the information on users given their identifier on the organization&#39;s authentication server. Only web-app administrators can access this end-point."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"protocolProfileBehavior": {}
+}
