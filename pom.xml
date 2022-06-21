@@ -29,7 +29,7 @@
 		<firebase-admin.version>6.12.2</firebase-admin.version>
 		<maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
 		<validation-api.version>2.0.1.Final</validation-api.version>
-		<mysql-connector-java.version>8.0.20</mysql-connector-java.version>
+		<mysql-connector-java.version>8.0.28</mysql-connector-java.version>
 		<unboundid-ldapsdk.version>5.0.1</unboundid-ldapsdk.version>
 	</properties>
 
